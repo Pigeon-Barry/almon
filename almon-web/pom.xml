@@ -9,24 +9,31 @@
         <relativePath/> <!-- lookup parent from repository -->
     </parent>
     <groupId>com.capgemini.bedwards.almon</groupId>
-    <artifactId>almon-framework</artifactId>
+    <artifactId>almon-web</artifactId>
     <version>1.0.0</version>
-    <name>almon-framework</name>
-    <description>almon-framework</description>
-    <dependencies>
+    <packaging>pom</packaging>
 
-        <!-- Almon Dependencies Start -->
+    <name>almon-web</name>
+    <description>almon-web</description>
+    <properties>
+        <almon-web-core.version>1.0.0</almon-web-core.version>
+    </properties>
+    <modules>
+        <module>almon-web-core</module>
+    </modules>
+    <dependencies>
         <dependency>
-            <groupId>com.capgemini.bedwards.almon</groupId>
-            <artifactId>almon-monitoring-api</artifactId>
-            <version>1.0.0</version>
+            <groupId>org.thymeleaf</groupId>
+            <artifactId>thymeleaf</artifactId>
         </dependency>
         <dependency>
-            <groupId>com.capgemini.bedwards.almon</groupId>
-            <artifactId>almon-web-core</artifactId>
-            <version>1.0.0</version>
+            <groupId>org.thymeleaf</groupId>
+            <artifactId>thymeleaf-spring5</artifactId>
         </dependency>
-        <!-- Almon Dependencies End -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-thymeleaf</artifactId>
+        </dependency>
     </dependencies>
 
     <build>
@@ -34,14 +41,6 @@
             <plugin>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
-                <configuration>
-                    <excludes>
-                        <exclude>
-                            <groupId>org.projectlombok</groupId>
-                            <artifactId>lombok</artifactId>
-                        </exclude>
-                    </excludes>
-                </configuration>
             </plugin>
         </plugins>
     </build>

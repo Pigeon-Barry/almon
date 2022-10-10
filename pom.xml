@@ -21,6 +21,7 @@
         <almon-core.version>1.0.0</almon-core.version>
         <almon-datastore.version>1.0.0</almon-datastore.version>
         <almon-monitoring.version>1.0.0</almon-monitoring.version>
+        <almon-web.version>1.0.0</almon-web.version>
     </properties>
 
     <modules>
@@ -29,6 +30,7 @@
         <module>almon-datastore</module>
         <module>almon-framework</module>
         <module>almon-monitoring</module>
+        <module>almon-web</module>
     </modules>
 
     <dependencies>
@@ -37,6 +39,11 @@
             <artifactId>spring-boot-starter-parent</artifactId>
             <version>2.7.4</version>
             <type>pom</type>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-devtools</artifactId>
+            <optional>true</optional>
         </dependency>
         <dependency>
             <groupId>org.springframework.boot</groupId>
