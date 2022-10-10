@@ -3,9 +3,9 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <parent>
-        <groupId>org.springframework.boot</groupId>
-        <artifactId>spring-boot-starter-parent</artifactId>
-        <version>2.7.4</version>
+        <groupId>com.capgemini.bedwards</groupId>
+        <artifactId>almon</artifactId>
+        <version>1.0.0</version>
         <relativePath/> <!-- lookup parent from repository -->
     </parent>
     <groupId>com.capgemini.bedwards.almon</groupId>
@@ -15,17 +15,11 @@
     <name>almon-alerting</name>
     <description>almon-alerting</description>
     <properties>
-        <java.version>1.8</java.version>
+        <almon-alerting-core.version>1.0.0</almon-alerting-core.version>
     </properties>
     <modules>
         <module>almon-alerting-core</module>
     </modules>
-    <dependencies>
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter</artifactId>
-        </dependency>
-    </dependencies>
 
     <build>
         <plugins>

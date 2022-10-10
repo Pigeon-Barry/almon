@@ -17,16 +17,27 @@
     <description>almon</description>
     <properties>
         <java.version>1.8</java.version>
+        <almon-alerting.version>1.0.0</almon-alerting.version>
+        <almon-core.version>1.0.0</almon-core.version>
+        <almon-datastore.version>1.0.0</almon-datastore.version>
+        <almon-monitoring.version>1.0.0</almon-monitoring.version>
     </properties>
 
     <modules>
+        <module>almon-alerting</module>
         <module>almon-core</module>
-        <module>almon-framework</module>
         <module>almon-datastore</module>
+        <module>almon-framework</module>
         <module>almon-monitoring</module>
     </modules>
 
     <dependencies>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-parent</artifactId>
+            <version>2.7.4</version>
+            <type>pom</type>
+        </dependency>
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter</artifactId>
@@ -39,6 +50,10 @@
             <groupId>org.projectlombok</groupId>
             <artifactId>lombok</artifactId>
             <optional>true</optional>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-autoconfigure</artifactId>
         </dependency>
         <dependency>
             <groupId>org.springframework.boot</groupId>
