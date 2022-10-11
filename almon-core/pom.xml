@@ -13,4 +13,11 @@
     <version>1.0.0</version>
     <name>almon-core</name>
     <description>almon-core</description>
+    <dependencies>
+        <dependency>
+            <groupId>com.capgemini.bedwards.almon</groupId>
+            <artifactId>almon-datastore</artifactId>
+            <version>${almon-datastore.version}</version>
+        </dependency>
+    </dependencies>
 </project>

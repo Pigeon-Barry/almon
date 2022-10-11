@@ -10,7 +10,7 @@
     </parent>
     <groupId>com.capgemini.bedwards.almon</groupId>
     <artifactId>almon-datastore</artifactId>
-    <version>0.0.1-SNAPSHOT</version>
+    <version>1.0.0</version>
     <name>almon-datastore</name>
     <description>almon-datastore</description>
     <dependencies>

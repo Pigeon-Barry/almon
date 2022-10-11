@@ -1,7 +1,7 @@
-package com.capgemini.bedwards.almon.almonmonitoringapi.models;
+package com.capgemini.bedwards.almon.almonmonitoringcore.models;
 
 public enum ErrorCode {
-    BAD_REQUEST("Desc");
+    NOT_FOUND("Not Found");
 
     private final String ERROR_DESCRIPTION;
 

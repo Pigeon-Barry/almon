@@ -1,6 +1,6 @@
 package com.capgemini.bedwards.almon.almonmonitoringapi.services;
 
-import com.capgemini.bedwards.almon.almoncore.models.AlertType;
+import com.capgemini.bedwards.almon.almondatastore.models.AlertType;
 import lombok.Getter;
 
 import java.time.LocalDateTime;

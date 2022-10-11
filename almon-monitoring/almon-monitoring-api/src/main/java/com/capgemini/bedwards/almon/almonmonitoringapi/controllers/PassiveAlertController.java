@@ -1,7 +1,8 @@
 package com.capgemini.bedwards.almon.almonmonitoringapi.controllers;
 
-import com.capgemini.bedwards.almon.almoncore.models.Alert;
+import com.capgemini.bedwards.almon.almoncore.exceptions.NotFoundException;
 import com.capgemini.bedwards.almon.almoncore.services.AlertService;
+import com.capgemini.bedwards.almon.almondatastore.models.Alert;
 import com.capgemini.bedwards.almon.almonmonitoringapi.services.AlertRequestBody;
 import io.swagger.v3.oas.annotations.OpenAPIDefinition;
 import io.swagger.v3.oas.annotations.Operation;
@@ -28,7 +29,7 @@ import javax.validation.constraints.NotNull;
                 version = "1.0.0")
 )
 @RestController
-@RequestMapping("/alert")
+@RequestMapping("${almon.api.prefix}/alert")
 public class PassiveAlertController {
 
     @Autowired
@@ -48,7 +49,7 @@ public class PassiveAlertController {
             })
     @RequestMapping(method = RequestMethod.POST)
     public ResponseEntity<Alert> triggerAlert(
-            @Valid @RequestBody @NotNull AlertRequestBody alertRequestBody) {
+            @Valid @RequestBody @NotNull AlertRequestBody alertRequestBody) throws NotFoundException {
         return new ResponseEntity<>(
                 this.alertService.saveAlert(alertRequestBody.getAlertType(), alertRequestBody.getMessage(), alertRequestBody.getTime()),
                 HttpStatus.CREATED);
