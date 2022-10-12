@@ -29,11 +29,12 @@ public class CorrelationIdInterceptor implements HandlerInterceptor {
     }
 
     private UUID getOrGenerateCorrelationId(final HttpServletRequest request) {
-        final String correlationId = request.getHeaders(CORRELATION_ID_NAME).toString();
-        if (correlationId.isEmpty() || !correlationId.matches("[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}")) {
-            return UUID.randomUUID();
+        if (request.getHeaders(CORRELATION_ID_NAME).hasMoreElements()) {
+            final String correlationId = request.getHeaders(CORRELATION_ID_NAME).nextElement();
+            if (correlationId.matches("[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}")) {
+                return UUID.fromString(correlationId);
+            }
         }
-        return UUID.fromString(correlationId);
+        return UUID.randomUUID();
     }
-
 }
