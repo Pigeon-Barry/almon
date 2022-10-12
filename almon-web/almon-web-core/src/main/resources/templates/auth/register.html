@@ -3,14 +3,16 @@
       xmlns:th="http://www.thymeleaf.org" lang="en">
 <head>
     <th:block th:insert="fragments/head :: head"/>
-    <title th:text="${@environment.getProperty('almon.app.name')} + '- Home'"></title>
+    <title th:text="${@environment.getProperty('almon.app.name')} + '- Register'"></title>
 </head>
 <body>
 <div class="container-fluid">
-    <th:block th:insert="fragments/header :: header(activeTab='home')"/>
-    <!-- Main Content Start -->
+    <th:block th:insert="fragments/header :: header(activeTab='register')"/>
 
+    <!-- Main Content Start -->
+    <th:block th:insert="fragments/auth/register :: registerForm"/>
     <!-- Main Content End -->
+
     <th:block th:insert="fragments/foorter :: footer"/>
 </div>
 </body>

@@ -1,0 +1,38 @@
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org" lang="en">
+<div class="container" th:fragment="loginForm">
+    <div class="row justify-content-center">
+        <div class="col-12 col-md-8">
+            <div class="card">
+                <h3 class="card-header">Login Form</h3>
+                <div class="card-body">
+                    <form th:action="@{/auth/login}" th:object="${login}" method="post">
+                        <div class="form-group">
+                            <label for="email">Email:</label>
+                            <input th:class="(${#fields.hasErrors('email')}? 'is-invalid ' : '') + 'form-control'"
+                                   type="text" id="email" placeholder="Enter Email"
+                                   name="email" th:field="*{email}"/>
+                            <span th:if="${#fields.hasErrors('email')}" class="invalid-feedback" role="alert">
+                                    <strong th:errors="*{email}"></strong>
+                                </span>
+                        </div>
+                        <div class="form-group">
+                            <label for="password">Password:</label>
+                            <input th:class="(${#fields.hasErrors('password')}? 'is-invalid ' : '') + 'form-control'"
+                                   type="password" id="password" placeholder="Enter Password"
+                                   name="password" th:field="*{password}"/>
+
+                            <span th:if="${#fields.hasErrors('password')}" class="invalid-feedback" role="alert">
+                                    <strong th:errors="*{password}"></strong>
+                                </span>
+                        </div>
+                        <a class="btn btn-link" href="">Forgot Your Password?</a>
+                        <div class="form-group">
+                            <button type="submit" class="form-control btn-block btn btn-primary">Login</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
