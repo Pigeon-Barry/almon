@@ -1,7 +1,10 @@
 package com.capgemini.bedwards.almon.almonmonitoringcore.models;
 
 public enum ErrorCode {
-    NOT_FOUND("Not Found");
+    NOT_FOUND("Not Found"),
+    INTERNAL_SERVER_ERROR("Please contact system administrators"),
+
+    ;
 
     private final String ERROR_DESCRIPTION;
 
@@ -12,4 +15,5 @@ public enum ErrorCode {
     public String getErrorDescription() {
         return this.ERROR_DESCRIPTION;
     }
+
 }

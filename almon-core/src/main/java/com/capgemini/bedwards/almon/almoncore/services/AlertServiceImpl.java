@@ -23,21 +23,19 @@ public class AlertServiceImpl implements AlertService {
     private AlertTypeRepository alertTypeRepository;
 
     @Override
-    public Alert saveAlert(@NotNull AlertType alertType, String message, @NotNull LocalDateTime timeOfAlert) throws NotFoundException {
+    public Alert saveAlert(@NotNull AlertType alertType, String message, LocalDateTime timeOfAlert) throws NotFoundException {
         if (timeOfAlert == null)
             timeOfAlert = LocalDateTime.now();
         if (!alertTypeRepository.existsById(alertType.getName())) {
             throw new NotFoundException("Alert type: '" + alertType.getName() + "' does not exist");
         }
 
-        log.info("Alert received");
-        Alert alert =
-                Alert.builder()
-                        .alertType(alertType)
-                        .message(message)
-                        .alertReceivedTime(timeOfAlert)
-                        .build();
-        log.info(alert.toString());
+        Alert alert = Alert.builder()
+                .alertType(alertType)
+                .message(message)
+                .alertReceivedTime(timeOfAlert)
+                .build();
+        log.debug("Alert received: " + alert);
         return alertRepository.save(alert);
     }
 }

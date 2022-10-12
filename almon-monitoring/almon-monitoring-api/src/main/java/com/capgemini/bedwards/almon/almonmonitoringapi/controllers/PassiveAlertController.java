@@ -4,6 +4,7 @@ import com.capgemini.bedwards.almon.almoncore.exceptions.NotFoundException;
 import com.capgemini.bedwards.almon.almoncore.services.AlertService;
 import com.capgemini.bedwards.almon.almondatastore.models.Alert;
 import com.capgemini.bedwards.almon.almonmonitoringapi.services.AlertRequestBody;
+import com.capgemini.bedwards.almon.almonmonitoringcore.models.ErrorResponse;
 import io.swagger.v3.oas.annotations.OpenAPIDefinition;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.info.Info;
@@ -41,11 +42,11 @@ public class PassiveAlertController {
                     @ApiResponse(responseCode = "201", description = "Alert successfully registered on the system",
                             content = @Content(mediaType = MediaType.APPLICATION_JSON_VALUE, schema = @Schema(implementation = Alert.class))),
                     @ApiResponse(responseCode = "400", description = "Invalid payload",
-                            content = @Content(mediaType = MediaType.APPLICATION_JSON_VALUE, array = @ArraySchema(schema = @Schema(implementation = Error.class)))),
+                            content = @Content(mediaType = MediaType.APPLICATION_JSON_VALUE, array = @ArraySchema(schema = @Schema(implementation = ErrorResponse.class)))),
                     @ApiResponse(responseCode = "500", description = "Internal Server Error",
-                            content = @Content(mediaType = MediaType.APPLICATION_JSON_VALUE, array = @ArraySchema(schema = @Schema(implementation = Error.class)))),
+                            content = @Content(mediaType = MediaType.APPLICATION_JSON_VALUE, array = @ArraySchema(schema = @Schema(implementation = ErrorResponse.class)))),
                     @ApiResponse(responseCode = "503", description = "Downstream error",
-                            content = @Content(mediaType = MediaType.APPLICATION_JSON_VALUE, array = @ArraySchema(schema = @Schema(implementation = Error.class)))),
+                            content = @Content(mediaType = MediaType.APPLICATION_JSON_VALUE, array = @ArraySchema(schema = @Schema(implementation = ErrorResponse.class)))),
             })
     @RequestMapping(method = RequestMethod.POST)
     public ResponseEntity<Alert> triggerAlert(
