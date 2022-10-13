@@ -46,7 +46,7 @@ public class SecSecurityConfig {
                 .antMatchers("/auth/**").permitAll()
                 .antMatchers("/api/**").permitAll()
                 .antMatchers("/error").permitAll()
-                .antMatchers("/**").hasAnyAuthority("ROLE_USER", "ROLE_ADMIN")
+                .antMatchers("/**").hasAnyAuthority("ACCESS_CORE_PAGES")
                 .and()
                 .formLogin()
                 .disable()

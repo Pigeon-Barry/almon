@@ -24,4 +24,9 @@ public class Role {
 
     @ManyToMany(mappedBy = "roles")
     private Set<Authority> authorities;
+
+    @Override
+    public int hashCode() {
+        return roleName.hashCode();
+    }
 }

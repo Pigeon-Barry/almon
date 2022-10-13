@@ -1,8 +1,8 @@
 package com.capgemini.bedwards.almon.almoncore.service;
 
-import com.capgemini.bedwards.almon.almondatastore.models.auth.Authority;
 import com.capgemini.bedwards.almon.almondatastore.models.auth.User;
 import com.capgemini.bedwards.almon.almondatastore.repository.auth.AuthorityRepository;
+import com.capgemini.bedwards.almon.almondatastore.repository.auth.RoleRepository;
 import com.capgemini.bedwards.almon.almondatastore.repository.auth.UserRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,6 +16,8 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.util.HashSet;
+
 @Service
 @Slf4j
 public class AuthServiceImpl implements AuthService {
@@ -27,6 +29,8 @@ public class AuthServiceImpl implements AuthService {
     UserRepository userRepository;
     @Autowired
     AuthorityRepository authorityRepository;
+    @Autowired
+    RoleRepository roleRepository;
     @Autowired
     @Lazy
     PasswordEncoder passwordEncoder;
@@ -59,11 +63,12 @@ public class AuthServiceImpl implements AuthService {
                             .build());
 
             if (email.equalsIgnoreCase(rootAccount)) {
-                log.info("ID: " + user.getId());
                 user.setApprovedBy(user);
+                user.setRoles(new HashSet<>());
+                user.getRoles().add(roleRepository.findById("ADMIN").orElse(null));
+                user.getRoles().add(roleRepository.findById("USER").orElse(null));
                 userRepository.saveAndFlush(user);
-//                authorityRepository.saveAndFlush(new Authority(new Authority.AuthorityId(user, "ROLE_ADMIN")));
-//                authorityRepository.saveAndFlush(new Authority(new Authority.AuthorityId(user, "ROLE_USER")));
+
             }
             authenticate(email, password);
             return user;

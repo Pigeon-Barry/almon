@@ -1,9 +1,6 @@
 package com.capgemini.bedwards.almon.almondatastore.models.auth;
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
-import lombok.ToString;
+import lombok.*;
 
 import javax.persistence.*;
 import java.io.Serializable;
@@ -12,6 +9,7 @@ import java.util.Set;
 @Entity
 @Data
 @AllArgsConstructor
+@EqualsAndHashCode
 @ToString
 @Table(name = "authorities")
 public class Authority {
@@ -28,6 +26,12 @@ public class Authority {
 
     }
 
+    @Override
+    public int hashCode() {
+        return authority.hashCode();
+    }
+
+
     @Embeddable
     @Data
     @ToString
@@ -35,9 +39,7 @@ public class Authority {
     @NoArgsConstructor
     public static class AuthorityId implements Serializable {
         @ManyToOne
-        @JoinColumn(name = "user_id",nullable = false)
+        @JoinColumn(name = "user_id", nullable = false)
         private User user;
-
-
     }
 }

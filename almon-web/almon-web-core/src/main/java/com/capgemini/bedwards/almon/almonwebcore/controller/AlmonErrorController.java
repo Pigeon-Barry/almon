@@ -14,7 +14,7 @@ import javax.servlet.http.HttpServletRequest;
 @Slf4j
 public class AlmonErrorController implements ErrorController {
 
-    @SneakyThrows
+
     @RequestMapping("/error")
     public String handleError(HttpServletRequest request) {
         Object statusObj = request.getAttribute(RequestDispatcher.ERROR_STATUS_CODE);
