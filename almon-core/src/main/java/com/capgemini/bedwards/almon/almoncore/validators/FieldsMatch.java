@@ -1,4 +1,4 @@
-package com.capgemini.bedwards.almon.almondatastore.validation;
+package com.capgemini.bedwards.almon.almoncore.validators;
 
 import javax.validation.Constraint;
 import javax.validation.Payload;
@@ -14,7 +14,7 @@ import static java.lang.annotation.ElementType.*;
 @Constraint(validatedBy = FieldsMatchValidator.class)
 @Documented
 public @interface FieldsMatch {
-    String message() default "{com.capgemini.bedwards.almon.almondatastore.validation.FieldsMatch.message}";
+    String message() default "{com.capgemini.bedwards.almon.almoncore.validators.FieldsMatch.message}";
     Class<?>[] groups() default { };
     Class<? extends Payload>[] payload() default { };
     String[] fields();

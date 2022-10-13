@@ -4,7 +4,7 @@
 <th:block th:fragment="autodetect">
     <th:block th:fragment="authenticated" sec:authorize="isAuthenticated()">
         <!-- Left Side Of Navbar-->
-        <ul class="navbar-nav mr-auto">
+        <ul class="navbar-nav mr-auto" sec:authorize="hasAuthority('ACCESS_CORE_PAGES')">
             <li th:class="nav-item">
                 <a th:class="'nav-link ' +  (${activeTab =='home'} ? 'active' : '')" href="/">Home</a>
             </li>

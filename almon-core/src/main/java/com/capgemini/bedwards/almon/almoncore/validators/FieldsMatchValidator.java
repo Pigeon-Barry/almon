@@ -1,4 +1,4 @@
-package com.capgemini.bedwards.almon.almondatastore.validation;
+package com.capgemini.bedwards.almon.almoncore.validators;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.util.ReflectionUtils;

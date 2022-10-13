@@ -2,10 +2,12 @@ package com.capgemini.bedwards.almon.almondatastore.models.auth;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 import lombok.ToString;
 
 import javax.persistence.*;
 import java.io.Serializable;
+import java.util.Set;
 
 @Entity
 @Data
@@ -14,19 +16,28 @@ import java.io.Serializable;
 @Table(name = "authorities")
 public class Authority {
 
-    @EmbeddedId
-    private AuthorityId authorityId;
+    @Id
+    private String authority;
 
+    @ManyToMany
+    private Set<User> users;
+    @ManyToMany
+    private Set<Role> roles;
 
     public Authority() {
 
     }
 
     @Embeddable
-    private static class AuthorityId implements Serializable {
-        @JoinColumn(name = "users", referencedColumnName = "username")
-        private String username;
+    @Data
+    @ToString
+    @AllArgsConstructor
+    @NoArgsConstructor
+    public static class AuthorityId implements Serializable {
+        @ManyToOne
+        @JoinColumn(name = "user_id",nullable = false)
+        private User user;
 
-        private String authority;
+
     }
 }

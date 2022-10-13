@@ -1,28 +1,51 @@
 package com.capgemini.bedwards.almon.almondatastore.models.auth;
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.ToString;
+import lombok.*;
+import org.hibernate.annotations.GenericGenerator;
+import org.hibernate.annotations.Type;
 
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.Table;
+import javax.persistence.*;
 import javax.validation.constraints.NotNull;
+import java.util.List;
+import java.util.Set;
+import java.util.UUID;
 
 @Entity
-@Data
+@Getter
+@Setter
 @AllArgsConstructor
-@ToString
+@Builder
 @Table(name = "users")
 public class User {
 
     @Id
-    private String username;
+    @GeneratedValue(generator = "uuid")
+    @GenericGenerator(name = "uuid", strategy = "com.capgemini.bedwards.almon.almondatastore.util.UUIDGenerator")
+    @Type(type = "org.hibernate.type.UUIDCharType")
+    private UUID id;
+
+    @NotNull
+    private String email;
+
+    @NotNull
+    private String firstName;
+    @NotNull
+    private String lastName;
+
     @NotNull
     private String password;
     @NotNull
     private boolean enabled;
 
+    @JoinColumn(name = "approvedBy_id")
+    @OneToOne(fetch = FetchType.LAZY)
+    private User approvedBy;
+
+    @ManyToMany(mappedBy = "users", cascade = CascadeType.ALL)
+    private Set<Authority> authorities;
+
+    @ManyToMany
+    private Set<Role> roles;
     public User() {
 
     }
