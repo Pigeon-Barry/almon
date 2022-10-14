@@ -1,0 +1,72 @@
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org" lang="en">
+<!--/*@thymesVar id="login" type="com.capgemini.bedwards.almon.almonwebcore.model.auth.Login"*/-->
+<!--/*@thymesVar id="listUsers" type="java.util.List"*/-->
+<!--/*@thymesVar id="user" type="com.capgemini.bedwards.almon.almondatastore.models.auth.User"*/-->
+<!--/*@thymesVar id="currentPage" type="java.lang.Integer"*/-->
+<!--/*@thymesVar id="totalItems" type="java.lang.Integer"*/-->
+<!--/*@thymesVar id="totalPages" type="java.lang.Integer"*/-->
+<div class="container" th:fragment="users">
+    <h1>User List</h1>
+    <div class="row col-12">
+        <table class="table table-striped table-responsive-md">
+            <thead>
+            <tr>
+                <th>Email</th>
+                <th>First Name</th>
+                <th>Last Name</th>
+                <th class="d-flex justify-content-end">Actions</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="user : ${listUsers}">
+                <td th:text="${user.email}"></td>
+                <td th:text="${user.firstName}"></td>
+                <td th:text="${user.lastName}"></td>
+                <td class="d-flex justify-content-end">
+                    <a href="#" class="btn btn-primary mx-2">View Details</a>
+                    <a th:if="${user.isEnabled()}" href="#"  class="btn btn-danger mx-2"
+                       th:data-userId="${user.getId()}"
+                       onclick="disableAccount(this.getAttribute('data-userId'))"
+                    >Disable</a>
+                    <a th:if="${!user.isEnabled()}" href="#" class="btn btn-success mx-2"
+                       th:data-userId="${user.getId()}"
+                       onclick="enableAccount(this.getAttribute('data-userId'))"
+                    >Enable</a>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+    <th:block th:insert="fragments/util/pagintation :: standard"/>
+
+    <script>
+        function disableAccount(userId) {
+            updateEnableStatus(userId, false);
+        }
+
+        function updateEnableStatus(userId, enabled) {
+            const suffix = enabled ? "enable" : "disable";
+            const url = "/web/users/" + userId + "/" + suffix;
+
+            const token = $("meta[name='_csrf']").attr("content");
+            const header = $("meta[name='_csrf_header']").attr("content");
+            $.ajax({
+                type: 'PUT',
+                url: url,
+                beforeSend: function (request) {
+                    request.setRequestHeader(header, token);
+                },
+                success: function (result) {
+                    console.log(result);
+                }
+            });
+        }
+
+        function enableAccount(userId) {
+            updateEnableStatus(userId, true);
+        }
+
+    </script>
+</div>
+

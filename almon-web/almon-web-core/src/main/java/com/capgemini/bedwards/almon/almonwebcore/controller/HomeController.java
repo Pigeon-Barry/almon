@@ -7,6 +7,7 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.Map;
 
 @Controller
+@RestController("/web")
 public class HomeController {
     @GetMapping({"home", "/"})
     public String home(Map<String, Object> model) {

@@ -1,0 +1,8 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org" lang="en">
+<!--/*@thymesVar id="code" type="java.lang.String"*/-->
+<!--/*@thymesVar id="message" type="java.lang.String"*/-->
+<th:block th:fragment="generic(message)">
+    <h1 class="text-center"><strong th:if="${code} != null" th:text="${code} + ' - '"/>[[${message}]]</h1>
+</th:block>

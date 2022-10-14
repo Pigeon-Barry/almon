@@ -1,17 +1,1 @@
-<!DOCTYPE html>
-<html xmlns="http://www.w3.org/1999/xhtml"
-      xmlns:th="http://www.thymeleaf.org" lang="en">
-<head>
-    <th:block th:insert="fragments/head :: head"/>
-    <title th:text="${@environment.getProperty('almon.app.name')} + '- Not Found'"></title>
-</head>
-<body>
-<div class="container-fluid">
-    <th:block th:insert="fragments/header :: header(activeTab='none')"/>
-    <!-- Main Content Start -->
-    <h1 class="text-center">404 - Page not found</h1>
-    <!-- Main Content End -->
-    <th:block th:insert="fragments/foorter :: footer"/>
-</div>
-</body>
-</html>
+<th:block th:insert="containers/error :: generic(code='404', message='Page not found')"/>

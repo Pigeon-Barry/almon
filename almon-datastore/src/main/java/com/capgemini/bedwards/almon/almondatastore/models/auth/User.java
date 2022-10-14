@@ -41,11 +41,12 @@ public class User {
     @OneToOne(fetch = FetchType.LAZY)
     private User approvedBy;
 
-    @ManyToMany(mappedBy = "users", cascade = CascadeType.ALL)
+    @ManyToMany(mappedBy = "users", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     private Set<Authority> authorities;
 
-    @ManyToMany
+    @ManyToMany(fetch = FetchType.EAGER)
     private Set<Role> roles;
+
     public User() {
 
     }

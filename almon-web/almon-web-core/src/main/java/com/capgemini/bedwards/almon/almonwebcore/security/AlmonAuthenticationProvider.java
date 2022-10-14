@@ -1,4 +1,4 @@
-package com.capgemini.bedwards.almon.almonwebcore.component;
+package com.capgemini.bedwards.almon.almonwebcore.security;
 
 import com.capgemini.bedwards.almon.almoncore.service.AuthService;
 import com.capgemini.bedwards.almon.almondatastore.models.auth.User;

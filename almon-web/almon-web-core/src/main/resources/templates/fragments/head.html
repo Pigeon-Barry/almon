@@ -2,7 +2,13 @@
       xmlns:th="http://www.thymeleaf.org" lang="en">
 <th:block th:fragment="head">
     <meta charset="UTF-8">
+    <th:block th:if="${_csrf} != null">
+        <meta id="_csrf" name="_csrf" th:content="${_csrf.token}"/>
+        <meta id="_csrf_header" name="_csrf_header" th:content="${_csrf.headerName}"/>
+    </th:block>
     <script th:src="@{/js/bootstrap.bundle.min.js}"></script>
+    <script th:src="@{/js/jquery-3.6.1.min.js}"></script>
+    <script th:src="@{/js/almon.js}"></script>
     <link th:href="@{/css/bootstrap.min.css}" rel="stylesheet"/>
     <link rel="icon" th:href="@{/img/favicon.png}" type="image/x-icon"/>
 </th:block>

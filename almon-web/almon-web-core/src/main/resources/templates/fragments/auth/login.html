@@ -1,16 +1,17 @@
 <html xmlns="http://www.w3.org/1999/xhtml"
       xmlns:th="http://www.thymeleaf.org" lang="en">
+<!--/*@thymesVar id="login" type="com.capgemini.bedwards.almon.almonwebcore.model.auth.Login"*/-->
 <div class="container" th:fragment="loginForm">
     <div class="row justify-content-center">
         <div class="col-12 col-md-8">
             <div class="card">
                 <h3 class="card-header">Login</h3>
                 <div class="card-body">
-                    <form th:action="@{/auth/login}" th:object="${login}" method="post">
+                    <form th:action="@{/web/auth/login}" th:object="${login}" method="post">
                         <div class="form-group">
                             <label for="email">Email:</label>
                             <input th:class="(${#fields.hasErrors('email')}? 'is-invalid ' : '') + 'form-control'"
-                                   type="text" id="email" placeholder="Enter Email"
+                                   type="text" id="email" placeholder="Enter Email" autocomplete="email"
                                    name="email" th:field="*{email}"/>
                             <span th:if="${#fields.hasErrors('email')}" class="invalid-feedback" role="alert">
                                     <strong th:errors="*{email}"></strong>

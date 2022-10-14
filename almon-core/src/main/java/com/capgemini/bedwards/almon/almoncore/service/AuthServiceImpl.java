@@ -8,11 +8,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Lazy;
-import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.BadCredentialsException;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.AuthenticationException;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -22,9 +18,6 @@ import java.util.HashSet;
 @Slf4j
 public class AuthServiceImpl implements AuthService {
 
-    @Autowired
-    @Lazy
-    AuthenticationProvider authenticationProvider;
     @Autowired
     UserRepository userRepository;
     @Autowired
@@ -47,11 +40,6 @@ public class AuthServiceImpl implements AuthService {
     }
 
     @Override
-    public void authenticate(String email, String password) throws AuthenticationException {
-        SecurityContextHolder.getContext().setAuthentication(authenticationProvider.authenticate(new UsernamePasswordAuthenticationToken(email, password)));
-    }
-
-    @Override
     public User register(String email, String firstname, String lastname, String password) {
         if (!checkUserExists(email)) {
             User user = userRepository.saveAndFlush(
@@ -70,7 +58,6 @@ public class AuthServiceImpl implements AuthService {
                 userRepository.saveAndFlush(user);
 
             }
-            authenticate(email, password);
             return user;
         }
         throw new BadCredentialsException("Invalid Credentials");

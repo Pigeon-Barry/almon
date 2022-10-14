@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org" lang="en">
+<th:block th:fragment="base(pageName,activeTab, mainContentFragment)">
+    <!--/*@thymesVar id="pageName" type="java.lang.String"*/-->
+    <!--/*@thymesVar id="activeTab" type="java.lang.String"*/-->
+    <!--/*@thymesVar id="mainContentFragment" type="java.lang.String"*/-->
+    <html xmlns="http://www.w3.org/1999/xhtml"
+          xmlns:th="http://www.thymeleaf.org" lang="en">
+    <head>
+        <th:block th:insert="fragments/head :: head"/>
+        <title th:text="${@environment.getProperty('almon.app.name')} + '- ' + ${pageName}"></title>
+    </head>
+    <body>
+    <div class="container-fluid">
+        <th:block th:insert="fragments/header :: header(activeTab=${activeTab})"/>
+        <!-- Main Content Start -->
+        <th:block th:if="${mainContentFragment}!=null">
+            <th:block th:insert="__${mainContentFragment}__"/>
+        </th:block>
+        <!-- Main Content End -->
+        <th:block th:insert="fragments/foorter :: footer"/>
+    </div>
+    </body>
+    </html>
+</th:block>

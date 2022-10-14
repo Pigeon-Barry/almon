@@ -1,17 +1,18 @@
 <html xmlns="http://www.w3.org/1999/xhtml"
       xmlns:th="http://www.thymeleaf.org" lang="en">
+<!--/*@thymesVar id="register" type="com.capgemini.bedwards.almon.almonwebcore.model.auth.Register"*/-->
 <div class="container" th:fragment="registerForm">
     <div class="row justify-content-center">
         <div class="col-12 col-md-8">
             <div class="card">
                 <h3 class="card-header">Register</h3>
                 <div class="card-body">
-                    <form th:action="@{/auth/register}" th:object="${register}" method="post">
+                    <form th:action="@{/web/auth/register}" th:object="${register}" method="post">
                         <div class="form-group">
                             <label for="email">Email:</label>
                             <input th:class="(${#fields.hasErrors('email')}? 'is-invalid ' : '') + 'form-control'"
                                    type="text" id="email" placeholder="Enter Email"
-                                   name="email" th:field="*{email}"/>
+                                   name="email" th:field="*{email}" autocomplete="email"/>
                             <span th:if="${#fields.hasErrors('email')}" class="invalid-feedback" role="alert">
                                     <strong th:errors="*{email}"></strong>
                                 </span>
@@ -20,7 +21,7 @@
                             <label for="firstName">First Name:</label>
                             <input th:class="(${#fields.hasErrors('firstName')}? 'is-invalid ' : '') + 'form-control'"
                                    type="text" id="firstName" placeholder="Enter First Name"
-                                   name="firstName" th:field="*{firstName}"/>
+                                   name="firstName" th:field="*{firstName}" autocomplete="firstName"/>
                             <span th:if="${#fields.hasErrors('firstName')}" class="invalid-feedback" role="alert">
                                     <strong th:errors="*{firstName}"></strong>
                                 </span>
@@ -29,7 +30,7 @@
                             <label for="lastName">Last Name:</label>
                             <input th:class="(${#fields.hasErrors('lastName')}? 'is-invalid ' : '') + 'form-control'"
                                    type="text" id="lastName" placeholder="Enter Last Name"
-                                   name="lastName" th:field="*{lastName}"/>
+                                   name="lastName" th:field="*{lastName}" autocomplete="lastName"/>
                             <span th:if="${#fields.hasErrors('lastName')}" class="invalid-feedback" role="alert">
                                     <strong th:errors="*{lastName}"></strong>
                                 </span>

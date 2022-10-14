@@ -2,13 +2,17 @@ package com.capgemini.bedwards.almon.almonwebcore.controller;
 
 import com.capgemini.bedwards.almon.almoncore.service.AuthService;
 import com.capgemini.bedwards.almon.almondatastore.models.auth.User;
+import com.capgemini.bedwards.almon.almonwebcore.security.AlmonAuthenticationProvider;
 import com.capgemini.bedwards.almon.almonwebcore.model.auth.Login;
 import com.capgemini.bedwards.almon.almonwebcore.model.auth.Register;
 import com.capgemini.bedwards.almon.almonwebcore.model.util.ScreenAlert;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.web.authentication.WebAuthenticationDetails;
 import org.springframework.security.web.authentication.logout.SecurityContextLogoutHandler;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -22,12 +26,15 @@ import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 
 @Controller
-@RequestMapping("/auth")
+@RequestMapping("/web/auth")
+@Slf4j
 public class AuthController {
 
     @Autowired
     AuthService authService;
 
+    @Autowired
+    AlmonAuthenticationProvider authenticationProvider;
     @GetMapping("/register")
     public String getRegisterForm(Register register) {
         return "/auth/register";
@@ -55,11 +62,12 @@ public class AuthController {
     }
 
     @PostMapping("/login")
-    public String login(@Valid Login login, Errors errors, Model model) {
+    public String login(@Valid Login login, Errors errors, Model model,HttpServletRequest request) {
+        log.info("Login attempted");
         if (errors.hasErrors())
             return "/auth/login";
         try {
-            authService.authenticate(login.getEmail(), login.getPassword());
+            doAutoLogin(login.getEmail(),login.getPassword(),request);
             User user = ((User) SecurityContextHolder.getContext().getAuthentication().getPrincipal());
             if (user.getApprovedBy() == null)
                 return "redirect:/auth/pendingApproval";
@@ -82,5 +90,20 @@ public class AuthController {
             model.addAttribute("screenAlerts", screenAlert);
         }
         return "redirect:/auth/login";
+    }
+
+
+    private void doAutoLogin(String username, String password, HttpServletRequest request) {
+        try {
+            // Must be called from request filtered by Spring Security, otherwise SecurityContextHolder is not updated
+            UsernamePasswordAuthenticationToken token = new UsernamePasswordAuthenticationToken(username, password);
+            token.setDetails(new WebAuthenticationDetails(request));
+            Authentication authentication = this.authenticationProvider.authenticate(token);
+            log.debug("Logging in with [{}]", authentication.getPrincipal());
+            SecurityContextHolder.getContext().setAuthentication(authentication);
+        } catch (Exception e) {
+            SecurityContextHolder.getContext().setAuthentication(null);
+            log.error("Failure in autoLogin", e);
+        }
     }
 }
