@@ -2,16 +2,22 @@ package com.capgemini.bedwards.almon.almonwebcore.controller;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.Map;
 
 @Controller
-@RestController("/web")
+@RequestMapping("/web")
 public class HomeController {
-    @GetMapping({"home", "/"})
+    @GetMapping("/home")
     public String home(Map<String, Object> model) {
         model.put("message", "Hello Ben");
         return "home";
+    }
+
+    @GetMapping
+    public String root(Map<String, Object> model) {
+        return home(model);
     }
 }

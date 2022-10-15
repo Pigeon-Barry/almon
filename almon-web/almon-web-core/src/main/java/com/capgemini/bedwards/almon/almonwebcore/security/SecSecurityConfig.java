@@ -50,11 +50,13 @@ public class SecSecurityConfig {
                 .antMatcher("/api/**")
                 .csrf().disable()
                 .addFilterBefore(new ApiKeyAuthenticationFilter(apiKeyService), UsernamePasswordAuthenticationFilter.class)
-                .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
-                .and();
+                .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
+        http
+                .antMatcher("/web/**")
+                .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.ALWAYS);
         http
                 .authorizeRequests()
-                .antMatchers("/css/**", "/js/**", "/img/**", "auth/*", "/favicon.ico", "/auth/**").permitAll()
+                .antMatchers("/web/css/**", "/web/js/**", "/web/img/**", "/web/favicon.ico", "/web/auth/**").permitAll()
                 .antMatchers("/web/auth/pendingApproval").authenticated()
                 .antMatchers("/web/admin/**").hasAnyAuthority("VIEW_ADMIN_PAGES")
                 .antMatchers("/error").permitAll()

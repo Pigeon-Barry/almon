@@ -20,6 +20,8 @@ import org.springframework.validation.Errors;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerMapping;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -47,8 +49,8 @@ public class AuthController {
         }
         User user = authService.register(register.getEmail(), register.getFirstName(), register.getLastName(), register.getPassword());
         if (user.getApprovedBy() == null)
-            return "redirect:/auth/pendingApproval";
-        return "/home";
+            return "redirect:/web/auth/pendingApproval";
+        return "redirect:/web/home";
     }
 
 
@@ -63,17 +65,16 @@ public class AuthController {
 
     @PostMapping("/login")
     public String login(@Valid Login login, Errors errors, Model model,HttpServletRequest request) {
-        log.info("Login attempted");
         if (errors.hasErrors())
             return "/auth/login";
         try {
-            doAutoLogin(login.getEmail(),login.getPassword(),request);
+            doAutoLogin(login.getEmail(),login.getPassword());
             User user = ((User) SecurityContextHolder.getContext().getAuthentication().getPrincipal());
             if (user.getApprovedBy() == null)
-                return "redirect:/auth/pendingApproval";
+                return "redirect:/web/auth/pendingApproval";
             ScreenAlert screenAlert = new ScreenAlert("Welcome " + user.getFirstName(), ScreenAlert.Type.SUCCESS);
             model.addAttribute("screenAlerts", screenAlert);
-            return "redirect:/home";
+            return "redirect:/web/home";
         } catch (AuthenticationException ignored) {
             ScreenAlert screenAlert = new ScreenAlert("Invalid Credentials", ScreenAlert.Type.ERROR);
             model.addAttribute("screenAlerts", screenAlert);
@@ -89,15 +90,13 @@ public class AuthController {
             ScreenAlert screenAlert = new ScreenAlert("Successfully Logged out", ScreenAlert.Type.SUCCESS);
             model.addAttribute("screenAlerts", screenAlert);
         }
-        return "redirect:/auth/login";
+        return "redirect:/web/auth/login";
     }
 
 
-    private void doAutoLogin(String username, String password, HttpServletRequest request) {
+    private void doAutoLogin(String username, String password) {
         try {
-            // Must be called from request filtered by Spring Security, otherwise SecurityContextHolder is not updated
             UsernamePasswordAuthenticationToken token = new UsernamePasswordAuthenticationToken(username, password);
-            token.setDetails(new WebAuthenticationDetails(request));
             Authentication authentication = this.authenticationProvider.authenticate(token);
             log.debug("Logging in with [{}]", authentication.getPrincipal());
             SecurityContextHolder.getContext().setAuthentication(authentication);

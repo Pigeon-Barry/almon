@@ -33,6 +33,7 @@ public class AlmonAuthenticationProvider implements AuthenticationProvider {
         User user = authService.getAuthenticatedUser(authentication.getName(), password);
         if (user == null)
             throw new BadCredentialsException("Invalid Credentials");
+        log.info("1");
 
         Set<String> authoritiesString = new HashSet<>();
         if (user.getAuthorities() != null)
