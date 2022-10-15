@@ -1,5 +1,6 @@
 package com.capgemini.bedwards.almon.almonwebcore.security;
 
+import com.capgemini.bedwards.almon.almoncore.services.APIKeyService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
@@ -25,9 +26,9 @@ public class SecSecurityConfig {
     DataSource dataSource;
     @Autowired
     private AlmonAuthenticationProvider authProvider;
+    @Autowired
+    private APIKeyService apiKeyService;
 
-
-    private String API_KEY = "SomeKey1234567890";
 
     @Bean
     public PasswordEncoder passwordEncoder() {
@@ -48,7 +49,7 @@ public class SecSecurityConfig {
         http
                 .antMatcher("/api/**")
                 .csrf().disable()
-                .addFilterBefore(new ApiKeyAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class)
+                .addFilterBefore(new ApiKeyAuthenticationFilter(apiKeyService), UsernamePasswordAuthenticationFilter.class)
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 .and();
         http
@@ -57,7 +58,7 @@ public class SecSecurityConfig {
                 .antMatchers("/web/auth/pendingApproval").authenticated()
                 .antMatchers("/web/admin/**").hasAnyAuthority("VIEW_ADMIN_PAGES")
                 .antMatchers("/error").permitAll()
-                .antMatchers("/**").hasAnyAuthority("ACCESS_CORE_PAGES")
+                .antMatchers("/web/**").hasAnyAuthority("ACCESS_CORE_PAGES")
                 .and()
                 .csrf().disable()
                 .cors()

@@ -19,6 +19,10 @@ public class Authority {
 
     @ManyToMany
     private Set<User> users;
+
+    @ManyToMany
+    private Set<APIKey> apiKeys;
+
     @ManyToMany
     private Set<Role> roles;
 

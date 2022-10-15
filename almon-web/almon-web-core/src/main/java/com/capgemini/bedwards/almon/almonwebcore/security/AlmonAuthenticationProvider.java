@@ -33,17 +33,16 @@ public class AlmonAuthenticationProvider implements AuthenticationProvider {
         User user = authService.getAuthenticatedUser(authentication.getName(), password);
         if (user == null)
             throw new BadCredentialsException("Invalid Credentials");
+
         Set<String> authoritiesString = new HashSet<>();
-        
         if (user.getAuthorities() != null)
             user.getAuthorities().forEach(authority -> authoritiesString.add(authority.getAuthority()));
 
         if (user.getRoles() != null)
             user.getRoles().forEach(role -> role.getAuthorities().forEach(authority -> authoritiesString.add(authority.getAuthority())));
-
-
         List<GrantedAuthority> authorities = new ArrayList<>();
         authoritiesString.forEach(authority -> authorities.add(new SimpleGrantedAuthority(authority)));
+
         return new UsernamePasswordAuthenticationToken(user, name, authorities);
     }
 

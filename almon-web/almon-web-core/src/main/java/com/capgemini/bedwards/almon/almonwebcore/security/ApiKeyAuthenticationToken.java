@@ -1,5 +1,6 @@
 package com.capgemini.bedwards.almon.almonwebcore.security;
 
+import com.capgemini.bedwards.almon.almondatastore.models.auth.APIKey;
 import org.springframework.security.authentication.AbstractAuthenticationToken;
 import org.springframework.security.core.GrantedAuthority;
 
@@ -7,9 +8,9 @@ import java.util.Collection;
 
 public class ApiKeyAuthenticationToken extends AbstractAuthenticationToken {
 
-    private final String API_KEY;
+    private final APIKey API_KEY;
 
-    public ApiKeyAuthenticationToken(String apiKey, Collection<? extends GrantedAuthority> authorities) {
+    public ApiKeyAuthenticationToken(APIKey apiKey, Collection<? extends GrantedAuthority> authorities) {
         super(authorities);
         this.API_KEY = apiKey;
         setAuthenticated(true);
