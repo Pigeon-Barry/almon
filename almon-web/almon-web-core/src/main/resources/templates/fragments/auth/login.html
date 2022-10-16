@@ -11,7 +11,7 @@
                         <div class="form-group">
                             <label for="email">Email:</label>
                             <input th:class="(${#fields.hasErrors('email')}? 'is-invalid ' : '') + 'form-control'"
-                                   type="text" id="email" placeholder="Enter Email" autocomplete="email"
+                                   type="text" id="email" placeholder="Enter Email" autocomplete="on"
                                    name="email" th:field="*{email}"/>
                             <span th:if="${#fields.hasErrors('email')}" class="invalid-feedback" role="alert">
                                     <strong th:errors="*{email}"></strong>

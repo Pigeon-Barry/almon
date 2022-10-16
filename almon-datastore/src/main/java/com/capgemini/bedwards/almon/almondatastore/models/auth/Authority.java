@@ -1,6 +1,7 @@
 package com.capgemini.bedwards.almon.almondatastore.models.auth;
 
 import lombok.*;
+import org.springframework.lang.Nullable;
 
 import javax.persistence.*;
 import java.io.Serializable;
@@ -9,14 +10,14 @@ import java.util.Set;
 @Entity
 @Data
 @AllArgsConstructor
-@EqualsAndHashCode
 @ToString
 @Table(name = "authorities")
 public class Authority {
 
     @Id
     private String authority;
-
+    @Nullable
+    private String description;
     @ManyToMany
     private Set<User> users;
 
