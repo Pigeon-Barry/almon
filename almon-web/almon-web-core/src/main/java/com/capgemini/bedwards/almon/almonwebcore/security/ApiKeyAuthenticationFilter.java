@@ -34,7 +34,6 @@ public class ApiKeyAuthenticationFilter implements Filter {
         if (request instanceof HttpServletRequest && response instanceof HttpServletResponse) {
             String userApiKey = getApiKeyFromRequest((HttpServletRequest) request);
             if (userApiKey != null) {
-
                 APIKey apiKey = this.API_KEY_SERVICE.getAPIKey(userApiKey);
                 if (apiKey != null) {
                     log.info("API Key: " + apiKey);

@@ -3,6 +3,7 @@ package com.capgemini.bedwards.almon.almondatastore.models.auth;
 import lombok.*;
 import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.Type;
+import org.springframework.lang.Nullable;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
@@ -26,6 +27,8 @@ public class User {
 
     @NotNull
     private String email;
+    @Nullable
+    private String phoneNumber;
 
     @NotNull
     private String firstName;
@@ -49,5 +52,9 @@ public class User {
 
     public User() {
 
+    }
+
+    public String getFullName(){
+        return this.firstName + " " + this.lastName;
     }
 }

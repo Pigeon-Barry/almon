@@ -1,0 +1,142 @@
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org" lang="en"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<div th:fragment="user">
+    <!--/*@thymesVar id="user" type="com.capgemini.bedwards.almon.almondatastore.models.auth.User"*/-->
+    <!--/*@thymesVar id="roles" type="java.util.List"*/-->
+    <section style="background-color: #eee;">
+        <div class="container py-5">
+            <div class="row">
+                <div class="col-lg-4">
+                    <div class="card mb-4">
+                        <div class="card-body text-center">
+                            <img th:src="@{/web/img/ProfilePicturePlaceholder.png}"
+                                 alt="avatar"
+                                 class="rounded-circle img-fluid" style="width: 150px;">
+                            <h5 class="my-3" th:text="${user.getFullName()}"></h5>
+                            <!--                        <p class="text-muted mb-1">Placeholder</p>-->
+                            <!--                        <p class="text-muted mb-4">Placeholder</p>-->
+                            <div class="d-flex justify-content-center mb-2">
+                                <button type="button" class="btn btn-primary">Placeholder</button>
+                                <button type="button" class="btn btn-outline-primary ms-1">Placeholder</button>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card mb-4 mb-lg-0">
+                        <div class="card-body p-0">
+                            <ul class="list-group list-group-flush rounded-3">
+                                <li class="list-group-item d-flex justify-content-between align-items-center">
+                                    <p class="mb-0"><strong>Roles</strong></p>
+                                    <div class="justify-content-end" sec:authorize="hasAuthority('ASSIGN_ROLES')">
+                                        <button class="btn btn-primary" type="button"
+                                                data-bs-toggle="modal" data-bs-target="#updateRolesModel">Add Role
+                                        </button>
+                                    </div>
+                                </li>
+                                <li class="list-group-item d-flex justify-content-between"
+                                    th:each="role : ${user.getRoles()}"
+                                    th:id="'roleContainer_' + ${role.getName()}">
+                                    <p class="mb-0" th:text="${role.getName()}"></p>
+                                    <div class="justify-content-end" sec:authorize="hasAuthority('ASSIGN_ROLES')">
+                                        <button type="button" class="btn btn-danger"
+                                                th:data-role="${role.getName()}"
+                                                onclick="deleteRole(this.getAttribute('data-role'))">
+                                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16"
+                                                 fill="currentColor" class="bi bi-trash" viewBox="0 0 16 16">
+                                                <path d="M5.5 5.5A.5.5 0 0 1 6 6v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm2.5 0a.5.5 0 0 1 .5.5v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm3 .5a.5.5 0 0 0-1 0v6a.5.5 0 0 0 1 0V6z"></path>
+                                                <path fill-rule="evenodd"
+                                                      d="M14.5 3a1 1 0 0 1-1 1H13v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V4h-.5a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1H6a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1h3.5a1 1 0 0 1 1 1v1zM4.118 4 4 4.059V13a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V4.059L11.882 4H4.118zM2.5 3V2h11v1h-11z"></path>
+                                            </svg>
+                                        </button>
+                                    </div>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-8">
+                    <div class="card mb-4">
+                        <div class="card-body">
+                            <div class="row">
+                                <div class="col-sm-3">
+                                    <p class="mb-0">Full Name</p>
+                                </div>
+                                <div class="col-sm-9">
+                                    <p class="text-muted mb-0" th:text="${user.getFullName()}"></p>
+                                </div>
+                            </div>
+                            <hr>
+                            <div class="row">
+                                <div class="col-sm-3">
+                                    <p class="mb-0">Email</p>
+                                </div>
+                                <div class="col-sm-9">
+                                    <p class="text-muted mb-0" th:text="${user.email}"></p>
+                                </div>
+                            </div>
+                            <hr>
+                            <div class="row">
+                                <div class="col-sm-3">
+                                    <p class="mb-0">Phone</p>
+                                </div>
+                                <div class="col-sm-9">
+                                    <p class="text-muted mb-0" th:text="${user.phoneNumber ?: 'N.A'}"></p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="card mb-4 mb-md-0">
+                                <div class="card-body">
+                                    <ul class="list-group list-group-flush rounded-3">
+                                        <li class="list-group-item d-flex justify-content-start align-items-center p-3">
+                                            <i class="fas fa-globe fa-lg text-warning"></i>
+                                            <p class="mb-0"><strong>Alert Subscriptions</strong></p>
+                                        </li>
+                                        <!--                                    <li class="list-group-item d-flex justify-content-start p-3" th:each="role : ${user.getRoles()}">-->
+                                        <!--                                        <i class="fab fa-github fa-lg" style="color: #333333;"></i>-->
+                                        <!--                                        <p class="mb-0" th:text="${role.getName()}"></p>-->
+                                        <!--                                    </li>-->
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <th:block th:include="fragments/users/updateRolesModal :: updateRolesModel(${user},${roles},updateRolesModel)"
+              sec:authorize="hasAuthority('ASSIGN_ROLES')"/>
+
+    <script sec:authorize="hasAuthority('ASSIGN_ROLES')">
+        const userId = "[[${user.getId()}]]";
+
+        function deleteRole(role) {
+            if (!confirmationPrompt("Role Deletion", "Are you sure you want remove role " + role + " form user [[${user.getEmail()}]]"))
+                return;
+
+            const url = "/web/users/" + userId + "/roles/" + role;
+            const token = $("meta[name='_csrf']").attr("content");
+            const header = $("meta[name='_csrf_header']").attr("content");
+            $.ajax({
+                type: 'DELETE',
+                url: url,
+                beforeSend: function (request) {
+                    request.setRequestHeader(header, token);
+                },
+                complete: function (xhr, textStatus) {
+                    console.log(xhr.status);
+                    if (xhr.status === 202) {
+                        $("#roleContainer_" + role).remove();
+                        location.reload();
+                    } else {
+                        showAlertError("Failed to remove role. Please consult an administrator");
+                    }
+                }
+            });
+        }
+    </script>
+</div>

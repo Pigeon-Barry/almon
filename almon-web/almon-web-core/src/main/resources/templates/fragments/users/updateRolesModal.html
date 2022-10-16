@@ -1,0 +1,120 @@
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org" lang="en"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+
+<!--/*@thymesVar id="user" type="com.capgemini.bedwards.almon.almondatastore.models.auth.User"*/-->
+<!--/*@thymesVar id="modelId" type="java.lang.String"*/-->
+<!--/*@thymesVar id="roles" type="java.util.List"*/-->
+<!--/*@thymesVar id="role" type="com.capgemini.bedwards.almon.almondatastore.models.auth.Role"*/-->
+<div th:fragment="updateRolesModel(user,roles,modelId)">
+    <!-- Modal -->
+    <!-- Modal -->
+    <div class="modal fade" th:id="${modelId}" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
+         aria-labelledby="staticBackdropLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg modal-dialog-centered modal-dialog-scrollable">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="staticBackdropLabel">Role Assignment for user:
+                        [[${user.getEmail()}]]</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <h2>Role Assignment</h2>
+                    <input class="form-control" th:id="${modelId} + 'SearchBox'" type="text" placeholder="Search...">
+                    <br>
+                    <table class="table table-bordered table-striped" th:id="${modelId} + 'SearchTable'">
+                        <thead>
+                        <tr>
+                            <th>Role</th>
+                            <th>Description</th>
+                            <th>Granted</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr th:each="role : ${roles}">
+                            <td th:text="${role.getName()}"></td>
+                            <td th:text="${role.getDescription()}"></td>
+                            <td>
+                                <div class="form-check form-switch">
+                                    <input
+                                            th:data-original="${user.getRoles().contains(role)}"
+                                            class="form-check-input" type="checkbox"
+                                            th:checked="${user.getRoles().contains(role)}" th:name="${role.getName()}"
+                                            th:id="'ROLE_INPUT_' + ${role.getName()}">
+                                    <label class="form-check-label"
+                                           th:for="'ROLE_INPUT_' + ${role.getName()}">Granted</label>
+                                </div>
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Cancel</button>
+                    <button type="button" class="btn btn-primary" onclick="save()">Save</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <script>
+        const inputBoxId = "[[${modelId}]]SearchBox";
+        const inputSearchTableId = "[[${modelId}]]SearchTable";
+        const modalId = "[[${modelId}]]";
+        $(document).ready(function () {
+            $("#" + inputBoxId).on("keyup", function () {
+                const value = $(this).val().toLowerCase();
+                $("#" + inputSearchTableId + " tr").filter(function () {
+                    $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
+                });
+            });
+        });
+
+        function save() {
+            const formDataMap = new Map();
+            $("#" + inputSearchTableId + " input").each(function () {
+                const inputField = $(this);
+                if ($(this).is(":checked") !== inputField.data("original")) {
+                    let updateType;
+                    if($(this).is(":checked"))
+                        updateType = "GRANT";
+                    else
+                        updateType = "REMOVE";
+                    formDataMap.set(inputField.attr("name"), updateType);
+                }
+            });
+            if(formDataMap.size === 0){
+                showAlertInfo("No roles were detected as being changed.");
+                $("#" + modalId).modal('toggle');
+                return;
+            }
+            if (!confirmationPrompt("Role Amendment", "Are you sure you want to update the roles of  user [[${user.getEmail()}]]?"))
+                return;
+            console.log(formDataMap);
+
+            const url = "/web/users/" + userId + "/roles";
+            const token = $("meta[name='_csrf']").attr("content");
+            const header = $("meta[name='_csrf_header']").attr("content");
+
+            console.log(JSON.stringify(Object.fromEntries(formDataMap)));
+            $.ajax({
+                type: 'PUT',
+                url: url,
+                contentType: 'application/json',
+                data: JSON.stringify(Object.fromEntries(formDataMap)),
+                beforeSend: function (request) {
+                    request.setRequestHeader(header, token);
+                },
+                complete: function (xhr, textStatus) {
+                    console.log(xhr.status);
+                    if (xhr.status === 202) {
+                        location.reload();
+                    } else {
+                        showAlertError("Failed to Update roles. Please consult an administrator");
+                    }
+                }
+            });
+        }
+    </script>
+</div>

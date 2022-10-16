@@ -6,18 +6,20 @@ import lombok.NoArgsConstructor;
 import lombok.ToString;
 
 import javax.persistence.*;
+import javax.validation.constraints.Null;
 import java.util.Set;
 
 @Entity
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-@ToString
 @Table(name = "roles")
 public class Role {
 
     @Id
-    private String roleName;
+    private String name;
+    @Null
+    private String description;
 
     @ManyToMany(mappedBy = "roles")
     private Set<User> users;
@@ -27,6 +29,11 @@ public class Role {
 
     @Override
     public int hashCode() {
-        return roleName.hashCode();
+        return this.name.hashCode();
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        return this.name.equals(obj);
     }
 }

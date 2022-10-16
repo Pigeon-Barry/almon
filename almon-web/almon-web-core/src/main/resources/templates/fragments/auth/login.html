@@ -39,4 +39,8 @@
             </div>
         </div>
     </div>
+
+    <script th:if="${param.invalid}">
+        showAlertError("Invalid Credentials.");
+    </script>
 </div>

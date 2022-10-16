@@ -5,7 +5,7 @@
 <!--/*@thymesVar id="screenAlert" type="com.capgemini.bedwards.almon.almonwebcore.model.util.ScreenAlert"*/-->
 <div class="sticky-top" style="z-index: 10000;" th:fragment="header (activeTab)">
 
-    <div>
+    <div id="alerts">
         <th:block th:each="screenAlert: ${screenAlerts}">
             <div th:class="'alert alert-dismissible fade show ' +  ${screenAlert.getHtmlClass()}" role="alert">
                 [[${screenAlert.getMessage()}]]

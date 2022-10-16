@@ -1,12 +1,16 @@
 package com.capgemini.bedwards.almon.almonwebcore.security;
 
 import com.capgemini.bedwards.almon.almoncore.services.APIKeyService;
+import com.capgemini.bedwards.almon.almonwebcore.exception.handling.WebExceptionHandler;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.actuate.trace.http.HttpTraceRepository;
+import org.springframework.boot.actuate.trace.http.InMemoryHttpTraceRepository;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
+import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
@@ -20,6 +24,7 @@ import javax.sql.DataSource;
 @Configuration
 @Slf4j
 @EnableWebSecurity
+@EnableGlobalMethodSecurity(prePostEnabled = true)
 public class SecSecurityConfig {
 
     @Autowired
@@ -28,6 +33,8 @@ public class SecSecurityConfig {
     private AlmonAuthenticationProvider authProvider;
     @Autowired
     private APIKeyService apiKeyService;
+    @Autowired
+    private WebExceptionHandler webExceptionHandler;
 
 
     @Bean
@@ -35,7 +42,11 @@ public class SecSecurityConfig {
         return new BCryptPasswordEncoder();
     }
 
-
+    @Bean
+    public HttpTraceRepository htttpTraceRepository()
+    {
+        return new InMemoryHttpTraceRepository();
+    }
     @Bean
     public AuthenticationManager authManager(HttpSecurity http) throws Exception {
         AuthenticationManagerBuilder authenticationManagerBuilder =
@@ -47,12 +58,23 @@ public class SecSecurityConfig {
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http
+                .exceptionHandling()
+
+                .accessDeniedHandler(webExceptionHandler);
+        http
                 .antMatcher("/api/**")
                 .csrf().disable()
                 .addFilterBefore(new ApiKeyAuthenticationFilter(apiKeyService), UsernamePasswordAuthenticationFilter.class)
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
         http
                 .antMatcher("/web/**")
+                .exceptionHandling()
+                .accessDeniedHandler(webExceptionHandler)
+                .and()
+                .csrf()
+                .and()
+                .cors()
+                .and()
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.ALWAYS);
         http
                 .authorizeRequests()
@@ -61,9 +83,6 @@ public class SecSecurityConfig {
                 .antMatchers("/web/admin/**").hasAnyAuthority("VIEW_ADMIN_PAGES")
                 .antMatchers("/error").permitAll()
                 .antMatchers("/web/**").hasAnyAuthority("ACCESS_CORE_PAGES")
-                .and()
-                .csrf().disable()
-                .cors()
                 .and()
                 .formLogin()
                 .defaultSuccessUrl("/web/home")

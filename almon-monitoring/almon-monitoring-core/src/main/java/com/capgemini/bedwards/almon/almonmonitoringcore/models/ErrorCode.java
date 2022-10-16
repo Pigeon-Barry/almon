@@ -4,7 +4,7 @@ public enum ErrorCode {
     NOT_FOUND("Not Found"),
     INTERNAL_SERVER_ERROR("Please contact system administrators"),
 
-    ;
+    UNAUTHORISED("You are not authorised to view this page");
 
     private final String ERROR_DESCRIPTION;
 

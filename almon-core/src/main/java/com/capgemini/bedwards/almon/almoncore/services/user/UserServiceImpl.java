@@ -1,4 +1,4 @@
-package com.capgemini.bedwards.almon.almoncore.services;
+package com.capgemini.bedwards.almon.almoncore.services.user;
 
 import com.capgemini.bedwards.almon.almoncore.exceptions.NotFoundException;
 import com.capgemini.bedwards.almon.almondatastore.models.auth.User;
@@ -41,5 +41,13 @@ public class UserServiceImpl implements UserService {
     @Override
     public void disableAccount(UUID userId) {
         updateEnabledStatus(userId, false);
+    }
+
+    @Override
+    public User getUserById(UUID userId) {
+        Optional<User> userOptional = userRepository.findById(userId);
+        if (userOptional.isPresent())
+            return userOptional.get();
+        throw new NotFoundException("User with ID: " + userId + " not found");
     }
 }

@@ -1,4 +1,4 @@
-package com.capgemini.bedwards.almon.almoncore.services;
+package com.capgemini.bedwards.almon.almoncore.services.user;
 
 import com.capgemini.bedwards.almon.almondatastore.models.auth.User;
 import org.springframework.data.domain.Page;
@@ -10,4 +10,5 @@ public interface UserService {
 
     void enableAccount(UUID userId);
     void disableAccount(UUID userId);
+    User getUserById(UUID userId);
 }
