@@ -4,6 +4,7 @@ import lombok.*;
 import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.Type;
 import org.springframework.lang.Nullable;
+import org.springframework.security.core.userdetails.UserDetails;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
@@ -17,7 +18,7 @@ import java.util.UUID;
 @AllArgsConstructor
 @Builder
 @Table(name = "users")
-public class User {
+public class User  {
 
     @Id
     @GeneratedValue(generator = "uuid")
@@ -38,7 +39,7 @@ public class User {
     @NotNull
     private String password;
     @NotNull
-    private boolean enabled;
+    private boolean enabled = false;
 
     @JoinColumn(name = "approvedBy_id")
     @OneToOne(fetch = FetchType.LAZY)

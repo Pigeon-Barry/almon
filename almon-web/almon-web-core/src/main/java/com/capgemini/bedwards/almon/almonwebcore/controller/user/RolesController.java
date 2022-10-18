@@ -18,7 +18,7 @@ import java.util.Map;
 import java.util.UUID;
 
 @Controller
-@RequestMapping("/web/users/{userId}/roles")
+@RequestMapping("/web/user/{userId}/roles")
 @Slf4j
 @PreAuthorize("hasAuthority('ASSIGN_ROLES')")
 public class RolesController {

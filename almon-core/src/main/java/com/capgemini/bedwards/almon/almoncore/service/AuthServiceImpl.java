@@ -1,5 +1,6 @@
 package com.capgemini.bedwards.almon.almoncore.service;
 
+import com.capgemini.bedwards.almon.almondatastore.models.auth.Role;
 import com.capgemini.bedwards.almon.almondatastore.models.auth.User;
 import com.capgemini.bedwards.almon.almondatastore.repository.auth.AuthorityRepository;
 import com.capgemini.bedwards.almon.almondatastore.repository.auth.RoleRepository;
@@ -13,6 +14,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.HashSet;
+import java.util.Set;
 
 @Service
 @Slf4j
@@ -42,23 +44,19 @@ public class AuthServiceImpl implements AuthService {
     @Override
     public User register(String email, String firstname, String lastname, String password) {
         if (!checkUserExists(email)) {
-            User user = userRepository.saveAndFlush(
+            Set<Role> roles = new HashSet<>();
+            roles.add(roleRepository.findById("USER").orElse(null));
+
+            if (email.equalsIgnoreCase(rootAccount))
+                roles.add(roleRepository.findById("ADMIN").orElse(null));
+            return userRepository.saveAndFlush(
                     User.builder()
                             .email(email)
                             .firstName(firstname)
                             .lastName(lastname)
                             .password(passwordEncoder.encode(password))
+                            .roles(roles)
                             .build());
-
-            if (email.equalsIgnoreCase(rootAccount)) {
-                user.setApprovedBy(user);
-                user.setRoles(new HashSet<>());
-                user.getRoles().add(roleRepository.findById("ADMIN").orElse(null));
-                user.getRoles().add(roleRepository.findById("USER").orElse(null));
-                userRepository.saveAndFlush(user);
-
-            }
-            return user;
         }
         throw new BadCredentialsException("Invalid Credentials");
     }

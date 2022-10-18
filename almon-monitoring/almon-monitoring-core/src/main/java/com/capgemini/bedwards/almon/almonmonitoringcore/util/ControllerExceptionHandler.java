@@ -1,5 +1,6 @@
 package com.capgemini.bedwards.almon.almonmonitoringcore.util;
 
+import com.capgemini.bedwards.almon.almoncore.exceptions.InvalidPermissionException;
 import com.capgemini.bedwards.almon.almoncore.exceptions.NotFoundException;
 import com.capgemini.bedwards.almon.almonmonitoringcore.models.ErrorCode;
 import com.capgemini.bedwards.almon.almonmonitoringcore.models.ErrorResponse;
@@ -32,5 +33,10 @@ public class ControllerExceptionHandler {
     public ErrorResponse internalServerError(Exception exception, WebRequest request) {
         log.error("Unexpected error has occurred", exception);
         return new ErrorResponse(ErrorCode.INTERNAL_SERVER_ERROR);
+    }
+    @ExceptionHandler(value = {InvalidPermissionException.class})
+    @ResponseStatus(value = HttpStatus.UNAUTHORIZED)
+    public ErrorResponse invalidPermissionException(NotFoundException exception, WebRequest request) {
+        return new ErrorResponse(ErrorCode.UNAUTHORISED, exception.getMessage());
     }
 }

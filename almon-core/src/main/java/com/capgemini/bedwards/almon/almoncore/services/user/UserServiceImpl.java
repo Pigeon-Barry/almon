@@ -1,5 +1,6 @@
 package com.capgemini.bedwards.almon.almoncore.services.user;
 
+import com.capgemini.bedwards.almon.almoncore.exceptions.InvalidPermissionException;
 import com.capgemini.bedwards.almon.almoncore.exceptions.NotFoundException;
 import com.capgemini.bedwards.almon.almondatastore.models.auth.User;
 import com.capgemini.bedwards.almon.almondatastore.repository.auth.UserRepository;
@@ -7,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
 import javax.validation.constraints.NotNull;
@@ -25,22 +27,44 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public void enableAccount(@NotNull UUID userId) {
-        updateEnabledStatus(userId, true);
+    public Page<User> findPaginatedWithFilter(int pageNo, int pageSize, Boolean enabled) {
+        if (enabled == null)
+            return findApprovalsPaginated(pageNo, pageSize);
+        Pageable pageable = PageRequest.of(pageNo - 1, pageSize);
+        return userRepository.findUsersByEnabledEquals(pageable, enabled);
     }
 
-    private void updateEnabledStatus(@NotNull UUID userId, boolean enabled) {
-        Optional<User> userOptional = userRepository.findById(userId);
-        if (!userOptional.isPresent())
-            throw new NotFoundException("User with id '" + userId + "' could not be located");
-        User user = userOptional.get();
+    @Override
+    public Page<User> findApprovalsPaginated(int pageNo, int pageSize) {
+        Pageable pageable = PageRequest.of(pageNo - 1, pageSize);
+        return userRepository.findAll(pageable);
+    }
+
+    @Override
+    public void enableAccount(@NotNull User authorizer, @NotNull UUID userId) {
+        updateEnabledStatus(authorizer, userId, true);
+    }
+
+    private void updateEnabledStatus(@NotNull User authoriser, @NotNull UUID userId, boolean enabled) {
+        if (authoriser != null && authoriser.getId().equals(userId))
+            throw new InvalidPermissionException("Can not disable/enable your own account");
+        User user = getUser(userId);
         user.setEnabled(enabled);
+        user.setApprovedBy(authoriser);
         userRepository.save(user);
     }
 
     @Override
-    public void disableAccount(UUID userId) {
-        updateEnabledStatus(userId, false);
+    public User getUser(@NotNull UUID userId) {
+        Optional<User> userOptional = userRepository.findById(userId);
+        if (!userOptional.isPresent())
+            throw new NotFoundException("User with id '" + userId + "' could not be located");
+        return userOptional.get();
+    }
+
+    @Override
+    public void disableAccount(@NotNull User authorizer, UUID userId) {
+        updateEnabledStatus(authorizer, userId, false);
     }
 
     @Override

@@ -118,7 +118,7 @@
             if (!confirmationPrompt("Role Deletion", "Are you sure you want remove role " + role + " form user [[${user.getEmail()}]]"))
                 return;
 
-            const url = "/web/users/" + userId + "/roles/" + role;
+            const url = "/web/user/" + userId + "/roles/" + role;
             const token = $("meta[name='_csrf']").attr("content");
             const header = $("meta[name='_csrf_header']").attr("content");
             $.ajax({

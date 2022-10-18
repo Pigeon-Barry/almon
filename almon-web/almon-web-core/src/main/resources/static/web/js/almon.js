@@ -6,24 +6,43 @@ function updateQueryParam(name, value) {
     }
 }
 
+function toggleQueryParam(name) {
+    if ('URLSearchParams' in window) {
+        const searchParams = new URLSearchParams(window.location.search);
+        if (searchParams.has(name))
+            deleteQueryParam(name);
+        else
+            updateQueryParam(name, true);
+    }
+}
+
+function deleteQueryParam(name) {
+    if ('URLSearchParams' in window) {
+        const searchParams = new URLSearchParams(window.location.search);
+        searchParams.delete(name);
+        window.location.search = searchParams.toString();
+    }
+}
+
 
 function showAlertSuccess(message) {
-    showAlert(message,"alert-success")
+    showAlert(message, "alert-success")
 }
 
 function showAlertError(message) {
-    showAlert(message,"alert-danger")
+    showAlert(message, "alert-danger")
 }
 
-function showAlertInfo(message){
-    showAlert(message,"alert-info")
+function showAlertInfo(message) {
+    showAlert(message, "alert-info")
 }
+
 function showAlert(message, alertType) {
     $('#alerts').append(
-        '<div class="alert alert-dismissible fade show '.concat(alertType,'">',message,' <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button></div>')
+        '<div class="alert alert-dismissible fade show '.concat(alertType, '">', message, ' <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button></div>')
     );
 }
 
-function confirmationPrompt(title, message){
+function confirmationPrompt(title, message) {
     return confirm(message);//TODO Make more pretty
 }

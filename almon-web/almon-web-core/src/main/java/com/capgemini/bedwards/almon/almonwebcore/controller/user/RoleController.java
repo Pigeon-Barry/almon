@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import java.util.UUID;
 
 @Controller
-@RequestMapping("/web/users/{userId}/roles/{roleName}")
+@RequestMapping("/web/user/{userId}/roles/{roleName}")
 @Slf4j
 @PreAuthorize("hasAuthority('ASSIGN_ROLES')")
 public class RoleController {

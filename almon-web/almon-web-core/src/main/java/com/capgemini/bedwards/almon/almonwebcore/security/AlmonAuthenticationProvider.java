@@ -10,13 +10,10 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 @Component
 @Slf4j
@@ -34,15 +31,14 @@ public class AlmonAuthenticationProvider implements AuthenticationProvider {
         if (user == null)
             throw new BadCredentialsException("Invalid Credentials");
 
-        Set<String> authoritiesString = new HashSet<>();
-        if (user.getAuthorities() != null)
-            user.getAuthorities().forEach(authority -> authoritiesString.add(authority.getAuthority()));
-
-        if (user.getRoles() != null)
-            user.getRoles().forEach(role -> role.getAuthorities().forEach(authority -> authoritiesString.add(authority.getAuthority())));
         List<GrantedAuthority> authorities = new ArrayList<>();
-        authoritiesString.forEach(authority -> authorities.add(new SimpleGrantedAuthority(authority)));
+        if (user.isEnabled()) {
+            if (user.getAuthorities() != null)
+                authorities.addAll(user.getAuthorities());
 
+            if (user.getRoles() != null)
+                user.getRoles().forEach(role -> authorities.addAll(role.getAuthorities()));
+        }
         return new UsernamePasswordAuthenticationToken(user, name, authorities);
     }
 

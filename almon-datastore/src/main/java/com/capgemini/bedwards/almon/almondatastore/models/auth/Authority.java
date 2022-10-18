@@ -2,6 +2,7 @@ package com.capgemini.bedwards.almon.almondatastore.models.auth;
 
 import lombok.*;
 import org.springframework.lang.Nullable;
+import org.springframework.security.core.GrantedAuthority;
 
 import javax.persistence.*;
 import java.io.Serializable;
@@ -12,7 +13,7 @@ import java.util.Set;
 @AllArgsConstructor
 @ToString
 @Table(name = "authorities")
-public class Authority {
+public class Authority implements GrantedAuthority {
 
     @Id
     private String authority;

@@ -1,10 +1,9 @@
 INSERT INTO db_almon.authorities (authority)
 VALUES ('ACCESS_CORE_PAGES'),
-       ('APPROVE_REGISTRATIONS'),
+       ('ENABLE_DISABLE_ACCOUNTS'),
        ('VIEW_ADMIN_PAGES'),
        ('VIEW_ALL_USERS'),
        ('UPDATE_OTHER_USERS'),,
-       ('DISABLE_ACCOUNTS'),
        ('ASSIGN_ROLES'),
 ;
 
@@ -25,9 +24,8 @@ VALUES ('ACCESS_CORE_PAGES', 'USER');
 
 INSERT INTO db_almon.authorities_roles (authorities_authority, roles_name)
 VALUES ('VIEW_ADMIN_PAGES', 'ADMIN'),
-       ('APPROVE_REGISTRATIONS', 'ADMIN'),
+       ('ENABLE_DISABLE_ACCOUNTS', 'ADMIN'),
        ('VIEW_ALL_USERS', 'ADMIN'),
        ('UPDATE_OTHER_USERS', 'ADMIN'),
-       ('DISABLE_ACCOUNTS', 'ADMIN'),
        ('ASSIGN_ROLES', 'ADMIN'),
 ;
