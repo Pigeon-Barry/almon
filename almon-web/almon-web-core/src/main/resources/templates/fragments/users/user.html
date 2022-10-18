@@ -20,6 +20,22 @@
                                 <button type="button" class="btn btn-primary">Placeholder</button>
                                 <button type="button" class="btn btn-outline-primary ms-1">Placeholder</button>
                             </div>
+                            <div>
+                                <th:block sec:authorize="hasAuthority('ENABLE_DISABLE_ACCOUNTS')">
+                                    <button th:if="${user.isEnabled()}" href="#" class="btn btn-danger mx-2"
+                                            th:data-userId="${user.getId()}"
+                                            th:disabled="${#authentication.principal.getId().equals(user.getId())}"
+                                            onclick="disableAccount(this.getAttribute('data-userId'),this)"
+                                    >Disable Account
+                                    </button>
+                                    <button th:if="${!user.isEnabled()}" href="#" class="btn btn-success mx-2"
+                                            th:data-userId="${user.getId()}"
+                                            th:disabled="${#authentication.principal.getId().equals(user.getId())}"
+                                            onclick="enableAccount(this.getAttribute('data-userId'),this)"
+                                    >Enable Account
+                                    </button>
+                                </th:block>
+                            </div>
                         </div>
                     </div>
                     <div class="card mb-4 mb-lg-0">
@@ -134,6 +150,50 @@
                         location.reload();
                     } else {
                         showAlertError("Failed to remove role. Please consult an administrator");
+                    }
+                }
+            });
+        }
+    </script>
+    <script sec:authorize="hasAuthority('ENABLE_DISABLE_ACCOUNTS')">
+        function disableAccount(userId, domElement) {
+            updateEnableStatus(domElement, userId, false);
+        }
+
+        function enableAccount(userId, domElement) {
+            updateEnableStatus(domElement, userId, true);
+        }
+
+        function updateEnableStatus(domElement, userId, enabled) {
+            const suffix = enabled ? "enable" : "disable";
+
+            if (!confirmationPrompt(suffix + " - Account", "Are you sure you want to " + suffix + " this account?"))
+                return;
+
+            const url = "/web/user/" + userId + "/" + suffix;
+            const token = $("meta[name='_csrf']").attr("content");
+            const header = $("meta[name='_csrf_header']").attr("content");
+            $.ajax({
+                type: 'PUT',
+                url: url,
+                beforeSend: function (request) {
+                    request.setRequestHeader(header, token);
+                },
+                complete: function (xhr, textStatus) {
+                    if (xhr.status === 202) {
+                        showAlertSuccess("Account Successfully " + suffix + "d.");
+                        const dom = $(domElement);
+                        if (enabled) {
+                            dom.removeClass("btn-success").addClass("btn-danger");
+                            dom.attr("onclick", "disableAccount(this.getAttribute('data-userId'),this)");
+                            dom.text("Disable Account")
+                        } else {
+                            dom.removeClass("btn-danger").addClass("btn-success");
+                            dom.attr("onclick", "enableAccount(this.getAttribute('data-userId'),this)");
+                            dom.text("Enable Account")
+                        }
+                    } else {
+                        showAlertError("Failed to " + suffix + " account. Please consult an administrator");
                     }
                 }
             });
