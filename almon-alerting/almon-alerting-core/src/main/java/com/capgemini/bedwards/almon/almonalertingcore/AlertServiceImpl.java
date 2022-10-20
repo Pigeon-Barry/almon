@@ -1,8 +1,8 @@
-package com.capgemini.bedwards.almon.almoncore.services;
+package com.capgemini.bedwards.almon.almonalertingcore;
 
 import com.capgemini.bedwards.almon.almoncore.exceptions.NotFoundException;
-import com.capgemini.bedwards.almon.almondatastore.models.Alert;
-import com.capgemini.bedwards.almon.almondatastore.models.AlertType;
+import com.capgemini.bedwards.almon.almondatastore.models.alerts.Alert;
+import com.capgemini.bedwards.almon.almondatastore.models.alerts.AlertType;
 import com.capgemini.bedwards.almon.almondatastore.repository.AlertRepository;
 import com.capgemini.bedwards.almon.almondatastore.repository.AlertTypeRepository;
 import lombok.extern.slf4j.Slf4j;
@@ -11,6 +11,8 @@ import org.springframework.stereotype.Service;
 
 import javax.validation.constraints.NotNull;
 import java.time.LocalDateTime;
+import java.util.Optional;
+import java.util.UUID;
 
 @Service
 @Slf4j
@@ -23,15 +25,17 @@ public class AlertServiceImpl implements AlertService {
     private AlertTypeRepository alertTypeRepository;
 
     @Override
-    public Alert saveAlert(@NotNull AlertType alertType, String message, LocalDateTime timeOfAlert) throws NotFoundException {
+    public Alert saveAlert(@NotNull UUID alertTypeId, String message, LocalDateTime timeOfAlert) throws NotFoundException {
         if (timeOfAlert == null)
             timeOfAlert = LocalDateTime.now();
-        if (!alertTypeRepository.existsById(alertType.getName())) {
-            throw new NotFoundException("Alert type: '" + alertType.getName() + "' does not exist");
+        Optional<AlertType> alertTypeOptional = alertTypeRepository.findById(alertTypeId);
+        if (!alertTypeOptional.isPresent()) {
+            throw new NotFoundException("Alert type: '" + alertTypeId + "' does not exist");
         }
 
+
         Alert alert = Alert.builder()
-                .alertType(alertType)
+                .alertType(alertTypeOptional.get())
                 .message(message)
                 .alertReceivedTime(timeOfAlert)
                 .build();

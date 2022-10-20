@@ -1,4 +1,4 @@
-package com.capgemini.bedwards.almon.almondatastore.models;
+package com.capgemini.bedwards.almon.almondatastore.models.alerts;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -27,7 +27,7 @@ public class Alert {
     private UUID id;
 
     @NotNull
-    @JoinColumn(name = "alertType", referencedColumnName = "name")
+    @JoinColumn(name = "alertTypeId", referencedColumnName = "id")
     @OneToOne()
     private AlertType alertType;
 

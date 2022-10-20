@@ -19,6 +19,11 @@
             <version>${almon-core.version}</version>
         </dependency>
         <dependency>
+            <groupId>com.capgemini.bedwards.almon</groupId>
+            <artifactId>almon-alerting-core</artifactId>
+            <version>${almon-alerting.version}</version>
+        </dependency>
+        <dependency>
             <groupId>org.springframework</groupId>
             <artifactId>spring-web</artifactId>
         </dependency>

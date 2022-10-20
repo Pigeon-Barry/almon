@@ -1,10 +1,10 @@
-package com.capgemini.bedwards.almon.almonmonitoringapi.controllers;
+package com.capgemini.bedwards.almon.almonmonitoringapi.controllers.admin;
 
-import com.capgemini.bedwards.almon.almonalertingcore.AlertService;
+import com.capgemini.bedwards.almon.almonalertingcore.APIAlertTypeService;
 import com.capgemini.bedwards.almon.almoncore.exceptions.NotFoundException;
+import com.capgemini.bedwards.almon.almondatastore.models.alerts.APIAlertType;
 import com.capgemini.bedwards.almon.almondatastore.models.alerts.Alert;
-import com.capgemini.bedwards.almon.almonmonitoringapi.models.AlertRequestBody;
-import com.capgemini.bedwards.almon.almonmonitoringapi.models.AlertResponseBody;
+import com.capgemini.bedwards.almon.almonmonitoringapi.models.APIAlertTypeRequestBody;
 import com.capgemini.bedwards.almon.almonmonitoringcore.models.ErrorResponse;
 import io.swagger.v3.oas.annotations.OpenAPIDefinition;
 import io.swagger.v3.oas.annotations.Operation;
@@ -17,25 +17,21 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 
-
 @OpenAPIDefinition(
-        info = @Info(title = "ALMON - Passive Alerts",
+        info = @Info(title = "ALMON - Alert Types",
                 version = "1.0.0")
 )
 @RestController
-@RequestMapping("${almon.api.prefix}/alert")
-public class PassiveAlertController {
+@RequestMapping("${almon.api.prefix}/alertType")
+public class AlertTypeController {
 
     @Autowired
-    AlertService alertService;
+    APIAlertTypeService apiAlertTypeService;
 
     @Operation(
             summary = "POST - new passive alert",
@@ -49,11 +45,16 @@ public class PassiveAlertController {
                     @ApiResponse(responseCode = "503", description = "Downstream error",
                             content = @Content(mediaType = MediaType.APPLICATION_JSON_VALUE, array = @ArraySchema(schema = @Schema(implementation = ErrorResponse.class)))),
             })
-    @RequestMapping(method = RequestMethod.POST)
-    public ResponseEntity<AlertResponseBody> triggerAlert(
-            @Valid @RequestBody @NotNull AlertRequestBody alertRequestBody) throws NotFoundException {
+    @PostMapping(value = "/api")
+    public ResponseEntity<APIAlertType> createNewAPIAlertType(
+            @Valid @RequestBody @NotNull APIAlertTypeRequestBody apiAlertTypeRequestBody) throws NotFoundException {
         return new ResponseEntity<>(
-                AlertResponseBody.from(this.alertService.saveAlert(alertRequestBody.getAlertTypeId(), alertRequestBody.getMessage(), alertRequestBody.getTime())),
-                HttpStatus.CREATED);
+                this.apiAlertTypeService.saveAlertType(
+                        apiAlertTypeRequestBody.getName(),
+                        apiAlertTypeRequestBody.getDescription(),
+                        apiAlertTypeRequestBody.getUrl(),
+                        apiAlertTypeRequestBody.getExpectedStatus()),
+        HttpStatus.CREATED);
     }
+
 }
