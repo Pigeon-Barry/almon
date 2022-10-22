@@ -1,8 +1,7 @@
 package com.capgemini.bedwards.almon.almonalertingcore;
 
 import com.capgemini.bedwards.almon.almoncore.exceptions.NotFoundException;
-import com.capgemini.bedwards.almon.almondatastore.models.alerts.Alert;
-import com.capgemini.bedwards.almon.almondatastore.models.alerts.AlertType;
+import com.capgemini.bedwards.almon.almondatastore.models.alert.Alert;
 
 import javax.validation.constraints.NotNull;
 import java.time.LocalDateTime;

@@ -8,7 +8,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
 import javax.validation.constraints.NotNull;
@@ -51,12 +50,12 @@ public class UserServiceImpl implements UserService {
         User user = getUser(userId);
         user.setEnabled(enabled);
         user.setApprovedBy(authoriser);
-        userRepository.save(user);
+        save(user);
     }
 
     @Override
     public User getUser(@NotNull UUID userId) {
-        Optional<User> userOptional = userRepository.findById(userId);
+        Optional<User> userOptional = findById(userId);
         if (!userOptional.isPresent())
             throw new NotFoundException("User with id '" + userId + "' could not be located");
         return userOptional.get();
@@ -69,9 +68,19 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public User getUserById(UUID userId) {
-        Optional<User> userOptional = userRepository.findById(userId);
+        Optional<User> userOptional = findById(userId);
         if (userOptional.isPresent())
             return userOptional.get();
         throw new NotFoundException("User with ID: " + userId + " not found");
+    }
+
+    @Override
+    public Optional<User> findById(UUID userId) {
+        return userRepository.findById(userId);
+    }
+
+    @Override
+    public User save(User user) {
+        return userRepository.save(user);
     }
 }

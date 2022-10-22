@@ -1,14 +1,16 @@
 package com.capgemini.bedwards.almon.almondatastore.models.auth;
 
-import lombok.*;
+import com.capgemini.bedwards.almon.almondatastore.models.service.Service;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.Setter;
 import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.Type;
 import org.springframework.lang.Nullable;
-import org.springframework.security.core.userdetails.UserDetails;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
-import java.util.List;
 import java.util.Set;
 import java.util.UUID;
 
@@ -18,7 +20,7 @@ import java.util.UUID;
 @AllArgsConstructor
 @Builder
 @Table(name = "users")
-public class User  {
+public class User {
 
     @Id
     @GeneratedValue(generator = "uuid")
@@ -42,7 +44,7 @@ public class User  {
     private boolean enabled = false;
 
     @JoinColumn(name = "approvedBy_id")
-    @OneToOne(fetch = FetchType.LAZY)
+    @OneToOne(fetch = FetchType.EAGER)
     private User approvedBy;
 
     @ManyToMany(mappedBy = "users", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
@@ -51,11 +53,23 @@ public class User  {
     @ManyToMany(fetch = FetchType.EAGER)
     private Set<Role> roles;
 
+    @OneToMany
+    private Set<Service> ownerOfServices;
+
+    @ManyToMany(mappedBy = "users", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    private Set<Service> services;
+
     public User() {
 
     }
 
-    public String getFullName(){
+    public String getFullName() {
         return this.firstName + " " + this.lastName;
     }
+
+
+    public boolean isAuthorityFromRole(Authority authority) {
+        return getRoles().stream().anyMatch(role -> role.getAuthorities().contains(authority)) ;
+    }
+
 }

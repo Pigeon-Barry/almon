@@ -2,6 +2,7 @@ package com.capgemini.bedwards.almon.almonwebcore.controller.user;
 
 import com.capgemini.bedwards.almon.almoncore.services.user.UserService;
 import com.capgemini.bedwards.almon.almondatastore.models.auth.User;
+import com.capgemini.bedwards.almon.almonwebcore.controller.WebController;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -18,7 +19,7 @@ import java.util.List;
 @RequestMapping("/web/users")
 @Slf4j
 @PreAuthorize("isAuthenticated()")
-public class UsersController {
+public class UsersWebController  extends WebController {
     @Autowired
     UserService userService;
 

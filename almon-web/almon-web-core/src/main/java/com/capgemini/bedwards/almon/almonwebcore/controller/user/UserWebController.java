@@ -1,9 +1,12 @@
 package com.capgemini.bedwards.almon.almonwebcore.controller.user;
 
+import com.capgemini.bedwards.almon.almoncore.service.AuthorityService;
 import com.capgemini.bedwards.almon.almoncore.services.user.RoleService;
 import com.capgemini.bedwards.almon.almoncore.services.user.UserService;
+import com.capgemini.bedwards.almon.almondatastore.models.auth.Authority;
 import com.capgemini.bedwards.almon.almondatastore.models.auth.Role;
 import com.capgemini.bedwards.almon.almondatastore.models.auth.User;
+import com.capgemini.bedwards.almon.almonwebcore.controller.WebController;
 import com.capgemini.bedwards.almon.almonwebcore.model.util.Util;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,18 +28,25 @@ import java.util.UUID;
 @RequestMapping("/web/user/{userId}")
 @Slf4j
 @PreAuthorize("isAuthenticated()")
-public class UserController {
+public class UserWebController  extends WebController {
     @Autowired
     UserService userService;
+    @Autowired
+    AuthorityService authorityService;
     @Autowired
     RoleService roleService;
 
     @GetMapping()
+
+    @PreAuthorize("hasAuthority('VIEW_ALL_USERS') || #userId == authentication.principal.id")
     public String getUsersList(@PathVariable(name = "userId") UUID userId, Model model) {
+
         User user = userService.getUserById(userId);
         List<Role> roles = roleService.getAllRoles();
+        List<Authority> authorities = authorityService.getAllAuthorities();
         model.addAttribute("user", user);
         model.addAttribute("roles", roles);
+        model.addAttribute("authorities", authorities);
         return "users/user";
     }
 

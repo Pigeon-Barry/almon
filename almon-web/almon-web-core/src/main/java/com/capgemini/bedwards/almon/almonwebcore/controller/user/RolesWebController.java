@@ -5,6 +5,7 @@ import com.capgemini.bedwards.almon.almoncore.services.user.RoleService;
 import com.capgemini.bedwards.almon.almoncore.services.user.UserService;
 import com.capgemini.bedwards.almon.almondatastore.models.auth.UpdateType;
 import com.capgemini.bedwards.almon.almondatastore.models.auth.User;
+import com.capgemini.bedwards.almon.almonwebcore.controller.WebController;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -21,7 +22,7 @@ import java.util.UUID;
 @RequestMapping("/web/user/{userId}/roles")
 @Slf4j
 @PreAuthorize("hasAuthority('ASSIGN_ROLES')")
-public class RolesController {
+public class RolesWebController  extends WebController {
     @Autowired
     UserService userService;
     @Autowired

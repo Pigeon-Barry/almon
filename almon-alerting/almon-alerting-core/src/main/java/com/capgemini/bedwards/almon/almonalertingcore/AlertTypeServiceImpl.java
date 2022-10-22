@@ -1,6 +1,6 @@
 package com.capgemini.bedwards.almon.almonalertingcore;
 
-import com.capgemini.bedwards.almon.almondatastore.models.alerts.APIAlertType;
+import com.capgemini.bedwards.almon.almondatastore.models.alert.APIAlertType;
 import com.capgemini.bedwards.almon.almondatastore.repository.AlertTypeRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;

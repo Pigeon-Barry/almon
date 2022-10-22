@@ -2,6 +2,7 @@ package com.capgemini.bedwards.almon.almonwebcore.controller.user;
 
 
 import com.capgemini.bedwards.almon.almoncore.services.user.RoleService;
+import com.capgemini.bedwards.almon.almonwebcore.controller.WebController;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -19,7 +20,7 @@ import java.util.UUID;
 @RequestMapping("/web/user/{userId}/roles/{roleName}")
 @Slf4j
 @PreAuthorize("hasAuthority('ASSIGN_ROLES')")
-public class RoleController {
+public class RoleWebController  extends WebController {
 
     @Autowired
     RoleService roleService;

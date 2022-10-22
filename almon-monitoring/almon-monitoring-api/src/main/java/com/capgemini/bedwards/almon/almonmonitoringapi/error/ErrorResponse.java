@@ -1,4 +1,4 @@
-package com.capgemini.bedwards.almon.almonmonitoringcore.models;
+package com.capgemini.bedwards.almon.almonmonitoringapi.error;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

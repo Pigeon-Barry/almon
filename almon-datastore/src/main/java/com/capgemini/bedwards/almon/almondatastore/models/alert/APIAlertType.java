@@ -1,8 +1,7 @@
-package com.capgemini.bedwards.almon.almondatastore.models.alerts;
+package com.capgemini.bedwards.almon.almondatastore.models.alert;
 
 import lombok.*;
 import lombok.experimental.SuperBuilder;
-import org.springframework.http.HttpStatus;
 
 import javax.persistence.DiscriminatorValue;
 import javax.persistence.Entity;

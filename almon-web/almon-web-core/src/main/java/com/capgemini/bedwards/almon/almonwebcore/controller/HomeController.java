@@ -11,7 +11,7 @@ import java.util.Map;
 @Controller
 @RequestMapping("/web")
 @PreAuthorize("isAuthenticated()")
-public class HomeController {
+public class HomeController  extends WebController{
     @GetMapping("/home")
     public String home(Map<String, Object> model) {
         model.put("message", "Hello Ben");

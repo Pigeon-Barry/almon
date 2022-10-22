@@ -14,6 +14,9 @@
                 <a class="nav-link text-danger" href="#">Dashboards</a>
             </li>
 
+            <li th:class="nav-item">
+                <a th:class="'nav-link ' +  (${activeTab =='services'} ? 'active' : '')" href="/web/services">Services</a>
+            </li>
 
             <li class="nav-item dropdown" sec:authorize="hasAuthority('VIEW_ADMIN_PAGES')">
                 <a  th:class="'nav-link dropdown-toggle ' +  (${activeTab =='admin'} ? 'active' : '')" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">

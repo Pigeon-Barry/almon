@@ -23,12 +23,12 @@ public class RoleServiceImpl implements RoleService {
     RoleRepository roleRepository;
 
     @Autowired
-    UserRepository userRepository;
+    UserService userService;
 
     @SuppressWarnings("SuspiciousMethodCalls")
     @Override
     public void removeRole(UUID userId, String roleName) {
-        Optional<User> userOptional = userRepository.findById(userId);
+        Optional<User> userOptional = userService.findById(userId);
         if (!userOptional.isPresent())
             throw new NotFoundException("User with ID: " + userId + " could not be located");
         User user = userOptional.get();
@@ -38,7 +38,7 @@ public class RoleServiceImpl implements RoleService {
         Optional<Role> roleToDeleteOptional = user.getRoles().stream().filter(role -> role.getName().equals(roleName)).findFirst();
         if (roleToDeleteOptional.isPresent()) {
             user.getRoles().remove(roleToDeleteOptional.get());
-            userRepository.save(user);
+            userService.save(user);
         } else {
             throw new NotFoundException("User does not have role " + roleName);
         }
@@ -51,7 +51,7 @@ public class RoleServiceImpl implements RoleService {
 
     @Override
     public void updateRoles(User user, Map<String, UpdateType> rolesToUpdate) {
-        List<Role> roles = roleRepository.findAll();
+        List<Role> roles = getAllRoles();
         roles.forEach(role -> {
             UpdateType updateType = rolesToUpdate.getOrDefault(role.getName(), null);
             if (updateType == null) {
@@ -63,6 +63,6 @@ public class RoleServiceImpl implements RoleService {
             else
                 throw new RuntimeException("Update type " + updateType + " does not have any actions assigned to it");
         });
-        userRepository.save(user);
+        userService.save(user);
     }
 }

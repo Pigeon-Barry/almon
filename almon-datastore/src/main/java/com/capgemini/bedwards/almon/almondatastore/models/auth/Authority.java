@@ -11,7 +11,7 @@ import java.util.Set;
 @Entity
 @Data
 @AllArgsConstructor
-@ToString
+@Builder
 @Table(name = "authorities")
 public class Authority implements GrantedAuthority {
 
@@ -19,13 +19,13 @@ public class Authority implements GrantedAuthority {
     private String authority;
     @Nullable
     private String description;
-    @ManyToMany
+    @ManyToMany(fetch = FetchType.EAGER)
     private Set<User> users;
 
-    @ManyToMany
+    @ManyToMany(fetch = FetchType.EAGER)
     private Set<APIKey> apiKeys;
 
-    @ManyToMany
+    @ManyToMany(fetch = FetchType.EAGER)
     private Set<Role> roles;
 
     public Authority() {
@@ -36,7 +36,10 @@ public class Authority implements GrantedAuthority {
     public int hashCode() {
         return authority.hashCode();
     }
-
+    @Override
+    public boolean equals(Object obj) {
+        return authority.equals(obj);
+    }
 
     @Embeddable
     @Data
@@ -47,5 +50,14 @@ public class Authority implements GrantedAuthority {
         @ManyToOne
         @JoinColumn(name = "user_id", nullable = false)
         private User user;
+    }
+
+
+    @Override
+    public String toString() {
+        return "Authority{" +
+                "authority='" + authority + '\'' +
+                ", description='" + description + '\'' +
+                '}';
     }
 }

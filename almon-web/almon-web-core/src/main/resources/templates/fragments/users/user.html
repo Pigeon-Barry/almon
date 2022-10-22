@@ -1,8 +1,10 @@
+-
 <html xmlns="http://www.w3.org/1999/xhtml"
       xmlns:th="http://www.thymeleaf.org" lang="en"
       xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 <div th:fragment="user">
     <!--/*@thymesVar id="user" type="com.capgemini.bedwards.almon.almondatastore.models.auth.User"*/-->
+    <!--/*@thymesVar id="authority" type="com.capgemini.bedwards.almon.almondatastore.models.auth.Authority"*/-->
     <!--/*@thymesVar id="roles" type="java.util.List"*/-->
     <section style="background-color: #eee;">
         <div class="container py-5">
@@ -69,6 +71,25 @@
                             </ul>
                         </div>
                     </div>
+                    <br>
+                    <div class="card mb-4 mb-lg-0" sec:authorize="hasAuthority('ASSIGN_PERMISSIONS')">
+                        <div class="card-body p-0">
+                            <ul class="list-group list-group-flush rounded-3">
+                                <li class="list-group-item d-flex justify-content-between align-items-center">
+                                    <p class="mb-0"><strong>Permissions</strong></p>
+                                    <div class="justify-content-end">
+                                        <button class="btn btn-primary" type="button"
+                                                data-bs-toggle="modal" data-bs-target="#updateAuthorityModel">View
+                                            Permission
+                                        </button>
+                                    </div>
+                                </li>
+                                <li class="list-group-item"   th:each="authority : ${user.getAuthorities()}">
+                                    <p class="mb-0" th:text="${authority.getAuthority()}"></p>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
                 </div>
                 <div class="col-lg-8">
                     <div class="card mb-4">
@@ -126,6 +147,11 @@
 
     <th:block th:include="fragments/users/updateRolesModal :: updateRolesModel(${user},${roles},updateRolesModel)"
               sec:authorize="hasAuthority('ASSIGN_ROLES')"/>
+
+
+    <th:block
+            th:include="fragments/users/updateAuthorityModal :: updateAuthorityModel(${user},${authorities},updateAuthorityModel)"
+            sec:authorize="hasAuthority('ASSIGN_PERMISSIONS')"/>
 
     <script sec:authorize="hasAuthority('ASSIGN_ROLES')">
         const userId = "[[${user.getId()}]]";

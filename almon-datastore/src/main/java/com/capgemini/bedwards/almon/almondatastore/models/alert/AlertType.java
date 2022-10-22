@@ -1,5 +1,6 @@
-package com.capgemini.bedwards.almon.almondatastore.models.alerts;
+package com.capgemini.bedwards.almon.almondatastore.models.alert;
 
+import com.capgemini.bedwards.almon.almondatastore.models.service.Service;
 import lombok.*;
 import lombok.experimental.SuperBuilder;
 import org.hibernate.annotations.GenericGenerator;
@@ -31,6 +32,11 @@ public class AlertType {
     protected String name;
 
     protected String description;
+
+    @ManyToOne
+    @NotNull
+    @JoinColumn(name = "service_id", nullable = false)
+    protected Service service;
 
     public AlertType() {
 

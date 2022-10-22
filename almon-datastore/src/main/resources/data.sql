@@ -3,8 +3,11 @@ VALUES ('ACCESS_CORE_PAGES'),
        ('ENABLE_DISABLE_ACCOUNTS'),
        ('VIEW_ADMIN_PAGES'),
        ('VIEW_ALL_USERS'),
-       ('UPDATE_OTHER_USERS'),,
+       ('UPDATE_OTHER_USERS'),
        ('ASSIGN_ROLES'),
+       ('ASSIGN_PERMISSIONS'),
+       ('CREATE_SERVICE'),
+       ('VIEW_ALL_SERVICES'),
 ;
 
 INSERT INTO db_almon.roles (name)
@@ -28,4 +31,7 @@ VALUES ('VIEW_ADMIN_PAGES', 'ADMIN'),
        ('VIEW_ALL_USERS', 'ADMIN'),
        ('UPDATE_OTHER_USERS', 'ADMIN'),
        ('ASSIGN_ROLES', 'ADMIN'),
+       ('CREATE_SERVICE', 'ADMIN'),
+       ('VIEW_ALL_SERVICES', 'ADMIN'),
+       ('ASSIGN_PERMISSIONS','ADMIN'),
 ;

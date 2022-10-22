@@ -1,4 +1,4 @@
-package com.capgemini.bedwards.almon.almonmonitoringcore.models;
+package com.capgemini.bedwards.almon.almonmonitoringapi.error;
 
 public enum ErrorCode {
     NOT_FOUND("Not Found"),

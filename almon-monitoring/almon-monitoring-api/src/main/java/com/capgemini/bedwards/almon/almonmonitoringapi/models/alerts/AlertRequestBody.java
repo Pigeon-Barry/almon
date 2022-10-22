@@ -1,6 +1,5 @@
-package com.capgemini.bedwards.almon.almonmonitoringapi.models;
+package com.capgemini.bedwards.almon.almonmonitoringapi.models.alerts;
 
-import com.capgemini.bedwards.almon.almondatastore.models.alerts.AlertType;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Getter;
 

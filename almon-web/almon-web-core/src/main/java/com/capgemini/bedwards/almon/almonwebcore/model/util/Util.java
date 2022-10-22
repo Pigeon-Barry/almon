@@ -14,11 +14,17 @@ public class Util {
     public static Authentication getAuthentication() {
         return SecurityContextHolder.getContext().getAuthentication();
     }
+
     public static void setAuthentication(Authentication authentication) {
-         SecurityContextHolder.getContext().setAuthentication(authentication);
+        SecurityContextHolder.getContext().setAuthentication(authentication);
     }
 
     public static void clearAuthentication() {
         SecurityContextHolder.clearContext();
+    }
+
+    public static boolean hasAuthority(String authority) {
+        return getAuthentication().getAuthorities().stream()
+                .anyMatch(grantedAuthority -> grantedAuthority.getAuthority().equals(authority));
     }
 }

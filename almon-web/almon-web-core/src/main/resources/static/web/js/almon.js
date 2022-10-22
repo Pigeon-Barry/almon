@@ -47,7 +47,9 @@ function confirmationPrompt(title, message) {
     return confirm(message);//TODO Make more pretty
 }
 
-
+function redirect(url){
+    window.location = url;
+}
 
 
 $( document ).ready(function() {

@@ -1,7 +1,7 @@
-package com.capgemini.bedwards.almon.almonmonitoringapi.models;
+package com.capgemini.bedwards.almon.almonmonitoringapi.models.alerts;
 
 
-import com.capgemini.bedwards.almon.almondatastore.models.alerts.Alert;
+import com.capgemini.bedwards.almon.almondatastore.models.alert.Alert;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 

@@ -2,10 +2,10 @@ package com.capgemini.bedwards.almon.almonmonitoringapi.controllers.admin;
 
 import com.capgemini.bedwards.almon.almonalertingcore.APIAlertTypeService;
 import com.capgemini.bedwards.almon.almoncore.exceptions.NotFoundException;
-import com.capgemini.bedwards.almon.almondatastore.models.alerts.APIAlertType;
-import com.capgemini.bedwards.almon.almondatastore.models.alerts.Alert;
-import com.capgemini.bedwards.almon.almonmonitoringapi.models.APIAlertTypeRequestBody;
-import com.capgemini.bedwards.almon.almonmonitoringcore.models.ErrorResponse;
+import com.capgemini.bedwards.almon.almondatastore.models.alert.APIAlertType;
+import com.capgemini.bedwards.almon.almondatastore.models.alert.Alert;
+import com.capgemini.bedwards.almon.almonmonitoringapi.models.alerts.APIAlertTypeRequestBody;
+import com.capgemini.bedwards.almon.almonmonitoringapi.error.ErrorResponse;
 import io.swagger.v3.oas.annotations.OpenAPIDefinition;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.info.Info;

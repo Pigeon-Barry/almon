@@ -1,0 +1,55 @@
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org" lang="en">
+<!--/*@thymesVar id="serviceRequestBody" type="com.capgemini.bedwards.almon.almonmonitoringapi.models.services.ServiceRequestBody"*/-->
+<div class="container" th:fragment="create">
+    <div class="row justify-content-center">
+        <div class="col-12 col-md-8">
+            <div class="card">
+                <h3 class="card-header">Create Service</h3>
+                <div class="card-body">
+                    <form th:action="@{/web/services/create}" th:object="${serviceRequestBody}" method="post">
+                        <div class="form-group required">
+                            <label for="key" class="control-label">Key:</label>
+                            <input
+                                    oninput="this.value = this.value.toUpperCase()"
+                                    th:class="(${#fields.hasErrors('key')}? 'is-invalid ' : '') + 'form-control'"
+                                    type="text" id="key" placeholder="Enter Key"
+                                    name="key" th:field="*{key}"/>
+                            <span th:if="${#fields.hasErrors('key')}" class="invalid-feedback" role="alert">
+                                    <strong th:errors="*{key}"></strong>
+                            </span>
+                        </div>
+                        <div class="form-group required">
+                            <label for="name" class="control-label">Name:</label>
+                            <input
+                                    th:class="(${#fields.hasErrors('name')}? 'is-invalid ' : '') + 'form-control'"
+                                    type="text" id="name" placeholder="Enter Service Name"
+                                    name="name" th:field="*{name}"/>
+                            <span th:if="${#fields.hasErrors('name')}" class="invalid-feedback" role="alert">
+                                    <strong th:errors="*{name}"></strong>
+                            </span>
+                        </div>
+
+
+                        <div class="form-group">
+                            <label for="description" class="control-label">Description:</label>
+                            <textarea th:class="(${#fields.hasErrors('description')}? 'is-invalid ' : '') + 'form-control'" id="description" rows="3"
+                                      placeholder="Enter Service Description"
+                                      th:field="*{description}"
+                            ></textarea>
+
+                            <span th:if="${#fields.hasErrors('description')}" class="invalid-feedback" role="alert">
+                                    <strong th:errors="*{description}"></strong>
+                            </span>
+                        </div>
+
+                        <br/>
+                        <div class="form-group">
+                            <button type="submit" class="form-control btn-block btn btn-primary">Create Service</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

@@ -27,7 +27,7 @@ import javax.validation.Valid;
 @Controller
 @RequestMapping("/web/auth")
 @Slf4j
-public class AuthController {
+public class AuthController  extends WebController{
 
     @Autowired
     AuthService authService;
@@ -77,9 +77,7 @@ public class AuthController {
         try {
             doAutoLogin(login.getEmail(), login.getPassword());
             User user = Util.getAuthenticatedUser();
-            log.error("1");
             if (user.getApprovedBy() == null) {
-                log.error("2");
                 return "redirect:/web/auth/pendingApproval";
             }
             if (!user.isEnabled())

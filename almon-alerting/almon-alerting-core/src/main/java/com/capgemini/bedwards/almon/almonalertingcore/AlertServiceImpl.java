@@ -1,8 +1,8 @@
 package com.capgemini.bedwards.almon.almonalertingcore;
 
 import com.capgemini.bedwards.almon.almoncore.exceptions.NotFoundException;
-import com.capgemini.bedwards.almon.almondatastore.models.alerts.Alert;
-import com.capgemini.bedwards.almon.almondatastore.models.alerts.AlertType;
+import com.capgemini.bedwards.almon.almondatastore.models.alert.Alert;
+import com.capgemini.bedwards.almon.almondatastore.models.alert.AlertType;
 import com.capgemini.bedwards.almon.almondatastore.repository.AlertRepository;
 import com.capgemini.bedwards.almon.almondatastore.repository.AlertTypeRepository;
 import lombok.extern.slf4j.Slf4j;

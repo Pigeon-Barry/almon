@@ -1,4 +1,4 @@
-package com.capgemini.bedwards.almon.almondatastore.models.alerts;
+package com.capgemini.bedwards.almon.almondatastore.models.alert;
 
 import lombok.Getter;
 import lombok.Setter;

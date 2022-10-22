@@ -4,21 +4,21 @@
 
 <!--/*@thymesVar id="user" type="com.capgemini.bedwards.almon.almondatastore.models.auth.User"*/-->
 <!--/*@thymesVar id="modelId" type="java.lang.String"*/-->
-<!--/*@thymesVar id="roles" type="java.util.List"*/-->
-<!--/*@thymesVar id="role" type="com.capgemini.bedwards.almon.almondatastore.models.auth.Role"*/-->
-<div th:fragment="updateRolesModel(user,roles,modelId)">
-    <!-- Role Modal -->
+<!--/*@thymesVar id="authorities" type="java.util.List"*/-->
+<!--/*@thymesVar id="authority" type="com.capgemini.bedwards.almon.almondatastore.models.auth.Authority"*/-->
+<div th:fragment="updateAuthorityModel(user,authorities,modelId)">
+    <!-- Authority Modal -->
     <div class="modal fade" th:id="${modelId}" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
          aria-labelledby="staticBackdropLabel" aria-hidden="true">
         <div class="modal-dialog modal-lg modal-dialog-centered modal-dialog-scrollable">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title" id="staticBackdropLabel">Role Assignment for user:
+                    <h5 class="modal-title" id="staticBackdropLabel">Permission Assignment for user:
                         [[${user.getEmail()}]]</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
-                    <h2>Role Assignment</h2>
+                    <h2>Permission Assignment</h2>
                     <input class="form-control" th:id="${modelId} + 'SearchBox'" type="text" placeholder="Search...">
                     <br>
                     <table class="table table-bordered table-striped" th:id="${modelId} + 'SearchTable'">
@@ -30,19 +30,29 @@
                         </tr>
                         </thead>
                         <tbody>
-                        <tr th:each="role : ${roles}">
-                            <td th:text="${role.getName()}"></td>
-                            <td th:text="${role.getDescription()}"></td>
+                        <tr th:each="authority : ${authorities}">
+                            <td th:text="${authority.getAuthority()}"></td>
+                            <td th:text="${authority.getDescription()}"></td>
                             <td>
-                                <div class="form-check form-switch">
-                                    <input
-                                            th:data-original="${user.getRoles().contains(role)}"
-                                            class="form-check-input" type="checkbox"
-                                            th:checked="${user.getRoles().contains(role)}" th:name="${role.getName()}"
-                                            th:id="'ROLE_INPUT_' + ${role.getName()}">
-                                    <label class="form-check-label"
-                                           th:for="'ROLE_INPUT_' + ${role.getName()}">Granted</label>
-                                </div>
+                                <th:block
+                                        th:with="grantedFromRole=${user.isAuthorityFromRole(authority)}">
+                                    <th:block th:if="${grantedFromRole}">
+                                        <p>Granted from Role</p>
+                                    </th:block>
+                                    <th:block th:if="${!grantedFromRole}">
+                                        <div class="form-check form-switch">
+                                            <input
+                                                    th:data-original="${user.getAuthorities().contains(authority)}"
+                                                    class="form-check-input" type="checkbox"
+                                                    th:checked="${user.getAuthorities().contains(authority)}"
+                                                    th:name="${authority.getAuthority()}"
+                                                    th:id="'AUTHORITY_INPUT_' + ${authority.getAuthority()}">
+                                            <label class="form-check-label"
+                                                   th:for="'AUTHORITY_INPUT_' + ${authority.getAuthority()}">Granted</label>
+                                        </div>
+                                    </th:block>
+                                </th:block>
+
                             </td>
                         </tr>
                         </tbody>
@@ -58,13 +68,13 @@
 
 
     <script>
-        const inputBoxId = "[[${modelId}]]SearchBox";
-        const inputSearchTableId = "[[${modelId}]]SearchTable";
-        const modalId = "[[${modelId}]]";
+        const permissionInputBoxId = "[[${modelId}]]SearchBox";
+        const permissionInputSearchTableId = "[[${modelId}]]SearchTable";
+        const permissionModalId = "[[${modelId}]]";
         $(document).ready(function () {
-            $("#" + inputBoxId).on("keyup", function () {
+            $("#" + permissionInputBoxId).on("keyup", function () {
                 const value = $(this).val().toLowerCase();
-                $("#" + inputSearchTableId + " tr").filter(function () {
+                $("#" + permissionInputSearchTableId + " tr").filter(function () {
                     $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
                 });
             });
@@ -72,27 +82,27 @@
 
         function save() {
             const formDataMap = new Map();
-            $("#" + inputSearchTableId + " input").each(function () {
+            $("#" + permissionInputSearchTableId + " input").each(function () {
                 const inputField = $(this);
                 if ($(this).is(":checked") !== inputField.data("original")) {
                     let updateType;
-                    if($(this).is(":checked"))
+                    if ($(this).is(":checked"))
                         updateType = "GRANT";
                     else
                         updateType = "REMOVE";
                     formDataMap.set(inputField.attr("name"), updateType);
                 }
             });
-            if(formDataMap.size === 0){
-                showAlertInfo("No roles were detected as being changed.");
-                $("#" + modalId).modal('toggle');
+            if (formDataMap.size === 0) {
+                showAlertInfo("No permissions were detected as being changed.");
+                $("#" + permissionModalId).modal('toggle');
                 return;
             }
-            if (!confirmationPrompt("Role Amendment", "Are you sure you want to update the roles of  user [[${user.getEmail()}]]?"))
+            if (!confirmationPrompt("Permission Amendment", "Are you sure you want to update the Permissions of  user [[${user.getEmail()}]]?"))
                 return;
             console.log(formDataMap);
 
-            const url = "/web/user/" + userId + "/roles";
+            const url = "/web/user/" + userId + "/permissions";
             const token = $("meta[name='_csrf']").attr("content");
             const header = $("meta[name='_csrf_header']").attr("content");
 
@@ -110,7 +120,7 @@
                     if (xhr.status === 202) {
                         location.reload();
                     } else {
-                        showAlertError("Failed to Update roles. Please consult an administrator");
+                        showAlertError("Failed to Update Permissions. Please consult an administrator");
                     }
                 }
             });

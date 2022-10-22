@@ -1,6 +1,6 @@
 package com.capgemini.bedwards.almon.almondatastore.repository;
 
-import com.capgemini.bedwards.almon.almondatastore.models.alerts.AlertType;
+import com.capgemini.bedwards.almon.almondatastore.models.alert.AlertType;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
