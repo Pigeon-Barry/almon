@@ -4,6 +4,7 @@ import com.capgemini.bedwards.almon.almoncore.exceptions.InvalidPermissionExcept
 import com.capgemini.bedwards.almon.almoncore.exceptions.NotFoundException;
 import com.capgemini.bedwards.almon.almondatastore.models.auth.User;
 import com.capgemini.bedwards.almon.almondatastore.repository.auth.UserRepository;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -15,6 +16,7 @@ import java.util.Optional;
 import java.util.UUID;
 
 @Service
+@Slf4j
 public class UserServiceImpl implements UserService {
     @Autowired
     UserRepository userRepository;
@@ -47,6 +49,7 @@ public class UserServiceImpl implements UserService {
     private void updateEnabledStatus(@NotNull User authoriser, @NotNull UUID userId, boolean enabled) {
         if (authoriser != null && authoriser.getId().equals(userId))
             throw new InvalidPermissionException("Can not disable/enable your own account");
+        log.info((enabled ? "Enabling" : "Disabling") + " user account: " + userId);
         User user = getUser(userId);
         user.setEnabled(enabled);
         user.setApprovedBy(authoriser);

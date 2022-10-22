@@ -38,6 +38,9 @@ public class Service {
     @OneToMany
     private Set<AlertType> alertTypes;
 
+    @NotNull
+    private boolean enabled = true;
+
 
     public Service() {
 

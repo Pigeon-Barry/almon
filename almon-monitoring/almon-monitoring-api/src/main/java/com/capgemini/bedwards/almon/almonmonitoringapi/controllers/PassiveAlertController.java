@@ -31,8 +31,8 @@ import javax.validation.constraints.NotNull;
                 version = "1.0.0")
 )
 @RestController
-@RequestMapping("${almon.api.prefix}/alert")
-public class PassiveAlertController {
+@RequestMapping("/api/alert")
+public class PassiveAlertController extends APIController{
 
     @Autowired
     AlertService alertService;

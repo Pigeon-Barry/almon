@@ -19,6 +19,9 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.access.AccessDeniedHandler;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.security.web.csrf.CookieCsrfTokenRepository;
+import org.springframework.security.web.csrf.CsrfFilter;
+import org.springframework.security.web.csrf.CsrfTokenRepository;
 
 import javax.sql.DataSource;
 
@@ -32,6 +35,7 @@ public class SecurityConfig {
     @Autowired
     private AlmonAuthenticationProvider authProvider;
 
+    private final static CsrfTokenRepository CSRF_TOKEN_REPOSITORY = CookieCsrfTokenRepository.withHttpOnlyFalse();
 
     @Bean
     public PasswordEncoder passwordEncoder() {
@@ -50,7 +54,6 @@ public class SecurityConfig {
         authenticationManagerBuilder.authenticationProvider(authProvider);
         return authenticationManagerBuilder.build();
     }
-
 
 
     @Configuration
@@ -73,13 +76,13 @@ public class SecurityConfig {
 
             };
         }
+
         @Bean
         public SecurityFilterChain webFilterChain(HttpSecurity http) throws Exception {
             http
                     .antMatcher("/web/**")
                     .exceptionHandling(exceptionHandlingConfigurer -> exceptionHandlingConfigurer.accessDeniedHandler(accessDeniedHandler()))
-                    .csrf()
-                    .and()
+                    .csrf(configurer -> configurer.csrfTokenRepository(CSRF_TOKEN_REPOSITORY))
                     .cors()
                     .and()
                     .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.ALWAYS)
@@ -99,6 +102,7 @@ public class SecurityConfig {
                             .clearAuthentication(true)
                             .permitAll())
                     .authorizeRequests(requests -> requests
+                            .antMatchers("/actuator/**").permitAll()
                             .antMatchers("/web/css/**", "/web/js/**", "/web/img/**", "/web/favicon.ico", "/web/auth/**").permitAll()
                             .antMatchers("/web/auth/pendingApproval").authenticated()
                             .antMatchers("/web/auth/accountDisabled").authenticated()
@@ -121,11 +125,14 @@ public class SecurityConfig {
         public SecurityFilterChain apiFilterChain(HttpSecurity http) throws Exception {
             http
                     .antMatcher("/api/**")
-                    .csrf().disable()
+                    .cors()
+                    .and()
+                    .csrf(configurer -> configurer.csrfTokenRepository(CSRF_TOKEN_REPOSITORY))
                     .addFilterBefore(new ApiKeyAuthenticationFilter(apiKeyService), UsernamePasswordAuthenticationFilter.class)
-                    .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
+                    .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.NEVER);
             return http.build();
         }
-
     }
+
+
 }

@@ -1,0 +1,129 @@
+-
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org" lang="en"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<div th:fragment="service">
+    <!--/*@thymesVar id="service" type="com.capgemini.bedwards.almon.almondatastore.models.service.Service"*/-->
+    <!--/*@thymesVar id="authority" type="com.capgemini.bedwards.almon.almondatastore.models.auth.Authority"*/-->
+    <!--/*@thymesVar id="roles" type="java.util.List"*/-->
+    <section style="background-color: #eee;">
+        <div class="container py-5">
+            <div class="row">
+                <div class="col-lg-4">
+                    <div class="card mb-4">
+                        <div class="card-body text-center">
+                            <h4>Service</h4>
+                            <h5 class="my-3" th:text="${service.getId()}"></h5>
+                            <!--                        <p class="text-muted mb-1">Placeholder</p>-->
+                            <!--                        <p class="text-muted mb-4">Placeholder</p>-->
+                            <div class="d-flex justify-content-center mb-2">
+                                <button type="button" class="btn btn-primary">Placeholder</button>
+                                <button type="button" class="btn btn-outline-primary ms-1">Placeholder</button>
+                            </div>
+                            <div>
+                                <th:block
+                                        th:if="${#authorization.expression('hasAuthority(''ENABLE_DISABLE_SERVICES'') || hasAuthority(''SERVICE_' + service.getId() + '_CAN_ENABLE_DISABLE'')')}">
+                                    <button th:if="${service.isEnabled()}" href="#" class="btn btn-danger mx-2"
+                                            th:data-serviceId="${service.getId()}"
+                                            onclick="disableService(this.getAttribute('data-serviceId'),this)"
+                                    >Disable Service
+                                    </button>
+                                    <button th:if="${!service.isEnabled()}" href="#" class="btn btn-success mx-2"
+                                            th:data-serviceId="${service.getId()}"
+                                            onclick="enableService(this.getAttribute('data-serviceId'),this)"
+                                    >Enable Service
+                                    </button>
+                                </th:block>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-8">
+                    <div class="card mb-4">
+                        <div class="card-body">
+                            <div class="row">
+                                <div class="col-sm-3">
+                                    <p class="mb-0">Service Name</p>
+                                </div>
+                                <div class="col-sm-9">
+                                    <p class="text-muted mb-0" th:text="${service.getName()}"></p>
+                                </div>
+                            </div>
+                            <hr>
+                            <div class="row">
+                                <div class="col-sm-3">
+                                    <p class="mb-0">Service Description</p>
+                                </div>
+                                <div class="col-sm-9">
+                                    <p class="text-muted mb-0" th:text="${service.getDescription()}"></p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="card mb-4 mb-md-0">
+                                <div class="card-body">
+                                    <ul class="list-group list-group-flush rounded-3">
+                                        <li class="list-group-item d-flex justify-content-start align-items-center p-3">
+                                            <i class="fas fa-globe fa-lg text-warning"></i>
+                                            <p class="mb-0"><strong>Alerts</strong></p>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <script th:if="${#authorization.expression('hasAuthority(''ENABLE_DISABLE_SERVICES'') || hasAuthority(''SERVICE_' + service.getId() + '_CAN_ENABLE_DISABLE'')')}">
+        function disableService(serviceId, domElement) {
+            updateEnableStatus(domElement, serviceId, false);
+        }
+
+        function enableService(serviceId, domElement) {
+            updateEnableStatus(domElement, serviceId, true);
+        }
+
+        function updateEnableStatus(domElement, serviceId, enabled) {
+            const suffix = enabled ? "enable" : "disable";
+
+            if (!confirmationPrompt(suffix + " - Service", "Are you sure you want to " + suffix + " this service?"))
+                return;
+
+            const url = "/api/service/" + serviceId + "/" + suffix;
+            const token = $("meta[name='_csrf']").attr("content");
+            const header = $("meta[name='_csrf_header']").attr("content");
+            $.ajax({
+                type: 'PUT',
+                url: url,
+                xhrFields: {
+                    withCredentials: true
+                },
+                beforeSend: function (request) {
+                    request.setRequestHeader(header, token);
+                },
+                complete: function (xhr, textStatus) {
+                    if (xhr.status === 202) {
+                        showAlertSuccess("Service Successfully " + suffix + "d.");
+                        const dom = $(domElement);
+                        if (enabled) {
+                            dom.removeClass("btn-success").addClass("btn-danger");
+                            dom.attr("onclick", "disableService(this.getAttribute('data-serviceId'),this)");
+                            dom.text("Disable Service")
+                        } else {
+                            dom.removeClass("btn-danger").addClass("btn-success");
+                            dom.attr("onclick", "enableService(this.getAttribute('data-serviceId'),this)");
+                            dom.text("Enable Service")
+                        }
+                    } else {
+                        showAlertError("Failed to " + suffix + " service. Please consult an administrator");
+                    }
+                }
+            });
+        }
+    </script>
+
+</div>

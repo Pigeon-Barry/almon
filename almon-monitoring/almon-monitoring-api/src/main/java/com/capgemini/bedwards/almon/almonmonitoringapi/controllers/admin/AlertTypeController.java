@@ -4,6 +4,7 @@ import com.capgemini.bedwards.almon.almonalertingcore.APIAlertTypeService;
 import com.capgemini.bedwards.almon.almoncore.exceptions.NotFoundException;
 import com.capgemini.bedwards.almon.almondatastore.models.alert.APIAlertType;
 import com.capgemini.bedwards.almon.almondatastore.models.alert.Alert;
+import com.capgemini.bedwards.almon.almonmonitoringapi.controllers.APIController;
 import com.capgemini.bedwards.almon.almonmonitoringapi.models.alerts.APIAlertTypeRequestBody;
 import com.capgemini.bedwards.almon.almonmonitoringapi.error.ErrorResponse;
 import io.swagger.v3.oas.annotations.OpenAPIDefinition;
@@ -27,8 +28,8 @@ import javax.validation.constraints.NotNull;
                 version = "1.0.0")
 )
 @RestController
-@RequestMapping("${almon.api.prefix}/alertType")
-public class AlertTypeController {
+@RequestMapping("/api/alertType")
+public class AlertTypeController extends APIController {
 
     @Autowired
     APIAlertTypeService apiAlertTypeService;

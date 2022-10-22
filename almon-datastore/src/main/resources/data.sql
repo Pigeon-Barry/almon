@@ -1,6 +1,7 @@
 INSERT INTO db_almon.authorities (authority)
 VALUES ('ACCESS_CORE_PAGES'),
        ('ENABLE_DISABLE_ACCOUNTS'),
+       ('ENABLE_DISABLE_SERVICES'),
        ('VIEW_ADMIN_PAGES'),
        ('VIEW_ALL_USERS'),
        ('UPDATE_OTHER_USERS'),
@@ -34,4 +35,5 @@ VALUES ('VIEW_ADMIN_PAGES', 'ADMIN'),
        ('CREATE_SERVICE', 'ADMIN'),
        ('VIEW_ALL_SERVICES', 'ADMIN'),
        ('ASSIGN_PERMISSIONS','ADMIN'),
+       ('ENABLE_DISABLE_SERVICES','ADMIN')
 ;

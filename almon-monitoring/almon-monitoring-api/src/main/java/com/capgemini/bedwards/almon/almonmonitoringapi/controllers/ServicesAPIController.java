@@ -32,7 +32,7 @@ import javax.validation.Valid;
                 version = "1.0.0")
 )
 @RestController
-@RequestMapping("${almon.api.prefix}/services")
+@RequestMapping("/api/services")
 @Slf4j
 public class ServicesAPIController extends APIController {
 
@@ -54,7 +54,6 @@ public class ServicesAPIController extends APIController {
     @PostMapping("/create")
     @PreAuthorize("hasAuthority('CREATE_SERVICE')")
     public ResponseEntity<ServiceResponseBody> create(@RequestBody @Valid ServiceRequestBody serviceRequestBody) {
-        log.info("Reciv: " + serviceRequestBody.toString());
         Service service = serviceService.createService(serviceRequestBody.getKey(), serviceRequestBody.getName(), serviceRequestBody.getDescription());
         return new ResponseEntity<>(ServiceResponseBody.from(service), HttpStatus.CREATED);
     }

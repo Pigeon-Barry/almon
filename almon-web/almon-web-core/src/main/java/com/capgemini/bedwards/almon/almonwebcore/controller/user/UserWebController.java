@@ -54,7 +54,6 @@ public class UserWebController  extends WebController {
     @PutMapping("/enable")
     @PreAuthorize("hasAuthority('ENABLE_DISABLE_ACCOUNTS')")
     public ResponseEntity<String> enableAccount(@PathVariable(name = "userId") UUID userId) {
-        log.info("Enabling user: " + userId);
         userService.enableAccount(SecurityUtil.getAuthenticatedUser(), userId);
         return new ResponseEntity<>(HttpStatus.ACCEPTED);
     }
@@ -62,7 +61,6 @@ public class UserWebController  extends WebController {
     @PutMapping("/disable")
     @PreAuthorize("hasAuthority('ENABLE_DISABLE_ACCOUNTS')")
     public ResponseEntity<String> disableAccount(@PathVariable(name = "userId") UUID userId, HttpServletRequest request) {
-        log.info("Disabling user: " + userId);
         userService.disableAccount(SecurityUtil.getAuthenticatedUser(),userId);
         return new ResponseEntity<>(HttpStatus.ACCEPTED);
     }

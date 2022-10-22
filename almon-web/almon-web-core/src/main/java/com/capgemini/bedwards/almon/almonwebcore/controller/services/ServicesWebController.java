@@ -1,4 +1,4 @@
-package com.capgemini.bedwards.almon.almonwebcore.controller.user;
+package com.capgemini.bedwards.almon.almonwebcore.controller.services;
 
 
 import com.capgemini.bedwards.almon.almoncore.services.service.ServiceService;
