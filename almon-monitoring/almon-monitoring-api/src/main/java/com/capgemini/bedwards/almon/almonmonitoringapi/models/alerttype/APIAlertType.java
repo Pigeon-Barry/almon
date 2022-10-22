@@ -1,6 +1,9 @@
-package com.capgemini.bedwards.almon.almondatastore.models.alert;
+package com.capgemini.bedwards.almon.almonmonitoringapi.models.alerttype;
 
-import lombok.*;
+import com.capgemini.bedwards.almon.almondatastore.models.alert.AlertType;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.ToString;
 import lombok.experimental.SuperBuilder;
 
 import javax.persistence.DiscriminatorValue;
@@ -13,7 +16,7 @@ import javax.persistence.Entity;
 @ToString
 @Getter
 @DiscriminatorValue("API")
-public class APIAlertType extends AlertType{
+public class APIAlertType extends AlertType {
 
     protected String url;
     protected int expectedStatus;

@@ -13,6 +13,14 @@
     <name>almon-monitoring-api</name>
     <description>almon-monitoring-api</description>
 
+
+    <dependencies>
+        <dependency>
+            <groupId>com.capgemini.bedwards.almon</groupId>
+            <artifactId>almon-monitoring-core</artifactId>
+            <version>${almon-monitoring-core.version}</version>
+        </dependency>
+    </dependencies>
     <build>
         <plugins>
             <plugin>
