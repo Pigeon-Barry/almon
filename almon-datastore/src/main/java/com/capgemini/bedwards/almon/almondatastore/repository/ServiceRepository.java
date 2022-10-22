@@ -14,9 +14,6 @@ import java.util.UUID;
 public interface ServiceRepository extends JpaRepository<Service, String> {
     boolean existsById(String key);
 
-    Page<Service> findServicesByUsersIsOrOwnerIs(Pageable pageable, User user, User owner);
-    
-    default Page<Service> findServicesByUsersIsOrOwnerIs(Pageable pageable, User user){
-        return findServicesByUsersIsOrOwnerIs(pageable,user,user);
-    }
+    Page<Service> findServicesByUsersIs(Pageable pageable, User user);
+
 }

@@ -32,12 +32,6 @@ public class Service {
 
     private String description;
 
-    @ManyToOne
-    @NotNull
-    @JoinColumn(name = "owner_id", nullable = false)
-    private User owner;
-
-
     @ManyToMany(fetch = FetchType.EAGER)
     private Set<User> users;
 

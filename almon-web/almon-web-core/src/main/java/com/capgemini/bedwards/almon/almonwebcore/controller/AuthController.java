@@ -1,12 +1,12 @@
 package com.capgemini.bedwards.almon.almonwebcore.controller;
 
+import com.capgemini.bedwards.almon.almoncore.security.AlmonAuthenticationProvider;
 import com.capgemini.bedwards.almon.almoncore.service.AuthService;
+import com.capgemini.bedwards.almon.almoncore.util.SecurityUtil;
 import com.capgemini.bedwards.almon.almondatastore.models.auth.User;
 import com.capgemini.bedwards.almon.almonwebcore.model.auth.Login;
 import com.capgemini.bedwards.almon.almonwebcore.model.auth.Register;
 import com.capgemini.bedwards.almon.almonwebcore.model.util.ScreenAlert;
-import com.capgemini.bedwards.almon.almonwebcore.model.util.Util;
-import com.capgemini.bedwards.almon.almonwebcore.security.AlmonAuthenticationProvider;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -76,7 +76,7 @@ public class AuthController  extends WebController{
             return "/auth/login";
         try {
             doAutoLogin(login.getEmail(), login.getPassword());
-            User user = Util.getAuthenticatedUser();
+            User user = SecurityUtil.getAuthenticatedUser();
             if (user.getApprovedBy() == null) {
                 return "redirect:/web/auth/pendingApproval";
             }
@@ -95,7 +95,7 @@ public class AuthController  extends WebController{
 
     @GetMapping(value = "/logout")
     public String logoutPage(Model model, HttpServletRequest request, HttpServletResponse response) {
-        Authentication auth = Util.getAuthentication();
+        Authentication auth = SecurityUtil.getAuthentication();
         if (auth != null) {
             new SecurityContextLogoutHandler().logout(request, response, auth);
             ScreenAlert screenAlert = new ScreenAlert("Successfully Logged out", ScreenAlert.Type.SUCCESS);
@@ -110,9 +110,9 @@ public class AuthController  extends WebController{
             UsernamePasswordAuthenticationToken token = new UsernamePasswordAuthenticationToken(username, password);
             Authentication authentication = this.authenticationProvider.authenticate(token);
             log.debug("Logging in with [{}]", authentication.getPrincipal());
-            Util.setAuthentication(authentication);
+            SecurityUtil.setAuthentication(authentication);
         } catch (Exception e) {
-            Util.clearAuthentication();
+            SecurityUtil.clearAuthentication();
             log.error("Failure in autoLogin", e);
         }
     }

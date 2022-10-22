@@ -1,11 +1,10 @@
-package com.capgemini.bedwards.almon.almonwebcore.security;
+package com.capgemini.bedwards.almon.almoncore.security;
 
 import com.capgemini.bedwards.almon.almoncore.services.APIKeyService;
 import com.capgemini.bedwards.almon.almondatastore.models.auth.APIKey;
 import com.capgemini.bedwards.almon.almondatastore.util.Constants;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 
 import javax.servlet.*;
@@ -39,7 +38,7 @@ public class ApiKeyAuthenticationFilter implements Filter {
                     log.info("API Key: " + apiKey);
                     Set<GrantedAuthority> authorities = new HashSet<>();
                     if (apiKey.getAuthorities() != null)
-                        apiKey.getAuthorities().forEach(authority -> authorities.add(new SimpleGrantedAuthority(authority.getAuthority())));
+                        authorities.addAll(apiKey.getAuthorities());
 
                     ApiKeyAuthenticationToken apiToken = new ApiKeyAuthenticationToken(apiKey, authorities);
                     SecurityContextHolder.getContext().setAuthentication(apiToken);

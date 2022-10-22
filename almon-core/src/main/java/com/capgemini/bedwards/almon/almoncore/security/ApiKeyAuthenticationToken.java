@@ -1,4 +1,4 @@
-package com.capgemini.bedwards.almon.almonwebcore.security;
+package com.capgemini.bedwards.almon.almoncore.security;
 
 import com.capgemini.bedwards.almon.almondatastore.models.auth.APIKey;
 import org.springframework.security.authentication.AbstractAuthenticationToken;

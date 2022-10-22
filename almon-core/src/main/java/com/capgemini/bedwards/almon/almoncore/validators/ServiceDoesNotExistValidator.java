@@ -24,6 +24,8 @@ public class ServiceDoesNotExistValidator implements ConstraintValidator<Service
 
     @Override
     public boolean isValid(String key, ConstraintValidatorContext context) {
+        if (key == null || key.length() == 0)
+            return true;
         return !serviceService.checkKeyExists(key);
     }
 }

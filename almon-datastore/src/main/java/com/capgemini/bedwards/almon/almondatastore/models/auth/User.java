@@ -11,6 +11,7 @@ import org.springframework.lang.Nullable;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
+import java.util.HashSet;
 import java.util.Set;
 import java.util.UUID;
 
@@ -53,9 +54,6 @@ public class User {
     @ManyToMany(fetch = FetchType.EAGER)
     private Set<Role> roles;
 
-    @OneToMany
-    private Set<Service> ownerOfServices;
-
     @ManyToMany(mappedBy = "users", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     private Set<Service> services;
 
@@ -72,4 +70,9 @@ public class User {
         return getRoles().stream().anyMatch(role -> role.getAuthorities().contains(authority)) ;
     }
 
+    public void addService(Service service) {
+        if(this.getServices() == null)
+            this.services = new HashSet<>();
+        this.services.add(service);
+    }
 }

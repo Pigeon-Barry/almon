@@ -6,6 +6,7 @@ import com.capgemini.bedwards.almon.almondatastore.models.auth.User;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 public interface AuthorityService {
     void createAuthority(String authority, String description, User... defaultUsers);
@@ -13,4 +14,6 @@ public interface AuthorityService {
     List<Authority> getAllAuthorities();
 
     void updateAuthorities(User user, Map<String, UpdateType> authorities);
+    void addAuthorities(User user, String... authorities);
+    void removeAuthorities(User user, String... authorities);
 }

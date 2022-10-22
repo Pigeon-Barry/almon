@@ -7,7 +7,7 @@ import com.capgemini.bedwards.almon.almondatastore.models.auth.Authority;
 import com.capgemini.bedwards.almon.almondatastore.models.auth.Role;
 import com.capgemini.bedwards.almon.almondatastore.models.auth.User;
 import com.capgemini.bedwards.almon.almonwebcore.controller.WebController;
-import com.capgemini.bedwards.almon.almonwebcore.model.util.Util;
+import com.capgemini.bedwards.almon.almoncore.util.SecurityUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -55,7 +55,7 @@ public class UserWebController  extends WebController {
     @PreAuthorize("hasAuthority('ENABLE_DISABLE_ACCOUNTS')")
     public ResponseEntity<String> enableAccount(@PathVariable(name = "userId") UUID userId) {
         log.info("Enabling user: " + userId);
-        userService.enableAccount(Util.getAuthenticatedUser(), userId);
+        userService.enableAccount(SecurityUtil.getAuthenticatedUser(), userId);
         return new ResponseEntity<>(HttpStatus.ACCEPTED);
     }
 
@@ -63,7 +63,7 @@ public class UserWebController  extends WebController {
     @PreAuthorize("hasAuthority('ENABLE_DISABLE_ACCOUNTS')")
     public ResponseEntity<String> disableAccount(@PathVariable(name = "userId") UUID userId, HttpServletRequest request) {
         log.info("Disabling user: " + userId);
-        userService.disableAccount(Util.getAuthenticatedUser(),userId);
+        userService.disableAccount(SecurityUtil.getAuthenticatedUser(),userId);
         return new ResponseEntity<>(HttpStatus.ACCEPTED);
     }
 }

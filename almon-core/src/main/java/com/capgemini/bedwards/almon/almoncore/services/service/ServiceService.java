@@ -9,7 +9,9 @@ public interface ServiceService {
 
     boolean checkKeyExists(String value);
 
-    Service createService(User owner, String id, String name, String description);
+    Service createService(String id, String name, String description);
+
+    Service createService(User owner,String id, String name, String description);
 
     Page<Service> findPaginatedFromUser(int pageNumber, int pageSize, User user);
 }

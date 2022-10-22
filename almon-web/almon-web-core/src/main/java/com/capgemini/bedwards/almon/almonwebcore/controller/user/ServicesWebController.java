@@ -2,11 +2,11 @@ package com.capgemini.bedwards.almon.almonwebcore.controller.user;
 
 
 import com.capgemini.bedwards.almon.almoncore.services.service.ServiceService;
+import com.capgemini.bedwards.almon.almoncore.util.SecurityUtil;
 import com.capgemini.bedwards.almon.almondatastore.models.auth.User;
 import com.capgemini.bedwards.almon.almondatastore.models.service.Service;
 import com.capgemini.bedwards.almon.almonmonitoringapi.models.services.ServiceRequestBody;
 import com.capgemini.bedwards.almon.almonwebcore.controller.WebController;
-import com.capgemini.bedwards.almon.almonwebcore.model.util.Util;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -31,21 +31,20 @@ public class ServicesWebController extends WebController {
     @Autowired
     ServiceService serviceService;
 
-
     @GetMapping()
     public String getAllUsers(@RequestParam(defaultValue = "1") int pageNumber,
                               @RequestParam(defaultValue = "25") int pageSize,
                               Model model) {
-        User user = Util.getAuthenticatedUser();
+        User user = SecurityUtil.getAuthenticatedUser();
         log.debug("UserID: " + user.getId());
         for (Service service : user.getServices())
             log.debug("Service: " + service.getId());
 
         Page<Service> page;
-        if (Util.hasAuthority("VIEW_ALL_SERVICES"))
+        if (SecurityUtil.hasAuthority("VIEW_ALL_SERVICES"))
             page = serviceService.findPaginated(pageNumber, pageSize);
         else
-            page = serviceService.findPaginatedFromUser(pageNumber, pageSize, Util.getAuthenticatedUser());
+            page = serviceService.findPaginatedFromUser(pageNumber, pageSize, SecurityUtil.getAuthenticatedUser());
         List<Service> listServices = page.getContent();
 
 
@@ -69,8 +68,8 @@ public class ServicesWebController extends WebController {
         if (errors.hasErrors()) {
             return "/services/createService";
         }
-        Service service = serviceService.createService(
-                Util.getAuthenticatedUser(), serviceRequestBody.getKey(), serviceRequestBody.getName(), serviceRequestBody.getDescription());
+        Service service = serviceService.createService(SecurityUtil.getAuthenticatedUser(), serviceRequestBody.getKey(), serviceRequestBody.getName(), serviceRequestBody.getDescription());
+
         return "redirect:/web/service/" + service.getId();
     }
 }

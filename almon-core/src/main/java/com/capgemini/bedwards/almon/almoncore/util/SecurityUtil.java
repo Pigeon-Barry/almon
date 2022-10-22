@@ -1,10 +1,10 @@
-package com.capgemini.bedwards.almon.almonwebcore.model.util;
+package com.capgemini.bedwards.almon.almoncore.util;
 
 import com.capgemini.bedwards.almon.almondatastore.models.auth.User;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 
-public class Util {
+public class SecurityUtil {
 
 
     public static User getAuthenticatedUser() {

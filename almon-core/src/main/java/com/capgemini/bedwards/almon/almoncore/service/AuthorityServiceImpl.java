@@ -11,10 +11,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.Arrays;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @Service
 @Slf4j
@@ -67,5 +64,23 @@ public class AuthorityServiceImpl implements AuthorityService {
             } else
                 throw new RuntimeException("Update type " + updateType + " does not have any actions assigned to it");
         });
+    }
+
+    @Override
+    public void addAuthorities(User user, String... authorities) {
+        updateAuthorities(user,new HashMap<String, UpdateType>(){{
+            for(String authority : authorities){
+                put(authority,UpdateType.GRANT);
+            }
+        }});
+    }
+
+    @Override
+    public void removeAuthorities(User user, String... authorities) {
+        updateAuthorities(user,new HashMap<String, UpdateType>(){{
+            for(String authority : authorities){
+                put(authority,UpdateType.REMOVE);
+            }
+        }});
     }
 }

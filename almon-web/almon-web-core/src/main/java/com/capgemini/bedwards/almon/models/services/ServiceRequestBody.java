@@ -1,15 +1,13 @@
-package com.capgemini.bedwards.almon.almonmonitoringapi.models.services;
+package com.capgemini.bedwards.almon.models.services;
 
 import com.capgemini.bedwards.almon.almoncore.validators.ServiceDoesNotExist;
 import com.capgemini.bedwards.almon.almondatastore.util.Constants;
 import lombok.Data;
-import lombok.ToString;
 
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Pattern;
 
 @Data
-@ToString
 public class ServiceRequestBody {
 
     @NotBlank
