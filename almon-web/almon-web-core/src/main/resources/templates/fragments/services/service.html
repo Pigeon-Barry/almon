@@ -65,9 +65,11 @@
                             <div class="card mb-4 mb-md-0">
                                 <div class="card-body">
                                     <ul class="list-group list-group-flush rounded-3">
-                                        <li class="list-group-item d-flex justify-content-start align-items-center p-3">
-                                            <i class="fas fa-globe fa-lg text-warning"></i>
+                                        <li class="list-group-item d-flex justify-content-between align-items-center p-3">
                                             <p class="mb-0"><strong>Alerts</strong></p>
+                                            <button
+                                                    th:if="${#authorization.expression('hasAuthority(''CREATE_ALERTTYPES'') || hasAuthority(''SERVICE_' + service.getId() + '_CAN_CREATE_ALERTS'')')}"
+                                                    type="button" class="btn btn-primary">Create New Alert</button>
                                     </ul>
                                 </div>
                             </div>
