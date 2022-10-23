@@ -2,7 +2,7 @@ package com.capgemini.bedwards.almon.almonwebcore.controller.user;
 
 
 import com.capgemini.bedwards.almon.almoncore.services.user.RoleService;
-import com.capgemini.bedwards.almon.almonwebcore.controller.WebController;
+import com.capgemini.bedwards.almon.almoncore.intergrations.web.WebController;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;

@@ -1,5 +1,6 @@
 package com.capgemini.bedwards.almon.almonwebcore.controller;
 
+import com.capgemini.bedwards.almon.almoncore.intergrations.web.WebController;
 import com.capgemini.bedwards.almon.almoncore.security.AlmonAuthenticationProvider;
 import com.capgemini.bedwards.almon.almoncore.service.AuthService;
 import com.capgemini.bedwards.almon.almoncore.util.SecurityUtil;
@@ -27,7 +28,7 @@ import javax.validation.Valid;
 @Controller
 @RequestMapping("/web/auth")
 @Slf4j
-public class AuthController  extends WebController{
+public class AuthController  extends WebController {
 
     @Autowired
     AuthService authService;

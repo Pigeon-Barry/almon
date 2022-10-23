@@ -1,10 +1,11 @@
-package com.capgemini.bedwards.almon.almonapi.controllers;
+package com.capgemini.bedwards.almon.almoncore.intergrations.api;
 
-import com.capgemini.bedwards.almon.almonapi.error.BadRequestResponse;
+
 import com.capgemini.bedwards.almon.almoncore.exceptions.InvalidPermissionException;
 import com.capgemini.bedwards.almon.almoncore.exceptions.NotFoundException;
-import com.capgemini.bedwards.almon.almonapi.error.ErrorCode;
-import com.capgemini.bedwards.almon.almonapi.error.ErrorResponse;
+import com.capgemini.bedwards.almon.almoncore.intergrations.api.error.BadRequestResponse;
+import com.capgemini.bedwards.almon.almoncore.intergrations.api.error.ErrorCode;
+import com.capgemini.bedwards.almon.almoncore.intergrations.api.error.ErrorResponse;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.access.AccessDeniedException;

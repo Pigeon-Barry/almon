@@ -1,4 +1,4 @@
-package com.capgemini.bedwards.almon.almonwebcore.controller;
+package com.capgemini.bedwards.almon.almoncore.intergrations.web;
 
 import com.capgemini.bedwards.almon.almoncore.exceptions.NotFoundException;
 import lombok.extern.slf4j.Slf4j;

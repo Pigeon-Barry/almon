@@ -6,7 +6,7 @@ import com.capgemini.bedwards.almon.almoncore.services.user.UserService;
 import com.capgemini.bedwards.almon.almondatastore.models.auth.Authority;
 import com.capgemini.bedwards.almon.almondatastore.models.auth.Role;
 import com.capgemini.bedwards.almon.almondatastore.models.auth.User;
-import com.capgemini.bedwards.almon.almonwebcore.controller.WebController;
+import com.capgemini.bedwards.almon.almoncore.intergrations.web.WebController;
 import com.capgemini.bedwards.almon.almoncore.util.SecurityUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;

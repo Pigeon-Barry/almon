@@ -1,6 +1,6 @@
 package com.capgemini.bedwards.almon.almondatastore.models.service;
 
-import com.capgemini.bedwards.almon.almondatastore.models.alert.AlertType;
+import com.capgemini.bedwards.almon.almondatastore.models.alert.MonitoringType;
 import com.capgemini.bedwards.almon.almondatastore.models.auth.User;
 import com.capgemini.bedwards.almon.almondatastore.util.Constants;
 import lombok.AllArgsConstructor;
@@ -36,7 +36,7 @@ public class Service {
     private Set<User> users;
 
     @OneToMany
-    private Set<AlertType> alertTypes;
+    private Set<MonitoringType> monitoringTypes;
 
     @NotNull
     private boolean enabled = true;

@@ -6,7 +6,6 @@ import lombok.experimental.SuperBuilder;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotNull;
 import java.io.Serializable;
 
 
@@ -19,16 +18,10 @@ import java.io.Serializable;
 @Entity
 @Inheritance(strategy = InheritanceType.JOINED)
 @DiscriminatorColumn(discriminatorType = DiscriminatorType.STRING, name = "type")
-public class AlertType {
-
-//    @Id
-//    @GeneratedValue(generator = "uuid")
-//    @GenericGenerator(name = "uuid", strategy = "com.capgemini.bedwards.almon.almondatastore.util.UUIDGenerator")
-//    @Type(type = "org.hibernate.type.UUIDCharType")
-//    protected UUID id;
+public abstract class MonitoringType {
 
     @EmbeddedId
-    protected AlertTypeId id;
+    protected MonitoringTypeId id;
 
     @NotBlank
     protected String name;
@@ -37,13 +30,13 @@ public class AlertType {
     protected String description;
 
 
-    public AlertType() {
+    public MonitoringType() {
 
     }
 
     @Data
     @Embeddable
-    public static class AlertTypeId implements Serializable {
+    public static class MonitoringTypeId implements Serializable {
         protected String id;
         @ManyToOne
         @JoinColumn(name = "service_id")

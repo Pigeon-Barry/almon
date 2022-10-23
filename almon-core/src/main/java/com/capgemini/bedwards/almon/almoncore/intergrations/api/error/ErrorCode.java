@@ -1,4 +1,4 @@
-package com.capgemini.bedwards.almon.almonapi.error;
+package com.capgemini.bedwards.almon.almoncore.intergrations.api.error;
 
 import org.springframework.http.ResponseEntity;
 

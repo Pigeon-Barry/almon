@@ -3,7 +3,7 @@ package com.capgemini.bedwards.almon.almonwebcore.controller.services;
 
 import com.capgemini.bedwards.almon.almoncore.services.service.ServiceService;
 import com.capgemini.bedwards.almon.almondatastore.models.service.Service;
-import com.capgemini.bedwards.almon.almonwebcore.controller.WebController;
+import com.capgemini.bedwards.almon.almoncore.intergrations.web.WebController;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;

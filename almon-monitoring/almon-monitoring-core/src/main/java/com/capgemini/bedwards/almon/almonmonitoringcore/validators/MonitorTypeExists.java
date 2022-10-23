@@ -1,4 +1,4 @@
-package com.capgemini.bedwards.almon.almoncore.validators;
+package com.capgemini.bedwards.almon.almonmonitoringcore.validators;
 
 import javax.validation.Constraint;
 import javax.validation.Payload;
@@ -11,10 +11,10 @@ import static java.lang.annotation.ElementType.*;
 
 @Target({TYPE, FIELD, ANNOTATION_TYPE, PARAMETER})
 @Retention(RetentionPolicy.RUNTIME)
-@Constraint(validatedBy = ServiceDoesNotExistValidator.class)
+@Constraint(validatedBy = MonitorTypeExistsValidator.class)
 @Documented
-public @interface ServiceDoesNotExist {
-    String message() default "Service does not exist";
+public @interface MonitorTypeExists {
+    String message() default "Monitor Type does not exist";
 
     Class<?>[] groups() default {};
 

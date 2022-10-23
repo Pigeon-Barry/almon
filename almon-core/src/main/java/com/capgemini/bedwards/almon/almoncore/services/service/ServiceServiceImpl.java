@@ -99,8 +99,8 @@ public class ServiceServiceImpl implements ServiceService {
                 "Grants the ability to update core details about this service as well as delete permission"
         );
         authorityService.createAuthority(
-                "SERVICE_" + id + "_CAN_CREATE_ALERTS",
-                "Grants the ability to create alerts for this service"
+                "SERVICE_" + id + "_CAN_CREATE_MONITORING",
+                "Grants the ability to create new monitors for this service"
         );
         authorityService.createAuthority(
                 "SERVICE_" + id + "_CAN_ENABLE_DISABLE",
@@ -117,7 +117,7 @@ public class ServiceServiceImpl implements ServiceService {
         authorityService.addAuthorities(owner,
                 "SERVICE_" + id + "_CAN_VIEW",
                 "SERVICE_" + id + "_ADMIN_CAN_EDIT",
-                "SERVICE_" + id + "_CAN_CREATE_ALERTS",
+                "SERVICE_" + id + "_CAN_CREATE_MONITORING",
                 "SERVICE_" + id + "_CAN_ENABLE_DISABLE");
         if (service.getUsers() == null)
             service.setUsers(new HashSet<>());

@@ -1,12 +1,13 @@
 package com.capgemini.bedwards.almon.almonapi.controllers;
 
-import com.capgemini.bedwards.almon.almonapi.error.BadRequestResponse;
+import com.capgemini.bedwards.almon.almoncore.intergrations.api.error.BadRequestResponse;
 import com.capgemini.bedwards.almon.almonapi.models.services.ServiceRequestBody;
 import com.capgemini.bedwards.almon.almonapi.models.services.ServiceResponseBody;
+import com.capgemini.bedwards.almon.almoncore.intergrations.api.APIController;
 import com.capgemini.bedwards.almon.almoncore.services.service.ServiceService;
 import com.capgemini.bedwards.almon.almondatastore.models.service.Service;
-import com.capgemini.bedwards.almon.almonapi.error.ErrorResponse;
-import com.capgemini.bedwards.almon.almonapi.error.InternalServerErrorResponse;
+import com.capgemini.bedwards.almon.almoncore.intergrations.api.error.ErrorResponse;
+import com.capgemini.bedwards.almon.almoncore.intergrations.api.error.InternalServerErrorResponse;
 import io.swagger.v3.oas.annotations.OpenAPIDefinition;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.info.Info;
