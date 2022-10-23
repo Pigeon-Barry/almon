@@ -17,21 +17,18 @@ import java.util.Map;
 @AllArgsConstructor
 @ToString
 @Getter
-@DiscriminatorValue("API")
+@DiscriminatorValue("ACTIVE_API")
 public class APIMonitoringType extends MonitoringType {
 
     protected String url;
 
     @ElementCollection
-    Map<String, String> headers;
+    protected Map<String, String> headers;
 
     protected int expectedStatus;
 
     @ElementCollection
-    Map<String, String> jsonPathValidations;
-
-    @ElementCollection
-    Map<String, String> xPathValidations;
+    protected Map<String, String> jsonPathValidations;
 
     public APIMonitoringType() {
 

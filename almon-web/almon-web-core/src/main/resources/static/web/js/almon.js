@@ -53,8 +53,38 @@ function redirect(url){
 
 
 $( document ).ready(function() {
-    var popoverTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="popover"]'))
-    var popoverList = popoverTriggerList.map(function (popoverTriggerEl) {
-        return new bootstrap.Popover(popoverTriggerEl)
-    })
+    const popoverTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="popover"]'));
+    const popoverList = popoverTriggerList.map(function (popoverTrigger) {
+        return new bootstrap.Popover(popoverTrigger)
+    });
 });
+
+function formToJson(formId) {
+    const elements = document.querySelectorAll('#' + formId + ' input');
+    const data = {};
+    for (let i = 0; i < elements.length; i++) {
+        const el = elements[i];
+        let val = el.value;
+        if (!val) val = "";
+        const fullName = el.getAttribute("name");
+        if (!fullName) continue;
+        const fullNameParts = fullName.split('.');
+        let prefix = '';
+        let stack = data;
+        for (let k = 0; k < fullNameParts.length - 1; k++) {
+            prefix = fullNameParts[k];
+            if (!stack[prefix]) {
+                stack[prefix] = {};
+            }
+            stack = stack[prefix];
+        }
+        prefix = fullNameParts[fullNameParts.length - 1];
+        if (stack[prefix]) {
+            const newVal = stack[prefix] + ',' + val;
+            stack[prefix] += newVal;
+        } else {
+            stack[prefix] = val;
+        }
+    }
+    return data;
+}

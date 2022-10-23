@@ -36,6 +36,8 @@ public abstract class MonitoringType {
 
     @Data
     @Embeddable
+    @AllArgsConstructor
+    @NoArgsConstructor
     public static class MonitoringTypeId implements Serializable {
         protected String id;
         @ManyToOne

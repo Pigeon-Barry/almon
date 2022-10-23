@@ -91,7 +91,7 @@ public class SecurityConfig {
                     .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.ALWAYS)
                     .and()
                     .formLogin(form -> form
-                            .defaultSuccessUrl("/web/home", true)
+                            .defaultSuccessUrl("/web/home", false)
                             .loginPage("/web/auth/login")
                             .loginProcessingUrl("/web/auth/login")
                             .usernameParameter("email")

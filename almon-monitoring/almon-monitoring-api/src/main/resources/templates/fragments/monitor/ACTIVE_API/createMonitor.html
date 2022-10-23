@@ -1,20 +1,183 @@
 <html xmlns="http://www.w3.org/1999/xhtml"
-      xmlns:th="http://www.thymeleaf.org" lang="en">
+      xmlns:th="http://www.thymeleaf.org"
+      lang="en">
 <!--/*@thymesVar id="serviceRequestBody" type="com.capgemini.bedwards.almon.almonmonitoringapi.models.CreateAPIMonitorRequestBody"*/-->
 <!--/*@thymesVar id="service" type="com.capgemini.bedwards.almon.almondatastore.models.service.Service"*/-->
 <!--/*@thymesVar id="monitoringType" type="com.capgemini.bedwards.almon.almonmonitoringapi.monitoring.APIMonitor"*/-->
+<!--/*@thymesVar id="formData" type="com.capgemini.bedwards.almon.almonmonitoringapi.models.CreateAPIMonitorRequestBody"*/-->
+<!--/*@thymesVar id="previousFormData" type="com.capgemini.bedwards.almon.almonmonitoringapi.models.CreateAPIMonitorRequestBody"*/-->
 <div class="container" th:fragment="create">
     <div class="row justify-content-center">
         <div class="col-12 col-md-8">
             <div class="card">
                 <h3 class="card-header">Create API Monitor</h3>
                 <div class="card-body">
-                    <form th:action="@{/web/service/{serviceId}/monitoring/{monitoringType}/create(serviceId=${service.getId()},monitoringType=${monitoringType.getName()})}"
-                          method="post">
+                    <form
+                            id="monitorForm"
+                            th:object="${formData}"
+                            th:action="@{/web/service/{serviceId}/monitoring/{monitoringType}/create(serviceId=${service.getId()},monitoringType=${monitoringType.getId()})}"
+                            method="post">
 
+                        <input type="hidden" name="MONITOR_TYPE" th:value="${monitoringType.getId()}">
+                        <div class="form-group required">
+                            <label for="key" class="control-label">Key:</label>
+                            <div class="input-group mb-3">
+                                <span class="input-group-text" th:text="${service.getId() + '_'}"></span>
+                                <input
+                                        th:class="(${#fields.hasErrors('key')}? 'is-invalid ' : '') + 'form-control'"
+                                        th:field="*{key}"
+                                        type="text" class="form-control" id="key" name="key"
+                                        placeholder="Enter Monitor Key">
+                                <span th:if="${#fields.hasErrors('key')}" class="invalid-feedback" role="alert">
+                                        <strong th:errors="*{key}"></strong>
+                                </span>
+                            </div>
+                        </div>
+                        <div class="form-group required">
+                            <label for="name" class="control-label">Name:</label>
+                            <input
+                                    th:class="(${#fields.hasErrors('name')}? 'is-invalid ' : '') + 'form-control'"
+                                    type="text" id="name" placeholder="Enter Service Name"
+                                    name="name" th:field="*{name}"/>
+                            <span th:if="${#fields.hasErrors('name')}" class="invalid-feedback" role="alert">
+                                    <strong th:errors="*{name}"></strong>
+                            </span>
+                        </div>
+
+
+                        <div class="form-group">
+                            <label for="description" class="control-label">Description:</label>
+                            <textarea th:class="(${#fields.hasErrors('description')}? 'is-invalid ' : '') + 'form-control'" id="description" rows="3"
+                                      placeholder="Enter Service Description"
+                                      th:field="*{description}"
+                            ></textarea>
+
+                            <span th:if="${#fields.hasErrors('description')}" class="invalid-feedback" role="alert">
+                                    <strong th:errors="*{description}"></strong>
+                            </span>
+                        </div>
+                        <div class="form-group required">
+                            <label for="url" class="control-label">URL:</label>
+                            <input
+                                    th:class="(${#fields.hasErrors('url')}? 'is-invalid ' : '') + 'form-control'"
+                                    type="text" id="url" placeholder="Enter Service Name"
+                                    name="url" th:field="*{url}"/>
+                            <span th:if="${#fields.hasErrors('url')}" class="invalid-feedback" role="alert">
+                                        <strong th:errors="*{url}"></strong>
+                                </span>
+                        </div>
+                        <div class="form-group required">
+                            <label for="expectedStatusCode" class="control-label">Expected Status Code:</label>
+                            <input
+                                    th:class="(${#fields.hasErrors('expectedStatusCode')}? 'is-invalid ' : '') + 'form-control'"
+                                    type="number"
+                                    min="100"
+                                    max="999"
+                                    id="expectedStatusCode" placeholder="Enter Expected Status Code"
+                                    name="expectedStatusCode" th:field="*{expectedStatusCode}"/>
+                            <span th:if="${#fields.hasErrors('expectedStatusCode')}" class="invalid-feedback"
+                                  role="alert">
+                                        <strong th:errors="*{expectedStatusCode}"></strong>
+                                </span>
+                        </div>
+                        <br>
+                        <div class="col-12">
+                            <h2 class="text-center">Headers</h2>
+                            <table class="table table-bordered">
+                                <thead>
+                                <tr>
+                                    <th class="col-6">Name</th>
+                                    <th class="col-6">Value</th>
+                                </tr>
+                                </thead>
+                                <tbody id="headerTable">
+                                </tbody>
+                            </table>
+                            <div class="form-group">
+                                <button type="button" class="form-control btn-block btn btn-info" onclick="addHeader()">
+                                    Add Header
+                                </button>
+                            </div>
+                        </div>
+                        <br>
+                        <div class="col-12">
+                            <h2 class="text-center">Json Path Verifications</h2>
+                            <table class="table table-bordered">
+                                <thead>
+                                <tr>
+                                    <th class="col-6">Json Path</th>
+                                    <th class="col-6">Expected Value</th>
+                                </tr>
+                                </thead>
+                                <tbody id="jsonPathVerificationTable">
+                                </tbody>
+                            </table>
+                            <div class="form-group">
+                                <button type="button" class="form-control btn-block btn btn-info"
+                                        onclick="addJsonPathVerification()">
+                                    Add Json Path Verification
+                                </button>
+                            </div>
+                        </div>
+                        <br/>
+                        <div class="form-group">
+                            <button type="submit" class="form-control btn-block btn btn-primary">Create Service</button>
+                        </div>
                     </form>
                 </div>
             </div>
         </div>
     </div>
+
+
+    <script>
+
+        function addJsonPathVerification(defaultJsonPath = "", defaultVerification = "") {
+            const headerText =
+                '<tr class="header">' +
+                '<th><input class="form-control map-key" type="text" placeholder="Enter Json Path" name="jsonPathValidations.key" value="' + defaultJsonPath + '"/></th>\n' +
+                '<th><input class="form-control map-value" type="text" placeholder="Enter Expected Value" data-name-prefix="jsonPathValidations." name="jsonPathValidations.value" value="' + defaultVerification + '"/></th>\n' +
+                '</tr>';
+
+            $("#jsonPathVerificationTable").append(headerText);
+        }
+
+        function addHeader(defaultKey = "", defaultValue = "") {
+            const headerText =
+                '<tr class="map">' +
+                '<th><input class="form-control map-key" type="text" placeholder="Enter Header Name" name="map-key"  value="' + defaultKey + '"/></th>\n' +
+                '<th><input class="form-control map-value" type="text" placeholder="Enter Header Value" name="map-value" data-name-prefix="headers." value="' + defaultValue + '"/></th>\n' +
+                '</tr>';
+
+            $("#headerTable").append(headerText);
+        }
+
+        $("#monitorForm").submit(function () {
+            $(".map-key").each(function () {
+                $(this).prop("disabled", true);
+                const headerKey = $(this).val();
+                const headerValDom = $(this).closest('.map').find('.map-value');
+                if (headerKey.length === 0)
+                    headerValDom.prop("disabled", true);
+                else {
+                    headerValDom.attr('name', headerValDom.data("name-prefix") + headerKey);
+                }
+            });
+            return true;
+        });
+
+    </script>
+
+    <script th:inline="javascript" th:if="${previousFormData != null && previousFormData.getHeaders() != null}">
+        /*[# th:each="header : ${previousFormData.getHeaders().entrySet()}"]*/
+        addHeader(/*[[${header.getKey()}]]*/, /*[[${header.getValue()}]]*/);
+        /*[/]*/
+    </script>
+
+    <script th:inline="javascript" th:if="${previousFormData != null && previousFormData.getJsonPathValidations() != null}">
+        /*[# th:each="jsonPathVerification : ${previousFormData.getJsonPathValidations().entrySet()}"]*/
+        addJsonPathVerification(/*[[${jsonPathVerification.getKey()}]]*/, /*[[${jsonPathVerification.getValue()}]]*/);
+        /*[/]*/
+    </script>
+
 </div>

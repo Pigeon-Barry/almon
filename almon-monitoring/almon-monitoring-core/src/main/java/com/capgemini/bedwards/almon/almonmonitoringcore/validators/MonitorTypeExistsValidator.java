@@ -1,7 +1,6 @@
 package com.capgemini.bedwards.almon.almonmonitoringcore.validators;
 
 import com.capgemini.bedwards.almon.almoncore.exceptions.NotFoundException;
-import com.capgemini.bedwards.almon.almoncore.services.service.ServiceService;
 import com.capgemini.bedwards.almon.almonmonitoringcore.Monitors;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,11 +26,11 @@ public class MonitorTypeExistsValidator implements ConstraintValidator<MonitorTy
     }
 
     @Override
-    public boolean isValid(String name, ConstraintValidatorContext context) {
-        if (name == null || name.length() == 0)
+    public boolean isValid(String id, ConstraintValidatorContext context) {
+        if (id == null || id.length() == 0)
             return true;
         try {
-            MONITORS.getMonitorTypeFromName(name);
+            MONITORS.getMonitorTypeFromId(id);
             return true;
         } catch (NotFoundException e) {
             return false;

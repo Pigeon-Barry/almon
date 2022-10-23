@@ -26,6 +26,7 @@ public abstract class WebController {
     @ExceptionHandler(Throwable.class)
     @ResponseStatus(value = HttpStatus.INTERNAL_SERVER_ERROR)
     public ModelAndView throwable(Throwable exception, WebRequest request) {
+        log.error("Unexpected exception thrown", exception);
         return new ModelAndView("error/error-500");
     }
 }

@@ -1,10 +1,10 @@
--
 <html xmlns="http://www.w3.org/1999/xhtml"
       xmlns:th="http://www.thymeleaf.org" lang="en"
 >
 <div th:fragment="service">
     <!--/*@thymesVar id="service" type="com.capgemini.bedwards.almon.almondatastore.models.service.Service"*/-->
     <!--/*@thymesVar id="authority" type="com.capgemini.bedwards.almon.almondatastore.models.auth.Authority"*/-->
+    <!--/*@thymesVar id="monitors" type="om.capgemini.bedwards.almon.almonmonitoringcore.Monitors"*/-->
     <!--/*@thymesVar id="roles" type="java.util.List"*/-->
     <section style="background-color: #eee;">
         <div class="container py-5">
@@ -66,10 +66,12 @@
                                 <div class="card-body">
                                     <ul class="list-group list-group-flush rounded-3">
                                         <li class="list-group-item d-flex justify-content-between align-items-center p-3">
-                                            <p class="mb-0"><strong>Alerts</strong></p>
+                                            <p class="mb-0"><strong>Monitors</strong></p>
                                             <button
                                                     th:if="${#authorization.expression('hasAuthority(''CREATE_MONITORING'') || hasAuthority(''SERVICE_' + service.getId() + '_CAN_CREATE_ALERTS'')')}"
-                                                    type="button" class="btn btn-primary">Create New Alert</button>
+                                                    data-bs-toggle="modal" data-bs-target="#selectMonitorTypeModal"
+                                                    type="button" class="btn btn-primary">Create New Monitor
+                                            </button>
                                     </ul>
                                 </div>
                             </div>
@@ -78,6 +80,10 @@
                 </div>
             </div>
         </div>
+        <th:block
+                th:include="fragments/monitor/selectMonitorTypeModal :: selectMonitorTypeModal(${service},${monitors},selectMonitorTypeModal)"
+                th:if="${#authorization.expression('hasAuthority(''CREATE_MONITORING'') || hasAuthority(''SERVICE_' + service.getId() + '_CAN_CREATE_ALERTS'')')}"/>
+
     </section>
 
     <script th:if="${#authorization.expression('hasAuthority(''ENABLE_DISABLE_SERVICES'') || hasAuthority(''SERVICE_' + service.getId() + '_CAN_ENABLE_DISABLE'')')}">

@@ -1,0 +1,66 @@
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org" lang="en"
+>
+
+<!--/*@thymesVar id="service" type="com.capgemini.bedwards.almon.almondatastore.models.auth.User"*/-->
+<!--/*@thymesVar id="monitors" type="com.capgemini.bedwards.almon.almonmonitoringcore.Monitors"*/-->
+<!--/*@thymesVar id="monitorType" type="com.capgemini.bedwards.almon.almonmonitoringcore.MonitorType"*/-->
+<!--/*@thymesVar id=com.capgemini.bedwards.almon.almonmonitoringcore.MonitorType"modelId" type="java.lang.String"*/-->
+
+<div th:fragment="selectMonitorTypeModal(service,monitors,modelId)">
+    <!-- Role Modal -->
+    <div class="modal fade" th:id="${modelId}" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
+         aria-labelledby="staticBackdropLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg modal-dialog-centered modal-dialog-scrollable">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="staticBackdropLabel">Monitor Selection</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <h2>Select Monitor Type</h2>
+                    <input class="form-control" th:id="${modelId} + 'SearchBox'" type="text" placeholder="Search...">
+                    <br>
+                    <table class="table table-bordered table-striped" th:id="${modelId} + 'SearchTable'">
+                        <thead>
+                        <tr>
+                            <th>Name</th>
+                            <th>Description</th>
+                            <th>Create</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr th:each="monitorType : ${monitors.getMonitorTypes()}">
+                            <td th:text="${monitorType.getName()}"></td>
+                            <td th:text="${monitorType.getDescription()}"></td>
+                            <td>
+                                <a th:href="@{/web/service/{serviceId}/monitoring/{monitoringType}/create(serviceId=${service.getId()},monitoringType=${monitorType.getId()})}" class="btn btn-primary" role="button">Create</a>
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Cancel</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <script>
+        const inputBoxId = "[[${modelId}]]SearchBox";
+        const inputSearchTableId = "[[${modelId}]]SearchTable";
+        const modalId = "[[${modelId}]]";
+        $(document).ready(function () {
+            $("#" + inputBoxId).on("keyup", function () {
+                const value = $(this).val().toLowerCase();
+                $("#" + inputSearchTableId + " tr").filter(function () {
+                    $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
+                });
+            });
+        });
+
+
+    </script>
+</div>

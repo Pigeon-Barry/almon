@@ -4,8 +4,9 @@ import com.capgemini.bedwards.almon.almondatastore.models.auth.User;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 
-public class SecurityUtil {
-
+public final class SecurityUtil {
+    private SecurityUtil() {
+    }
 
     public static User getAuthenticatedUser() {
         return (User) getAuthentication().getPrincipal();
