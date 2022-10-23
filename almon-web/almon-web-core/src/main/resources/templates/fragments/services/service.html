@@ -1,7 +1,7 @@
 -
 <html xmlns="http://www.w3.org/1999/xhtml"
       xmlns:th="http://www.thymeleaf.org" lang="en"
-      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+>
 <div th:fragment="service">
     <!--/*@thymesVar id="service" type="com.capgemini.bedwards.almon.almondatastore.models.service.Service"*/-->
     <!--/*@thymesVar id="authority" type="com.capgemini.bedwards.almon.almondatastore.models.auth.Authority"*/-->
@@ -68,7 +68,7 @@
                                         <li class="list-group-item d-flex justify-content-between align-items-center p-3">
                                             <p class="mb-0"><strong>Alerts</strong></p>
                                             <button
-                                                    th:if="${#authorization.expression('hasAuthority(''CREATE_ALERTTYPES'') || hasAuthority(''SERVICE_' + service.getId() + '_CAN_CREATE_ALERTS'')')}"
+                                                    th:if="${#authorization.expression('hasAuthority(''CREATE_MONITORING'') || hasAuthority(''SERVICE_' + service.getId() + '_CAN_CREATE_ALERTS'')')}"
                                                     type="button" class="btn btn-primary">Create New Alert</button>
                                     </ul>
                                 </div>

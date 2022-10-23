@@ -1,14 +1,18 @@
 package com.capgemini.bedwards.almon.almoncore.security;
 
+import com.capgemini.bedwards.almon.almoncore.intergrations.api.error.ErrorCode;
+import com.capgemini.bedwards.almon.almoncore.intergrations.api.error.ErrorResponse;
 import com.capgemini.bedwards.almon.almoncore.services.APIKeyService;
 import com.capgemini.bedwards.almon.almoncore.util.SecurityUtil;
 import com.capgemini.bedwards.almon.almondatastore.models.auth.User;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.actuate.trace.http.HttpTraceRepository;
 import org.springframework.boot.actuate.trace.http.InMemoryHttpTraceRepository;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.annotation.Order;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
@@ -120,13 +124,23 @@ public class SecurityConfig {
         @Autowired
         private APIKeyService apiKeyService;
 
+        public AccessDeniedHandler accessDeniedHandler() {
+            return (request, response, accessDeniedException) -> {
+                ObjectMapper mapper = new ObjectMapper();
+                ErrorResponse errorResponse = new ErrorResponse(ErrorCode.UNAUTHORISED_API);
+                mapper.writeValue(response.getOutputStream(), errorResponse);
+                response.setStatus(HttpStatus.UNAUTHORIZED.value());
+            };
+        }
+
         @Bean
         public SecurityFilterChain apiFilterChain(HttpSecurity http) throws Exception {
             http
                     .antMatcher("/api/**")
                     .cors()
                     .and()
-                    .csrf(configurer -> configurer.csrfTokenRepository(CSRF_TOKEN_REPOSITORY))
+                    .exceptionHandling(exceptionHandlingConfigurer -> exceptionHandlingConfigurer.accessDeniedHandler(accessDeniedHandler()))
+                    .csrf().disable()
                     .addFilterBefore(new ApiKeyAuthenticationFilter(apiKeyService), UsernamePasswordAuthenticationFilter.class)
                     .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.NEVER);
             return http.build();

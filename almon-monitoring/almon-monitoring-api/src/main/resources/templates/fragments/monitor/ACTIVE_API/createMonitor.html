@@ -1,0 +1,20 @@
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org" lang="en">
+<!--/*@thymesVar id="serviceRequestBody" type="com.capgemini.bedwards.almon.almonmonitoringapi.models.CreateAPIMonitorRequestBody"*/-->
+<!--/*@thymesVar id="service" type="com.capgemini.bedwards.almon.almondatastore.models.service.Service"*/-->
+<!--/*@thymesVar id="monitoringType" type="com.capgemini.bedwards.almon.almonmonitoringapi.monitoring.APIMonitor"*/-->
+<div class="container" th:fragment="create">
+    <div class="row justify-content-center">
+        <div class="col-12 col-md-8">
+            <div class="card">
+                <h3 class="card-header">Create API Monitor</h3>
+                <div class="card-body">
+                    <form th:action="@{/web/service/{serviceId}/monitoring/{monitoringType}/create(serviceId=${service.getId()},monitoringType=${monitoringType.getName()})}"
+                          method="post">
+
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

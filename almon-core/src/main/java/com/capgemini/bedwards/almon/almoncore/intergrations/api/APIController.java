@@ -3,6 +3,7 @@ package com.capgemini.bedwards.almon.almoncore.intergrations.api;
 
 import com.capgemini.bedwards.almon.almoncore.exceptions.InvalidPermissionException;
 import com.capgemini.bedwards.almon.almoncore.exceptions.NotFoundException;
+import com.capgemini.bedwards.almon.almoncore.exceptions.ValidationException;
 import com.capgemini.bedwards.almon.almoncore.intergrations.api.error.BadRequestResponse;
 import com.capgemini.bedwards.almon.almoncore.intergrations.api.error.ErrorCode;
 import com.capgemini.bedwards.almon.almoncore.intergrations.api.error.ErrorResponse;
@@ -11,6 +12,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.authentication.AuthenticationCredentialsNotFoundException;
 import org.springframework.validation.FieldError;
+import org.springframework.validation.ObjectError;
 import org.springframework.web.HttpRequestMethodNotSupportedException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -63,13 +65,24 @@ public abstract class APIController {
     @ExceptionHandler(MethodArgumentNotValidException.class)
     @ResponseBody
     public List<BadRequestResponse> handleValidationExceptions(MethodArgumentNotValidException ex) {
+        return handleObjectError(ex.getBindingResult().getAllErrors());
+    }
+    public List<BadRequestResponse> handleObjectError(List<ObjectError> objectErrors) {
         List<BadRequestResponse> errors = new ArrayList<>();
-        ex.getBindingResult().getAllErrors().forEach((error) -> {
+        objectErrors.forEach((error) -> {
             String fieldName = ((FieldError) error).getField();
             String errorMessage = error.getDefaultMessage();
             errors.add(new BadRequestResponse(fieldName, errorMessage));
         });
         return errors;
+    }
+
+
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    @ExceptionHandler(ValidationException.class)
+    @ResponseBody
+    public List<BadRequestResponse> handleValidationExceptions(ValidationException ex) {
+        return handleObjectError(ex.getErrors().getAllErrors());
     }
 
     @ExceptionHandler(Throwable.class)

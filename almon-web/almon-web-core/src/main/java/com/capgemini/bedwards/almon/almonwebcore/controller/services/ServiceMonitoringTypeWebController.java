@@ -8,14 +8,13 @@ import com.capgemini.bedwards.almon.almondatastore.models.service.Service;
 import com.capgemini.bedwards.almon.almonmonitoringcore.MonitorType;
 import com.capgemini.bedwards.almon.almonmonitoringcore.Monitors;
 import com.capgemini.bedwards.almon.almonmonitoringcore.validators.MonitorTypeExists;
+import com.fasterxml.jackson.databind.node.ObjectNode;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.validation.Valid;
@@ -37,7 +36,7 @@ public class ServiceMonitoringTypeWebController extends WebController {
     }
 
     @GetMapping("/create")
-    @PreAuthorize("hasAuthority('VIEW_ALL_SERVICES') || hasAuthority('SERVICE_' + #serviceId + '_CAN_CREATE_MONITORING')")
+    @PreAuthorize("hasAuthority('CREATE_MONITORING') || hasAuthority('SERVICE_' + #serviceId + '_CAN_CREATE_MONITORING')")
     public ModelAndView createNewAlertTypePage(
             @Valid @PathVariable(name = "serviceId")
             @ServiceDoesNotExist
@@ -48,6 +47,21 @@ public class ServiceMonitoringTypeWebController extends WebController {
             Model model) {
         Service service = SERVICE_SERVICE.findServiceById(serviceId);
         MonitorType monitorType = MONITORS.getMonitorTypeFromName(monitoringType);
-        return monitorType.createPage(service, model);
+        return monitorType.getCreatePageWeb(service, model);
+    }
+
+    @PostMapping("/create")
+    @PreAuthorize("hasAuthority('CREATE_MONITORING') || hasAuthority('SERVICE_' + #serviceId + '_CAN_CREATE_MONITORING')")
+    public ModelAndView createNewAlertType(
+            @Valid @PathVariable(name = "serviceId")
+            @ServiceDoesNotExist
+            String serviceId,
+            @Valid @PathVariable(name = "monitoringType")
+            @MonitorTypeExists
+            String monitoringType,
+            @RequestBody ObjectNode objectNode) {
+        Service service = SERVICE_SERVICE.findServiceById(serviceId);
+        MonitorType monitorType = MONITORS.getMonitorTypeFromName(monitoringType);
+        return monitorType.createMonitorWeb(service, objectNode);
     }
 }
