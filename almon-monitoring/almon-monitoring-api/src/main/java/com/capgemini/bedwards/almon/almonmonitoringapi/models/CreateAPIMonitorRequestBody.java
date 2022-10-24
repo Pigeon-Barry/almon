@@ -1,6 +1,7 @@
 package com.capgemini.bedwards.almon.almonmonitoringapi.models;
 
 import com.capgemini.bedwards.almon.almoncore.util.MappingUtil;
+import com.capgemini.bedwards.almon.almoncore.validators.CronExpression;
 import com.capgemini.bedwards.almon.almondatastore.models.monitor.MonitoringTypeId;
 import com.capgemini.bedwards.almon.almondatastore.models.service.Service;
 import com.capgemini.bedwards.almon.almondatastore.util.Constants;
@@ -21,6 +22,9 @@ public class CreateAPIMonitorRequestBody {
     private String key;
     @NotBlank
     protected String name;
+
+    @CronExpression
+    protected String cronExpression;
 
     protected String description;
     @NotBlank
@@ -49,6 +53,8 @@ public class CreateAPIMonitorRequestBody {
                 .id(new MonitoringTypeId(key, service))
                 .name(name)
                 .description(description)
+                //Scheduled Class
+                .cronExpression(cronExpression)
                 //API Monitor Class
                 .url(url)
                 .headers(headers)

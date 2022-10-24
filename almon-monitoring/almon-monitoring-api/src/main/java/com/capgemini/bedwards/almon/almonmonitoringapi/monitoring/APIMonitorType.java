@@ -11,7 +11,6 @@ import com.capgemini.bedwards.almon.almonmonitoringcore.contracts.MonitorType;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
 import org.springframework.ui.Model;
 import org.springframework.validation.BeanPropertyBindingResult;
@@ -68,10 +67,6 @@ public class APIMonitorType implements MonitorType, HasScheduledTasks {
         return API_MONITOR_SERVICE.create(requestBody.toAPIMonitoringType(service));
     }
 
-    @Override
-    public ResponseEntity<?> createMonitorAPI(Service service, ObjectNode objectNode) {
-        throw new UnsupportedOperationException();//TODO
-    }
 
     @Override
     public Object getCreateMonitorRequestBody(ObjectNode objectNode) {

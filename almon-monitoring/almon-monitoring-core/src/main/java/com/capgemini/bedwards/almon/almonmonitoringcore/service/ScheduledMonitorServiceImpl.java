@@ -41,4 +41,12 @@ public abstract class ScheduledMonitorServiceImpl<T extends ScheduledMonitoringT
     public void disable(T monitor) {
         updateEnabledStatus(monitor, false);
     }
+
+    @Override
+    public T create(T monitorType) {
+        monitorType = getRepository().save(monitorType);
+        if (monitorType.isEnabled())
+            enable(monitorType);
+        return monitorType;
+    }
 }

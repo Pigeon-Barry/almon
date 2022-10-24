@@ -6,7 +6,6 @@ import com.capgemini.bedwards.almon.almonmonitoringcore.service.ScheduledMonitor
 import java.util.List;
 
 public interface APIMonitorService extends ScheduledMonitorService<APIMonitoringType> {
-    APIMonitoringType create(APIMonitoringType apiMonitoringType);
 
     List<APIMonitoringType> findAll();
 

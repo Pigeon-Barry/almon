@@ -20,10 +20,6 @@ public class APIMonitorServiceImpl extends ScheduledMonitorServiceImpl<APIMonito
         this.API_MONITORING_TYPE_REPOSITORY = apiMonitoringTypeRepository;
     }
 
-    @Override
-    public APIMonitoringType create(APIMonitoringType apiMonitoringType) {
-        return API_MONITORING_TYPE_REPOSITORY.save(apiMonitoringType);
-    }
 
     @Override
     public List<APIMonitoringType> findAll() {

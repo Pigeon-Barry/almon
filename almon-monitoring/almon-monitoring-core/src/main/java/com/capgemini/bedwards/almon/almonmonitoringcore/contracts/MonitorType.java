@@ -2,9 +2,7 @@ package com.capgemini.bedwards.almon.almonmonitoringcore.contracts;
 
 import com.capgemini.bedwards.almon.almondatastore.models.service.Service;
 import com.fasterxml.jackson.databind.node.ObjectNode;
-import org.springframework.http.ResponseEntity;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.servlet.ModelAndView;
 
 
@@ -34,8 +32,6 @@ public interface MonitorType {
     }
 
     ModelAndView createMonitorWeb(Service service, Object formData, Model model);
-
-    ResponseEntity<?> createMonitorAPI(Service service, ObjectNode requestBody) throws MethodArgumentNotValidException;
 
     Object getCreateMonitorRequestBody(ObjectNode jsonRes);
 }

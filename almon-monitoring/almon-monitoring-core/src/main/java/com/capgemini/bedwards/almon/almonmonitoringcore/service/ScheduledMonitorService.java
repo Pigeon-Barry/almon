@@ -5,4 +5,6 @@ import com.capgemini.bedwards.almon.almondatastore.models.monitor.ScheduledMonit
 
 public interface ScheduledMonitorService<T extends ScheduledMonitoringType> extends MonitorService<T> {
     ScheduledTask getScheduledTask(T monitor);
+
+    T create(T monitorType);
 }

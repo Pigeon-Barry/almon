@@ -66,6 +66,18 @@
                                         <strong th:errors="*{url}"></strong>
                                 </span>
                         </div>
+
+                        <div class="form-group required">
+                            <label for="url" class="control-label">Cron Expression:</label>
+                            <input
+                                    th:class="(${#fields.hasErrors('cronExpression')}? 'is-invalid ' : '') + 'form-control'"
+                                    type="text" id="cronExpression" placeholder="Enter Cron Expression"
+                                    name="cronExpression" th:field="*{cronExpression}"/>
+                            <span th:if="${#fields.hasErrors('cronExpression')}" class="invalid-feedback" role="alert">
+                                        <strong th:errors="*{cronExpression}"></strong>
+                                </span>
+                        </div>
+
                         <div class="form-group required">
                             <label for="expectedStatusCode" class="control-label">Expected Status Code:</label>
                             <input

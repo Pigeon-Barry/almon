@@ -25,5 +25,5 @@ public abstract class MonitoringType {
 
     protected String description;
 
-    protected boolean enabled = true;
+    protected boolean enabled = false;
 }
