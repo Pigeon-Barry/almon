@@ -1,7 +1,7 @@
 package com.capgemini.bedwards.almon.almonmonitoringapi.models;
 
 import com.capgemini.bedwards.almon.almoncore.util.MappingUtil;
-import com.capgemini.bedwards.almon.almondatastore.models.alert.MonitoringType;
+import com.capgemini.bedwards.almon.almondatastore.models.monitor.MonitoringTypeId;
 import com.capgemini.bedwards.almon.almondatastore.models.service.Service;
 import com.capgemini.bedwards.almon.almondatastore.util.Constants;
 import com.fasterxml.jackson.databind.node.ObjectNode;
@@ -46,7 +46,7 @@ public class CreateAPIMonitorRequestBody {
     public APIMonitoringType toAPIMonitoringType(Service service) {
         return APIMonitoringType.builder()
                 //Base class
-                .id(new MonitoringType.MonitoringTypeId(key, service))
+                .id(new MonitoringTypeId(key, service))
                 .name(name)
                 .description(description)
                 //API Monitor Class

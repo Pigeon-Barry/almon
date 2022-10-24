@@ -1,7 +1,7 @@
 package com.capgemini.bedwards.almon.almonmonitoringcore.resolver;
 
-import com.capgemini.bedwards.almon.almonmonitoringcore.MonitorType;
 import com.capgemini.bedwards.almon.almonmonitoringcore.Monitors;
+import com.capgemini.bedwards.almon.almonmonitoringcore.contracts.MonitorType;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import lombok.extern.slf4j.Slf4j;

@@ -81,7 +81,7 @@
             </div>
         </div>
         <th:block
-                th:include="fragments/monitor/selectMonitorTypeModal :: selectMonitorTypeModal(${service},${monitors},selectMonitorTypeModal)"
+                th:include="fragments/monitorType/selectMonitorTypeModal :: selectMonitorTypeModal(${service},${monitors},selectMonitorTypeModal)"
                 th:if="${#authorization.expression('hasAuthority(''CREATE_MONITORING'') || hasAuthority(''SERVICE_' + service.getId() + '_CAN_CREATE_ALERTS'')')}"/>
 
     </section>

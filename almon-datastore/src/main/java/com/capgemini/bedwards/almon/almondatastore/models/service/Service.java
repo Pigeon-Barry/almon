@@ -1,7 +1,7 @@
 package com.capgemini.bedwards.almon.almondatastore.models.service;
 
-import com.capgemini.bedwards.almon.almondatastore.models.alert.MonitoringType;
 import com.capgemini.bedwards.almon.almondatastore.models.auth.User;
+import com.capgemini.bedwards.almon.almondatastore.models.monitor.MonitoringType;
 import com.capgemini.bedwards.almon.almondatastore.util.Constants;
 import lombok.AllArgsConstructor;
 import lombok.Builder;

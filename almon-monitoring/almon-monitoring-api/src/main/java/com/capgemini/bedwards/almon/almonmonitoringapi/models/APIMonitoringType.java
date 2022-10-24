@@ -1,8 +1,9 @@
 package com.capgemini.bedwards.almon.almonmonitoringapi.models;
 
-import com.capgemini.bedwards.almon.almondatastore.models.alert.MonitoringType;
+import com.capgemini.bedwards.almon.almondatastore.models.monitor.ScheduledMonitoringType;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.ToString;
 import lombok.experimental.SuperBuilder;
 
@@ -15,10 +16,11 @@ import java.util.Map;
 @Entity
 @SuperBuilder
 @AllArgsConstructor
+@NoArgsConstructor
 @ToString
 @Getter
 @DiscriminatorValue("ACTIVE_API")
-public class APIMonitoringType extends MonitoringType {
+public class APIMonitoringType extends ScheduledMonitoringType {
 
     protected String url;
 
@@ -30,7 +32,9 @@ public class APIMonitoringType extends MonitoringType {
     @ElementCollection
     protected Map<String, String> jsonPathValidations;
 
-    public APIMonitoringType() {
 
+    @Override
+    public String getTaskId() {
+        return "ACTIVE_API-" + getId().getService().getId() + "-" + getId().getId();
     }
 }

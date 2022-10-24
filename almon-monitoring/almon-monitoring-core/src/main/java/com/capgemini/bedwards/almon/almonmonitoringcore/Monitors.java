@@ -1,6 +1,8 @@
 package com.capgemini.bedwards.almon.almonmonitoringcore;
 
 import com.capgemini.bedwards.almon.almoncore.exceptions.NotFoundException;
+import com.capgemini.bedwards.almon.almonmonitoringcore.contracts.MonitorType;
+import com.capgemini.bedwards.almon.almonmonitoringcore.schedule.Scheduler;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -11,7 +13,8 @@ import java.util.Map;
 
 @Component
 public class Monitors {
-
+    @Autowired
+    Scheduler scheduler;
     private final Map<String, MonitorType> MONITORING_TYPES;
 
     @Autowired

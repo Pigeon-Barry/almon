@@ -1,4 +1,4 @@
-package com.capgemini.bedwards.almon.almonmonitoringcore;
+package com.capgemini.bedwards.almon.almonmonitoringcore.contracts;
 
 import com.capgemini.bedwards.almon.almondatastore.models.service.Service;
 import com.fasterxml.jackson.databind.node.ObjectNode;
