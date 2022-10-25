@@ -1,6 +1,5 @@
 package com.capgemini.bedwards.almon.almondatastore.models.auth;
 
-import com.capgemini.bedwards.almon.almondatastore.models.service.Service;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -11,7 +10,6 @@ import org.springframework.lang.Nullable;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
-import java.util.HashSet;
 import java.util.Set;
 import java.util.UUID;
 
@@ -20,7 +18,6 @@ import java.util.UUID;
 @Setter
 @AllArgsConstructor
 @Builder
-@Table(name = "users")
 public class User {
 
     @Id
@@ -51,11 +48,8 @@ public class User {
     @ManyToMany(mappedBy = "users", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     private Set<Authority> authorities;
 
-    @ManyToMany(fetch = FetchType.EAGER)
+    @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     private Set<Role> roles;
-
-    @ManyToMany(mappedBy = "users", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
-    private Set<Service> services;
 
     public User() {
 
@@ -70,9 +64,4 @@ public class User {
         return getRoles().stream().anyMatch(role -> role.getAuthorities().contains(authority)) ;
     }
 
-    public void addService(Service service) {
-        if(this.getServices() == null)
-            this.services = new HashSet<>();
-        this.services.add(service);
-    }
 }

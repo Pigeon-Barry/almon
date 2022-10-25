@@ -13,7 +13,6 @@ import java.util.Set;
 @NoArgsConstructor
 @Builder
 @ToString
-@Table(name = "apiKeys")
 public class APIKey {
 
     @Id

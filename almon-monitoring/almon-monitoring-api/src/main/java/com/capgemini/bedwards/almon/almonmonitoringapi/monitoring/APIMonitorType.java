@@ -59,7 +59,7 @@ public class APIMonitorType implements MonitorType, HasScheduledTasks {
             return getCreatePageWeb(service, model);
         }
         APIMonitoringType apiMonitoringType = createAPIMonitorType(requestBody, service);
-        return new ModelAndView("redirect:/web/service/" + service.getId() + "/monitoring/" + getId() + "/" + apiMonitoringType.getId().getId());
+        return new ModelAndView("redirect:/web/service/" + service.getId() + "/monitoring/" + apiMonitoringType.getId());
     }
 
 

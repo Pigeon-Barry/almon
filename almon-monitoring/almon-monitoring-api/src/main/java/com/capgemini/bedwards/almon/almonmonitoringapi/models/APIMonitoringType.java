@@ -35,6 +35,6 @@ public class APIMonitoringType extends ScheduledMonitoringType {
 
     @Override
     public String getTaskId() {
-        return "ACTIVE_API-" + getId().getService().getId() + "-" + getId().getId();
+        return "ACTIVE_API-" + getId().toString();
     }
 }

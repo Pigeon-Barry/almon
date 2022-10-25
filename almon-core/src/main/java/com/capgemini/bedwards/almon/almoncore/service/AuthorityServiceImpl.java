@@ -6,7 +6,6 @@ import com.capgemini.bedwards.almon.almondatastore.models.auth.Role;
 import com.capgemini.bedwards.almon.almondatastore.models.auth.UpdateType;
 import com.capgemini.bedwards.almon.almondatastore.models.auth.User;
 import com.capgemini.bedwards.almon.almondatastore.repository.auth.AuthorityRepository;
-import com.capgemini.bedwards.almon.almondatastore.repository.auth.UserRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -17,28 +16,31 @@ import java.util.*;
 @Slf4j
 public class AuthorityServiceImpl implements AuthorityService {
 
+
+    private final AuthorityRepository AUTHORITY_REPOSITORY;
+
+    private final UserService USER_SERVICE;
+
     @Autowired
-    AuthorityRepository authorityRepository;
-    @Autowired
-    UserService userService;
+    public AuthorityServiceImpl(AuthorityRepository authorityRepository, UserService userService) {
+        this.AUTHORITY_REPOSITORY = authorityRepository;
+        this.USER_SERVICE = userService;
+    }
 
     @Override
-    public void createAuthority(String authority, String description, User... defaultUsers) {
+    public Authority createAuthority(String authority, String description, Set<User> defaultUsers, Set<Role> roles) {
         log.info("Creating new authority with name: " + authority + " description: " + description);
-
-        authorityRepository.save(Authority.builder()
+        return save(Authority.builder()
                 .authority(authority)
                 .description(description)
-                .users(new HashSet<User>() {{
-                    if (defaultUsers != null)
-                        this.addAll(Arrays.asList(defaultUsers));
-                }})
+                .users(defaultUsers)
+                .roles(roles)
                 .build());
     }
 
     @Override
     public List<Authority> getAllAuthorities() {
-        return authorityRepository.findAll();
+        return AUTHORITY_REPOSITORY.findAll();
     }
 
     @Override
@@ -57,10 +59,10 @@ public class AuthorityServiceImpl implements AuthorityService {
                 //Do nothing
             } else if (updateType == UpdateType.REMOVE) {
                 authority.getUsers().remove(user);
-                authorityRepository.save(authority);
+                save(authority);
             } else if (updateType == UpdateType.GRANT) {
                 authority.getUsers().add(user);
-                authorityRepository.save(authority);
+               save(authority);
             } else
                 throw new RuntimeException("Update type " + updateType + " does not have any actions assigned to it");
         });
@@ -68,19 +70,34 @@ public class AuthorityServiceImpl implements AuthorityService {
 
     @Override
     public void addAuthorities(User user, String... authorities) {
-        updateAuthorities(user,new HashMap<String, UpdateType>(){{
-            for(String authority : authorities){
-                put(authority,UpdateType.GRANT);
+        updateAuthorities(user, new HashMap<String, UpdateType>() {{
+            for (String authority : authorities) {
+                put(authority, UpdateType.GRANT);
             }
         }});
     }
 
     @Override
     public void removeAuthorities(User user, String... authorities) {
-        updateAuthorities(user,new HashMap<String, UpdateType>(){{
-            for(String authority : authorities){
-                put(authority,UpdateType.REMOVE);
+        updateAuthorities(user, new HashMap<String, UpdateType>() {{
+            for (String authority : authorities) {
+                put(authority, UpdateType.REMOVE);
             }
         }});
     }
+
+    @Override
+    public void addRole(Authority authority, Set<Role> roles) {
+        if (authority.getRoles() == null)
+            authority.setRoles(new HashSet<>());
+        authority.getRoles().addAll(roles);
+        save(authority);
+    }
+
+    @Override
+    public Authority save(Authority authority) {
+        log.info("Saving authority: " + authority);
+        return AUTHORITY_REPOSITORY.saveAndFlush(authority);
+    }
+
 }

@@ -1,11 +1,11 @@
 package com.capgemini.bedwards.almon.almonwebcore.controller.services;
 
 
+import com.capgemini.bedwards.almon.almoncore.intergrations.web.WebController;
 import com.capgemini.bedwards.almon.almoncore.services.service.ServiceService;
 import com.capgemini.bedwards.almon.almoncore.util.SecurityUtil;
 import com.capgemini.bedwards.almon.almondatastore.models.auth.User;
 import com.capgemini.bedwards.almon.almondatastore.models.service.Service;
-import com.capgemini.bedwards.almon.almoncore.intergrations.web.WebController;
 import com.capgemini.bedwards.almon.almonwebcore.model.services.ServiceRequestBody;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -37,8 +37,6 @@ public class ServicesWebController extends WebController {
                               Model model) {
         User user = SecurityUtil.getAuthenticatedUser();
         log.debug("UserID: " + user.getId());
-        for (Service service : user.getServices())
-            log.debug("Service: " + service.getId());
 
         Page<Service> page;
         if (SecurityUtil.hasAuthority("VIEW_ALL_SERVICES"))

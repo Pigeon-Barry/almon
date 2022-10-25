@@ -1,12 +1,8 @@
 package com.capgemini.bedwards.almon.almondatastore.models.service;
 
-import com.capgemini.bedwards.almon.almondatastore.models.auth.User;
 import com.capgemini.bedwards.almon.almondatastore.models.monitor.MonitoringType;
 import com.capgemini.bedwards.almon.almondatastore.util.Constants;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.ToString;
+import lombok.*;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
@@ -18,8 +14,8 @@ import java.util.Set;
 @Builder
 @Data
 @AllArgsConstructor
+@NoArgsConstructor
 @ToString
-@Table(name = "services")
 public class Service {
 
     @Id
@@ -32,17 +28,10 @@ public class Service {
 
     private String description;
 
-    @ManyToMany(fetch = FetchType.EAGER)
-    private Set<User> users;
-
-    @OneToMany
+    @OneToMany(mappedBy = "id.service", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private Set<MonitoringType> monitoringTypes;
 
     @NotNull
     private boolean enabled = true;
 
-
-    public Service() {
-
-    }
 }

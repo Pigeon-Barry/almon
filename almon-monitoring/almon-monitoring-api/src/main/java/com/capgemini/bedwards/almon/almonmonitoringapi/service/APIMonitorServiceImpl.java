@@ -1,5 +1,7 @@
 package com.capgemini.bedwards.almon.almonmonitoringapi.service;
 
+import com.capgemini.bedwards.almon.almoncore.service.AuthorityService;
+import com.capgemini.bedwards.almon.almoncore.services.service.ServiceService;
 import com.capgemini.bedwards.almon.almondatastore.models.ScheduledTask;
 import com.capgemini.bedwards.almon.almonmonitoringapi.models.APIMonitoringTask;
 import com.capgemini.bedwards.almon.almonmonitoringapi.models.APIMonitoringType;
@@ -16,7 +18,11 @@ public class APIMonitorServiceImpl extends ScheduledMonitorServiceImpl<APIMonito
     private final APIMonitoringTypeRepository API_MONITORING_TYPE_REPOSITORY;
 
     @Autowired
-    public APIMonitorServiceImpl(APIMonitoringTypeRepository apiMonitoringTypeRepository) {
+    public APIMonitorServiceImpl(
+            APIMonitoringTypeRepository apiMonitoringTypeRepository,
+            AuthorityService authorityService,
+            ServiceService serviceService) {
+        super(authorityService, serviceService);
         this.API_MONITORING_TYPE_REPOSITORY = apiMonitoringTypeRepository;
     }
 

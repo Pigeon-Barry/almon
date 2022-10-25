@@ -1,20 +1,20 @@
 package com.capgemini.bedwards.almon.almondatastore.models.auth;
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
-import lombok.ToString;
+import lombok.*;
 import org.springframework.lang.Nullable;
 
-import javax.persistence.*;
-import javax.validation.constraints.Null;
+import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.Id;
+import javax.persistence.ManyToMany;
 import java.util.Set;
 
 @Entity
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-@Table(name = "roles")
+@Builder
+@ToString
 public class Role {
 
     @Id
@@ -22,7 +22,7 @@ public class Role {
     @Nullable
     private String description;
 
-    @ManyToMany(mappedBy = "roles")
+    @ManyToMany(mappedBy = "roles", fetch = FetchType.EAGER)
     private Set<User> users;
 
     @ManyToMany(mappedBy = "roles", fetch = FetchType.EAGER)

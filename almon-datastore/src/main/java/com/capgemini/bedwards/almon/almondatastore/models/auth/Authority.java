@@ -12,7 +12,6 @@ import java.util.Set;
 @Data
 @AllArgsConstructor
 @Builder
-@Table(name = "authorities")
 public class Authority implements GrantedAuthority {
 
     @Id
