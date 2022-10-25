@@ -1,6 +1,5 @@
 package com.capgemini.bedwards.almon.almonmonitoringcore.schedule;
 
-import com.capgemini.bedwards.almon.almondatastore.models.ScheduledTask;
 import com.capgemini.bedwards.almon.almonmonitoringcore.contracts.HasScheduledTasks;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;

@@ -9,6 +9,7 @@ import com.fasterxml.jackson.databind.node.ObjectNode;
 import lombok.Data;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpMethod;
 
 import javax.validation.constraints.*;
 import java.util.Map;
@@ -27,6 +28,9 @@ public class CreateAPIMonitorRequestBody {
     protected String cronExpression;
 
     protected String description;
+
+    @NotNull
+    private HttpMethod method;
     @NotBlank
     private String url;
 

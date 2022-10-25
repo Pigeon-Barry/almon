@@ -1,7 +1,7 @@
 package com.capgemini.bedwards.almon.almonmonitoringapi.service;
 
 import com.capgemini.bedwards.almon.almonmonitoringapi.models.APIMonitoringType;
-import com.capgemini.bedwards.almon.almonmonitoringcore.service.ScheduledMonitorService;
+import com.capgemini.bedwards.almon.almonmonitoringcore.service.monitor.ScheduledMonitorService;
 
 import java.util.List;
 

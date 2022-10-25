@@ -2,11 +2,11 @@ package com.capgemini.bedwards.almon.almonmonitoringapi.service;
 
 import com.capgemini.bedwards.almon.almoncore.service.AuthorityService;
 import com.capgemini.bedwards.almon.almoncore.services.service.ServiceService;
-import com.capgemini.bedwards.almon.almondatastore.models.ScheduledTask;
 import com.capgemini.bedwards.almon.almonmonitoringapi.models.APIMonitoringTask;
 import com.capgemini.bedwards.almon.almonmonitoringapi.models.APIMonitoringType;
 import com.capgemini.bedwards.almon.almonmonitoringapi.repositorty.APIMonitoringTypeRepository;
-import com.capgemini.bedwards.almon.almonmonitoringcore.service.ScheduledMonitorServiceImpl;
+import com.capgemini.bedwards.almon.almonmonitoringcore.schedule.ScheduledTask;
+import com.capgemini.bedwards.almon.almonmonitoringcore.service.monitor.ScheduledMonitorServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -16,13 +16,16 @@ import java.util.List;
 public class APIMonitorServiceImpl extends ScheduledMonitorServiceImpl<APIMonitoringType> implements APIMonitorService {
 
     private final APIMonitoringTypeRepository API_MONITORING_TYPE_REPOSITORY;
+    private final APIAlertService API_ALERT_SERVICE;
 
     @Autowired
     public APIMonitorServiceImpl(
+            APIAlertService apiAlertService,
             APIMonitoringTypeRepository apiMonitoringTypeRepository,
             AuthorityService authorityService,
             ServiceService serviceService) {
         super(authorityService, serviceService);
+        this.API_ALERT_SERVICE = apiAlertService;
         this.API_MONITORING_TYPE_REPOSITORY = apiMonitoringTypeRepository;
     }
 
@@ -39,6 +42,6 @@ public class APIMonitorServiceImpl extends ScheduledMonitorServiceImpl<APIMonito
 
     @Override
     public ScheduledTask getScheduledTask(APIMonitoringType monitor) {
-        return new APIMonitoringTask(monitor);
+        return new APIMonitoringTask(API_ALERT_SERVICE, monitor);
     }
 }

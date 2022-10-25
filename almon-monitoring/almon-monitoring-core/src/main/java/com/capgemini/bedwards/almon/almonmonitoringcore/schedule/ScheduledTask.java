@@ -1,15 +1,18 @@
-package com.capgemini.bedwards.almon.almondatastore.models;
+package com.capgemini.bedwards.almon.almonmonitoringcore.schedule;
 
+import com.capgemini.bedwards.almon.almondatastore.models.alert.ScheduledAlert;
 import com.capgemini.bedwards.almon.almondatastore.models.monitor.ScheduledMonitoringType;
 import lombok.Data;
 
 @Data
-public abstract class ScheduledTask implements Runnable {
-    private final String TASK_ID;
-    private String cronExpression;
+public abstract class ScheduledTask<T extends ScheduledAlert> implements Runnable {
+    protected final String TASK_ID;
+    protected final String cronExpression;
+
 
     protected ScheduledTask(ScheduledMonitoringType scheduledMonitoringType) {
         this.TASK_ID = scheduledMonitoringType.getTaskId();
         this.cronExpression = scheduledMonitoringType.getCronExpression();
     }
+
 }

@@ -1,4 +1,4 @@
-package com.capgemini.bedwards.almon.almonmonitoringcore.service;
+package com.capgemini.bedwards.almon.almonmonitoringcore.service.monitor;
 
 import com.capgemini.bedwards.almon.almoncore.service.AuthorityService;
 import com.capgemini.bedwards.almon.almoncore.services.service.ServiceService;

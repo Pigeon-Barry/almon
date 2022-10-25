@@ -1,6 +1,6 @@
 package com.capgemini.bedwards.almon.almonmonitoringcore.contracts;
 
-import com.capgemini.bedwards.almon.almondatastore.models.ScheduledTask;
+import com.capgemini.bedwards.almon.almonmonitoringcore.schedule.ScheduledTask;
 
 import java.util.Set;
 

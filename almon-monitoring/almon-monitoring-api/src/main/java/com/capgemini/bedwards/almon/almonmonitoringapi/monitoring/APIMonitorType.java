@@ -1,13 +1,13 @@
 package com.capgemini.bedwards.almon.almonmonitoringapi.monitoring;
 
 import com.capgemini.bedwards.almon.almoncore.util.ValidatorUtil;
-import com.capgemini.bedwards.almon.almondatastore.models.ScheduledTask;
 import com.capgemini.bedwards.almon.almondatastore.models.service.Service;
 import com.capgemini.bedwards.almon.almonmonitoringapi.models.APIMonitoringType;
 import com.capgemini.bedwards.almon.almonmonitoringapi.models.CreateAPIMonitorRequestBody;
 import com.capgemini.bedwards.almon.almonmonitoringapi.service.APIMonitorService;
 import com.capgemini.bedwards.almon.almonmonitoringcore.contracts.HasScheduledTasks;
 import com.capgemini.bedwards.almon.almonmonitoringcore.contracts.MonitorType;
+import com.capgemini.bedwards.almon.almonmonitoringcore.schedule.ScheduledTask;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;

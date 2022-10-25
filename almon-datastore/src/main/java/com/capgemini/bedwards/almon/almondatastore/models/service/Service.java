@@ -31,7 +31,7 @@ public class Service {
     @OneToMany(mappedBy = "id.service", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private Set<MonitoringType> monitoringTypes;
 
-    @NotNull
+    @Builder.Default
     private boolean enabled = true;
 
 }

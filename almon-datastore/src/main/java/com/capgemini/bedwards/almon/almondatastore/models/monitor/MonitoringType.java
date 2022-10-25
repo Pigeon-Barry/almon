@@ -1,5 +1,6 @@
 package com.capgemini.bedwards.almon.almondatastore.models.monitor;
 
+import com.capgemini.bedwards.almon.almondatastore.models.alert.Alert;
 import com.capgemini.bedwards.almon.almondatastore.models.service.Service;
 import lombok.*;
 import lombok.experimental.SuperBuilder;
@@ -7,6 +8,7 @@ import lombok.experimental.SuperBuilder;
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
 import java.io.Serializable;
+import java.util.Set;
 
 @Getter
 @Setter
@@ -28,6 +30,9 @@ public abstract class MonitoringType {
     protected String description;
 
     protected boolean enabled = false;
+
+    @OneToMany(mappedBy = "monitoringType", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    protected Set<Alert> alerts;
 
 
     @Data
