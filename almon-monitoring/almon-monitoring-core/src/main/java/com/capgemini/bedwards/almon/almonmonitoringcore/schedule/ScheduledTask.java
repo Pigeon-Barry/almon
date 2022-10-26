@@ -9,6 +9,8 @@ public abstract class ScheduledTask<T extends ScheduledAlert> implements Runnabl
     protected final String TASK_ID;
     protected final String cronExpression;
 
+    public abstract boolean isEnabled();
+
 
     protected ScheduledTask(ScheduledMonitoringType scheduledMonitoringType) {
         this.TASK_ID = scheduledMonitoringType.getTaskId();

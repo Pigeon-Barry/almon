@@ -30,6 +30,10 @@ public class Scheduler {
     }
 
     public void scheduleTask(ScheduledTask scheduledTask) {
+        if(!scheduledTask.isEnabled()){
+            log.info("Scheduled task with ID: " + scheduledTask.getTASK_ID() + " is disabled ignoring");
+            return;
+        }
         log.info("Scheduling task with job id: " + scheduledTask.getTASK_ID() + " and cron expression: '" + scheduledTask.getCronExpression() +"'");
         ScheduledFuture<?> scheduledFuture = TASK_SCHEDULER.schedule(scheduledTask, new CronTrigger(scheduledTask.getCronExpression(), TimeZone.getTimeZone(TimeZone.getDefault().getID())));
         JOBS.put(scheduledTask.getTASK_ID(), scheduledFuture);

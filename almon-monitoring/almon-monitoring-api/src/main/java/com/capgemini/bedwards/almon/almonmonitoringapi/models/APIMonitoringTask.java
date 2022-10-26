@@ -54,4 +54,9 @@ public class APIMonitoringTask extends ScheduledTask<APIAlertType> {
                 .requestDurationMS(100)
                 .build());
     }
+
+    @Override
+    public boolean isEnabled() {
+        return this.API_MONITORING_TYPE.isEnabled();
+    }
 }

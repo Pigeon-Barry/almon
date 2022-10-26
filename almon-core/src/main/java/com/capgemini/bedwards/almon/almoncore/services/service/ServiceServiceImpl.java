@@ -45,7 +45,7 @@ public class ServiceServiceImpl implements ServiceService {
     @Override
     public Page<Service> findPaginatedFromUser(int pageNumber, int pageSize, User user) {
         Pageable pageable = PageRequest.of(pageNumber - 1, pageSize);
-        return SERVICE_REPOSITORY.findServicesByUser(pageable);
+        return SERVICE_REPOSITORY.findServicesByUser(pageable, user);
     }
 
     @Override
