@@ -1,4 +1,4 @@
-package com.capgemini.bedwards.almon.almoncore.service;
+package com.capgemini.bedwards.almon.almoncore.services.auth;
 
 import com.capgemini.bedwards.almon.almondatastore.models.auth.Role;
 import com.capgemini.bedwards.almon.almondatastore.models.auth.User;

@@ -19,6 +19,7 @@ import java.util.Set;
 @Entity
 @Inheritance(strategy = InheritanceType.JOINED)
 @DiscriminatorColumn(discriminatorType = DiscriminatorType.STRING, name = "type")
+@Table(name = "monitoring_type")
 public abstract class MonitoringType {
     @EmbeddedId
     protected MonitoringTypeId id;

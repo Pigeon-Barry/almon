@@ -89,7 +89,7 @@
                                         <tr th:each="monitorType : ${service.getMonitoringTypes()}">
                                             <td th:text="${monitorType.getId()}">ID</td>
                                             <td th:text="${monitorType.getName()}">Name</td>
-                                            <td>Alert Count (24 hours)</td>
+                                            <td>Errors in last 7 days</td>
                                             <td class="d-flex justify-content-end">
                                                 <a
                                                         th:href="@{/web/service/{serviceId}/monitoring/{monitoringTypeId}(serviceId=${service.getId()},monitoringTypeId=${monitorType.getId()})}"
@@ -100,14 +100,14 @@
                                                         th:if="${#authorization.expression('hasAuthority(''ENABLE_DISABLE_MONITORS'') || hasAuthority(''MONITOR_' + monitorType.getId() + '_CAN_ENABLE_DISABLE'')')}">
                                                     <button th:if="${monitorType.isEnabled()}" href="#"
                                                             class="btn btn-danger mx-2"
-                                                            th:data-userId="${monitorType.getId()}"
-                                                            onclick="disableAccount(this.getAttribute('data-userId'),this)"
+                                                            th:data-alertId="${monitorType.getId()}"
+                                                            onclick="disableAlert(this.getAttribute('data-alertId'),this)"
                                                     >Disable
                                                     </button>
                                                     <button th:if="${!monitorType.isEnabled()}" href="#"
                                                             class="btn btn-success mx-2"
-                                                            th:data-userId="${monitorType.getId()}"
-                                                            onclick="enableAccount(this.getAttribute('data-userId'),this)"
+                                                            th:data-alertId="${monitorType.getId()}"
+                                                            onclick="enableAlert(this.getAttribute('data-alertId'),this)"
                                                     >Enable
                                                     </button>
                                                 </th:block>
@@ -128,16 +128,68 @@
 
     </section>
 
+
+    <script>
+
+
+    </script>
+
     <script th:if="${#authorization.expression('hasAuthority(''ENABLE_DISABLE_SERVICES'') || hasAuthority(''SERVICE_' + service.getId() + '_CAN_ENABLE_DISABLE'')')}">
         function disableService(serviceId, domElement) {
-            updateEnableStatus(domElement, serviceId, false);
+            updateEnableStatusService(domElement, serviceId, false);
         }
 
         function enableService(serviceId, domElement) {
-            updateEnableStatus(domElement, serviceId, true);
+            updateEnableStatusService(domElement, serviceId, true);
         }
 
-        function updateEnableStatus(domElement, serviceId, enabled) {
+        function disableAlert(alertId, domElement) {
+            updateEnableStatusAlert(domElement, alertId, false);
+        }
+
+        function enableAlert(alertId, domElement) {
+            updateEnableStatusAlert(domElement, alertId, true);
+        }
+
+        function updateEnableStatusAlert(domElement, alertId, enabled) {
+            const suffix = enabled ? "enable" : "disable";
+
+            if (!confirmationPrompt(suffix + " - Service", "Are you sure you want to " + suffix + " this alert?"))
+                return;
+
+            const url = "/api/service/[[${serviceId}]]/monitoring/" + alertId + "/" + suffix;
+            const token = $("meta[name='_csrf']").attr("content");
+            const header = $("meta[name='_csrf_header']").attr("content");
+            $.ajax({
+                type: 'PUT',
+                url: url,
+                xhrFields: {
+                    withCredentials: true
+                },
+                beforeSend: function (request) {
+                    request.setRequestHeader(header, token);
+                },
+                complete: function (xhr, textStatus) {
+                    if (xhr.status === 202) {
+                        showAlertSuccess("Alert Successfully " + suffix + "d.");
+                        const dom = $(domElement);
+                        if (enabled) {
+                            dom.removeClass("btn-success").addClass("btn-danger");
+                            dom.attr("onclick", "disableAlert(this.getAttribute('data-alertId'),this)");
+                            dom.text("Disable")
+                        } else {
+                            dom.removeClass("btn-danger").addClass("btn-success");
+                            dom.attr("onclick", "enableAlert(this.getAttribute('data-alertId'),this)");
+                            dom.text("Enable")
+                        }
+                    } else {
+                        showAlertError("Failed to " + suffix + " alert. Please consult an administrator");
+                    }
+                }
+            });
+        }
+
+        function updateEnableStatusService(domElement, serviceId, enabled) {
             const suffix = enabled ? "enable" : "disable";
 
             if (!confirmationPrompt(suffix + " - Service", "Are you sure you want to " + suffix + " this service?"))

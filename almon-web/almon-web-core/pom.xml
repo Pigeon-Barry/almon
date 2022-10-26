@@ -24,8 +24,7 @@
         <dependency>
             <groupId>com.capgemini.bedwards.almon</groupId>
             <artifactId>almon-monitoring-core</artifactId>
-            <version>1.0.0</version>
-            <scope>compile</scope>
+            <version>${almon-monitoring.version}</version>
         </dependency>
     </dependencies>
 

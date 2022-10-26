@@ -21,7 +21,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 public class ServiceWebController extends WebController {
 
 
-    ServiceService SERVICE_SERVICE;
+    private final ServiceService SERVICE_SERVICE;
     private final Monitors MONITORS;
 
     @Autowired

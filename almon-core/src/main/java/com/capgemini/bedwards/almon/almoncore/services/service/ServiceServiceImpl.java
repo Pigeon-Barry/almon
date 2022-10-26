@@ -1,7 +1,7 @@
 package com.capgemini.bedwards.almon.almoncore.services.service;
 
 import com.capgemini.bedwards.almon.almoncore.exceptions.NotFoundException;
-import com.capgemini.bedwards.almon.almoncore.service.AuthorityService;
+import com.capgemini.bedwards.almon.almoncore.services.auth.AuthorityService;
 import com.capgemini.bedwards.almon.almoncore.services.user.RoleService;
 import com.capgemini.bedwards.almon.almondatastore.models.auth.Authority;
 import com.capgemini.bedwards.almon.almondatastore.models.auth.Role;
@@ -64,7 +64,6 @@ public class ServiceServiceImpl implements ServiceService {
     @Override
     public void disableService(String serviceId) {
         updateEnabledStatus(serviceId, false);
-
     }
 
     @Override

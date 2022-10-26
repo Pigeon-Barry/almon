@@ -1,6 +1,8 @@
 package com.capgemini.bedwards.almon.almonmonitoringapi.models;
 
-import com.capgemini.bedwards.almon.almondatastore.models.monitor.ScheduledMonitoringType;
+import com.capgemini.bedwards.almon.almoncore.util.BeanUtil;
+import com.capgemini.bedwards.almon.almonmonitoringapi.service.APIMonitorService;
+import com.capgemini.bedwards.almon.almonmonitoringcore.model.ScheduledMonitoringType;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -42,5 +44,11 @@ public class APIMonitoringType extends ScheduledMonitoringType {
     @Override
     public String getTaskId() {
         return "ACTIVE_API-" + getId().toString();
+    }
+
+
+    @Override
+    public APIMonitoringTask getScheduledTask() {
+        return BeanUtil.getBeanOfClass(APIMonitorService.class).getScheduledTask(this);
     }
 }

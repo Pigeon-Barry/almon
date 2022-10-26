@@ -1,6 +1,6 @@
 package com.capgemini.bedwards.almon.almoncore.security;
 
-import com.capgemini.bedwards.almon.almoncore.service.AuthService;
+import com.capgemini.bedwards.almon.almoncore.services.auth.AuthService;
 import com.capgemini.bedwards.almon.almondatastore.models.auth.User;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;

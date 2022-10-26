@@ -1,4 +1,4 @@
-package com.capgemini.bedwards.almon.almonapi.controllers;
+package com.capgemini.bedwards.almon.almonapi.controllers.service;
 
 import com.capgemini.bedwards.almon.almoncore.intergrations.api.APIController;
 import com.capgemini.bedwards.almon.almoncore.services.service.ServiceService;
@@ -25,21 +25,26 @@ import javax.servlet.http.HttpServletRequest;
 @Slf4j
 public class ServiceAPIController extends APIController {
 
+
+    private ServiceService SERVICE_SERVICE;
+
     @Autowired
-    ServiceService serviceService;
+    public ServiceAPIController(ServiceService serviceService) {
+        this.SERVICE_SERVICE = serviceService;
+    }
 
 
     @PutMapping("/enable")
     @PreAuthorize("hasAuthority('ENABLE_DISABLE_SERVICES') || hasAuthority('SERVICE_' + #serviceId + '_CAN_ENABLE_DISABLE')")
     public ResponseEntity<String> enable(@PathVariable(name = "serviceId") String serviceId) {
-        serviceService.enableService(serviceId);
+        SERVICE_SERVICE.enableService(serviceId);
         return new ResponseEntity<>(HttpStatus.ACCEPTED);
     }
 
     @PutMapping("/disable")
     @PreAuthorize("hasAuthority('ENABLE_DISABLE_SERVICES') || hasAuthority('SERVICE_' + #serviceId + '_CAN_ENABLE_DISABLE')")
     public ResponseEntity<String> disable(@PathVariable(name = "serviceId") String serviceId, HttpServletRequest request) {
-        serviceService.disableService(serviceId);
+        SERVICE_SERVICE.disableService(serviceId);
         return new ResponseEntity<>(HttpStatus.ACCEPTED);
     }
 }

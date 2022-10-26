@@ -5,6 +5,7 @@ import com.capgemini.bedwards.almon.almondatastore.models.service.Service;
 import com.capgemini.bedwards.almon.almonmonitoringapi.models.APIMonitoringType;
 import com.capgemini.bedwards.almon.almonmonitoringapi.models.CreateAPIMonitorRequestBody;
 import com.capgemini.bedwards.almon.almonmonitoringapi.service.APIMonitorService;
+import com.capgemini.bedwards.almon.almonmonitoringcore.LinkUtil;
 import com.capgemini.bedwards.almon.almonmonitoringcore.contracts.HasScheduledTasks;
 import com.capgemini.bedwards.almon.almonmonitoringcore.contracts.MonitorType;
 import com.capgemini.bedwards.almon.almonmonitoringcore.schedule.ScheduledTask;
@@ -59,7 +60,8 @@ public class APIMonitorType implements MonitorType, HasScheduledTasks {
             return getCreatePageWeb(service, model);
         }
         APIMonitoringType apiMonitoringType = createAPIMonitorType(requestBody, service);
-        return new ModelAndView("redirect:/web/service/" + service.getId() + "/monitoring/" + apiMonitoringType.getId());
+
+        return new ModelAndView("redirect:" + LinkUtil.getMonitorWebViewLink(service, apiMonitoringType));
     }
 
 

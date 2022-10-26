@@ -1,4 +1,4 @@
-package com.capgemini.bedwards.almon.almonwebcore.controller.services;
+package com.capgemini.bedwards.almon.almonwebcore.controller.monitor;
 
 
 import com.capgemini.bedwards.almon.almoncore.intergrations.web.WebController;

@@ -1,6 +1,6 @@
 package com.capgemini.bedwards.almon.almoncore.validators;
 
-import com.capgemini.bedwards.almon.almoncore.service.AuthService;
+import com.capgemini.bedwards.almon.almoncore.services.auth.AuthService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;

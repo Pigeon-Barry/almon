@@ -1,13 +1,13 @@
 package com.capgemini.bedwards.almon.almonwebcore.controller.user;
 
-import com.capgemini.bedwards.almon.almoncore.service.AuthorityService;
+import com.capgemini.bedwards.almon.almoncore.intergrations.web.WebController;
+import com.capgemini.bedwards.almon.almoncore.services.auth.AuthorityService;
 import com.capgemini.bedwards.almon.almoncore.services.user.RoleService;
 import com.capgemini.bedwards.almon.almoncore.services.user.UserService;
+import com.capgemini.bedwards.almon.almoncore.util.SecurityUtil;
 import com.capgemini.bedwards.almon.almondatastore.models.auth.Authority;
 import com.capgemini.bedwards.almon.almondatastore.models.auth.Role;
 import com.capgemini.bedwards.almon.almondatastore.models.auth.User;
-import com.capgemini.bedwards.almon.almoncore.intergrations.web.WebController;
-import com.capgemini.bedwards.almon.almoncore.util.SecurityUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;

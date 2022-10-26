@@ -2,7 +2,7 @@ package com.capgemini.bedwards.almon.almonwebcore.controller;
 
 import com.capgemini.bedwards.almon.almoncore.intergrations.web.WebController;
 import com.capgemini.bedwards.almon.almoncore.security.AlmonAuthenticationProvider;
-import com.capgemini.bedwards.almon.almoncore.service.AuthService;
+import com.capgemini.bedwards.almon.almoncore.services.auth.AuthService;
 import com.capgemini.bedwards.almon.almoncore.util.SecurityUtil;
 import com.capgemini.bedwards.almon.almondatastore.models.auth.User;
 import com.capgemini.bedwards.almon.almonwebcore.model.auth.Login;

@@ -1,5 +1,7 @@
-package com.capgemini.bedwards.almon.almondatastore.models.monitor;
+package com.capgemini.bedwards.almon.almonmonitoringcore.model;
 
+import com.capgemini.bedwards.almon.almondatastore.models.monitor.MonitoringType;
+import com.capgemini.bedwards.almon.almonmonitoringcore.schedule.ScheduledTask;
 import lombok.*;
 import lombok.experimental.SuperBuilder;
 
@@ -19,4 +21,6 @@ public abstract class ScheduledMonitoringType extends MonitoringType {
 
     public abstract String getTaskId();
 
+
+    public abstract ScheduledTask getScheduledTask();
 }

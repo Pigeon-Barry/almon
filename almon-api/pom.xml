@@ -30,6 +30,11 @@
             <artifactId>almon-alerting-core</artifactId>
             <version>${almon-alerting.version}</version>
         </dependency>
+        <dependency>
+            <groupId>com.capgemini.bedwards.almon</groupId>
+            <artifactId>almon-monitoring-core</artifactId>
+            <version>${almon-monitoring.version}</version>
+        </dependency>
     </dependencies>
 
     <build>

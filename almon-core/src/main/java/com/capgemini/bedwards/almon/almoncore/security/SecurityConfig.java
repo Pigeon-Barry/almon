@@ -3,12 +3,14 @@ package com.capgemini.bedwards.almon.almoncore.security;
 import com.capgemini.bedwards.almon.almoncore.intergrations.api.error.ErrorCode;
 import com.capgemini.bedwards.almon.almoncore.intergrations.api.error.ErrorResponse;
 import com.capgemini.bedwards.almon.almoncore.services.APIKeyService;
+import com.capgemini.bedwards.almon.almoncore.util.BeanUtil;
 import com.capgemini.bedwards.almon.almoncore.util.SecurityUtil;
 import com.capgemini.bedwards.almon.almondatastore.models.auth.User;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.actuate.trace.http.HttpTraceRepository;
 import org.springframework.boot.actuate.trace.http.InMemoryHttpTraceRepository;
+import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.annotation.Order;
@@ -26,17 +28,17 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 import org.springframework.security.web.csrf.CookieCsrfTokenRepository;
 import org.springframework.security.web.csrf.CsrfTokenRepository;
 
-import javax.sql.DataSource;
-
 @Configuration
 @EnableGlobalMethodSecurity(prePostEnabled = true)
 public class SecurityConfig {
 
+    private final AlmonAuthenticationProvider AUTH_PROVIDER;
 
     @Autowired
-    DataSource dataSource;
-    @Autowired
-    private AlmonAuthenticationProvider authProvider;
+    public SecurityConfig(AlmonAuthenticationProvider authProvider, ApplicationContext applicationContext) {
+        BeanUtil.setApplicationContext(applicationContext);
+        this.AUTH_PROVIDER = authProvider;
+    }
 
     private final static CsrfTokenRepository CSRF_TOKEN_REPOSITORY = CookieCsrfTokenRepository.withHttpOnlyFalse();
 
@@ -54,7 +56,7 @@ public class SecurityConfig {
     public AuthenticationManager authManager(HttpSecurity http) throws Exception {
         AuthenticationManagerBuilder authenticationManagerBuilder =
                 http.getSharedObject(AuthenticationManagerBuilder.class);
-        authenticationManagerBuilder.authenticationProvider(authProvider);
+        authenticationManagerBuilder.authenticationProvider(AUTH_PROVIDER);
         return authenticationManagerBuilder.build();
     }
 

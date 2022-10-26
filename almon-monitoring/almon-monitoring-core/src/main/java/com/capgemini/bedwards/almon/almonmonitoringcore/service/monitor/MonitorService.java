@@ -9,4 +9,7 @@ public interface MonitorService<T extends MonitoringType> {
     T create(T monitorType);
 
     T save(T monitorType);
+
+    T getMonitorFromCombinedId(String source);
+
 }
