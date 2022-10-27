@@ -1,6 +1,6 @@
 <html xmlns="http://www.w3.org/1999/xhtml"
       xmlns:th="http://www.thymeleaf.org" lang="en"
-      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+>
 
 <!--/*@thymesVar id="user" type="com.capgemini.bedwards.almon.almondatastore.models.auth.User"*/-->
 <!--/*@thymesVar id="modelId" type="java.lang.String"*/-->
@@ -60,7 +60,7 @@
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Cancel</button>
-                    <button type="button" class="btn btn-primary" onclick="save()">Save</button>
+                    <button type="button" class="btn btn-primary" onclick="saveAuthority()">Save</button>
                 </div>
             </div>
         </div>
@@ -80,7 +80,7 @@
             });
         });
 
-        function save() {
+        function saveAuthority() {
             const formDataMap = new Map();
             $("#" + permissionInputSearchTableId + " input").each(function () {
                 const inputField = $(this);
