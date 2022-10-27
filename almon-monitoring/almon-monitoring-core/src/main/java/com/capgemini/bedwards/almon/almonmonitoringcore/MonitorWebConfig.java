@@ -1,7 +1,9 @@
 package com.capgemini.bedwards.almon.almonmonitoringcore;
 
+import com.capgemini.bedwards.almon.almoncore.services.service.ServiceService;
 import com.capgemini.bedwards.almon.almondatastore.models.monitor.MonitoringType;
 import com.capgemini.bedwards.almon.almonmonitoringcore.convertor.MonitorConvertor;
+import com.capgemini.bedwards.almon.almonmonitoringcore.convertor.ServiceConvertor;
 import com.capgemini.bedwards.almon.almonmonitoringcore.resolver.CreateMonitorRequestResolver;
 import com.capgemini.bedwards.almon.almonmonitoringcore.service.monitor.MonitorService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,11 +20,15 @@ public class MonitorWebConfig implements WebMvcConfigurer {
 
     private final Monitors MONITORS;
     public final MonitorService<MonitoringType> MONITOR_SERVICE;
+    public final ServiceService SERVICE_SERVICE;
 
     @Autowired
 
-    public MonitorWebConfig(Monitors monitors, @Qualifier("monitorServiceImpl")  MonitorService<MonitoringType> monitorService) {
+    public MonitorWebConfig(Monitors monitors,
+                            @Qualifier("monitorServiceImpl") MonitorService<MonitoringType> monitorService,
+                            ServiceService serviceService) {
         this.MONITORS = monitors;
+        this.SERVICE_SERVICE = serviceService;
         this.MONITOR_SERVICE = monitorService;
 
     }
@@ -35,5 +41,6 @@ public class MonitorWebConfig implements WebMvcConfigurer {
     @Override
     public void addFormatters(FormatterRegistry registry) {
         registry.addConverter(new MonitorConvertor(MONITOR_SERVICE));
+        registry.addConverter(new ServiceConvertor(SERVICE_SERVICE));
     }
 }

@@ -4,6 +4,7 @@ import com.capgemini.bedwards.almon.almondatastore.models.auth.Authority;
 import com.capgemini.bedwards.almon.almondatastore.models.auth.Role;
 import com.capgemini.bedwards.almon.almondatastore.models.auth.UpdateType;
 import com.capgemini.bedwards.almon.almondatastore.models.auth.User;
+import com.capgemini.bedwards.almon.almondatastore.models.service.Service;
 
 import java.util.*;
 
@@ -26,4 +27,6 @@ public interface RoleService {
     Optional<Role> getRoleFromName(String roleName);
 
     Role findOrCreate(String name, String description);
+
+    void deleteServiceRoles(Service service);
 }

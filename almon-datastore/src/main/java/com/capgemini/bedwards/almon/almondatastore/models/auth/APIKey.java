@@ -21,7 +21,7 @@ public class APIKey {
     @NotNull
     private User owner;
 
-    @ManyToMany(mappedBy = "apiKeys", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @ManyToMany(mappedBy = "apiKeys", cascade = CascadeType.REMOVE, fetch = FetchType.EAGER)
     private Set<Authority> authorities;
 
 }

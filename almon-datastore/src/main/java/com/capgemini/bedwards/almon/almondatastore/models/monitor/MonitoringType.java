@@ -32,7 +32,7 @@ public abstract class MonitoringType {
 
     protected boolean enabled = false;
 
-    @OneToMany(mappedBy = "monitoringType", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "monitoringType", fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
     protected Set<Alert> alerts;
 
 

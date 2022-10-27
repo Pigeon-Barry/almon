@@ -18,66 +18,44 @@
                             th:action="@{/web/service/{serviceId}/monitoring/{monitoringType}/create(serviceId=${service.getId()},monitoringType=${monitoringType.getId()})}"
                             method="post">
 
-                        <input type="hidden" name="MONITOR_TYPE" th:value="${monitoringType.getId()}">
-                        <div class="form-group required">
-                            <label for="key" class="control-label">Key:</label>
-                            <div class="input-group mb-3">
-                                <span class="input-group-text" th:text="${service.getId() + '_'}"></span>
-                                <input
-                                        th:class="(${#fields.hasErrors('key')}? 'is-invalid ' : '') + 'form-control'"
-                                        th:field="*{key}"
-                                        type="text" class="form-control" id="key" name="key"
-                                        placeholder="Enter Monitor Key">
-                                <span th:if="${#fields.hasErrors('key')}" class="invalid-feedback" role="alert">
-                                        <strong th:errors="*{key}"></strong>
-                                </span>
-                            </div>
-                        </div>
-                        <div class="form-group required">
-                            <label for="name" class="control-label">Name:</label>
-                            <input
-                                    th:class="(${#fields.hasErrors('name')}? 'is-invalid ' : '') + 'form-control'"
-                                    type="text" id="name" placeholder="Enter Service Name"
-                                    name="name" th:field="*{name}"/>
-                            <span th:if="${#fields.hasErrors('name')}" class="invalid-feedback" role="alert">
-                                    <strong th:errors="*{name}"></strong>
-                            </span>
-                        </div>
+                        <th:block th:include="fragments/monitor/createScheduledMonitorFragment :: createScheduledMonitorHeader"/>
 
-
-                        <div class="form-group">
-                            <label for="description" class="control-label">Description:</label>
-                            <textarea th:class="(${#fields.hasErrors('description')}? 'is-invalid ' : '') + 'form-control'" id="description" rows="3"
-                                      placeholder="Enter Service Description"
-                                      th:field="*{description}"
-                            ></textarea>
-
-                            <span th:if="${#fields.hasErrors('description')}" class="invalid-feedback" role="alert">
-                                    <strong th:errors="*{description}"></strong>
-                            </span>
-                        </div>
+                        <h4 class="text-center">API Monitor Values</h4>
+                        <hr>
                         <div class="form-group required">
                             <label for="url" class="control-label">URL:</label>
-                            <input
-                                    th:class="(${#fields.hasErrors('url')}? 'is-invalid ' : '') + 'form-control'"
-                                    type="text" id="url" placeholder="Enter Service Name"
-                                    name="url" th:field="*{url}"/>
+                            <div class="input-group mb-3">
+                                <select class="input-group-text" name="method">
+                                    <option value="GET">GET</option>
+                                    <option value="POST">POST</option>
+                                    <option value="PUT">PUT</option>
+                                </select>
+                                <input
+                                        th:class="(${#fields.hasErrors('url')}? 'is-invalid ' : '') + 'form-control'"
+                                        type="text" id="url" placeholder="Enter Service Name"
+                                        name="url" th:field="*{url}"/>
+                            </div>
                             <span th:if="${#fields.hasErrors('url')}" class="invalid-feedback" role="alert">
                                         <strong th:errors="*{url}"></strong>
-                                </span>
+                            </span>
+                            <span th:if="${#fields.hasErrors('method')}" class="invalid-feedback" role="alert">
+                                        <strong th:errors="*{method}"></strong>
+                            </span>
                         </div>
 
-                        <div class="form-group required">
-                            <label for="url" class="control-label">Cron Expression:</label>
-                            <input
-                                    th:class="(${#fields.hasErrors('cronExpression')}? 'is-invalid ' : '') + 'form-control'"
-                                    type="text" id="cronExpression" placeholder="Enter Cron Expression"
-                                    name="cronExpression" th:field="*{cronExpression}"/>
-                            <span th:if="${#fields.hasErrors('cronExpression')}" class="invalid-feedback" role="alert">
-                                        <strong th:errors="*{cronExpression}"></strong>
-                                </span>
-                        </div>
+                        <div class="form-group">
+                            <label for="body" class="control-label">Payload:</label>
+                            <textarea
+                                    th:class="(${#fields.hasErrors('body')}? 'is-invalid ' : '') + 'form-control'"
+                                    id="body" rows="3"
+                                    placeholder="Enter Request Body"
+                                    th:field="*{body}"
+                            ></textarea>
 
+                            <span th:if="${#fields.hasErrors('body')}" class="invalid-feedback" role="alert">
+                                    <strong th:errors="*{body}"></strong>
+                            </span>
+                        </div>
                         <div class="form-group required">
                             <label for="expectedStatusCode" class="control-label">Expected Status Code:</label>
                             <input
@@ -186,7 +164,8 @@
         /*[/]*/
     </script>
 
-    <script th:inline="javascript" th:if="${previousFormData != null && previousFormData.getJsonPathValidations() != null}">
+    <script th:inline="javascript"
+            th:if="${previousFormData != null && previousFormData.getJsonPathValidations() != null}">
         /*[# th:each="jsonPathVerification : ${previousFormData.getJsonPathValidations().entrySet()}"]*/
         addJsonPathVerification(/*[[${jsonPathVerification.getKey()}]]*/, /*[[${jsonPathVerification.getValue()}]]*/);
         /*[/]*/

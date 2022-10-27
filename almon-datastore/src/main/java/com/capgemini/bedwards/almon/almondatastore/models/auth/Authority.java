@@ -12,19 +12,20 @@ import java.util.Set;
 @Data
 @AllArgsConstructor
 @Builder
+@Table(name = "authority")
 public class Authority implements GrantedAuthority {
 
     @Id
     private String authority;
     @Nullable
     private String description;
-    @ManyToMany(fetch = FetchType.EAGER)
+    @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.REMOVE)
     private Set<User> users;
 
-    @ManyToMany(fetch = FetchType.EAGER)
+    @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.REMOVE)
     private Set<APIKey> apiKeys;
 
-    @ManyToMany(fetch = FetchType.EAGER)
+    @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.REMOVE)
     private Set<Role> roles;
 
     public Authority() {

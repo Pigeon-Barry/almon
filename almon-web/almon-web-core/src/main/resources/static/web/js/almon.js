@@ -46,6 +46,9 @@ function showAlert(message, alertType) {
 function confirmationPrompt(title, message) {
     return confirm(message);//TODO Make more pretty
 }
+function showPopup(title, message){
+    return confirmationPrompt(title,message);
+}
 
 function redirect(url){
     window.location = url;

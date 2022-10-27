@@ -28,7 +28,7 @@ public class Service {
 
     private String description;
 
-    @OneToMany(mappedBy = "id.service", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "id.service", fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
     private Set<MonitoringType> monitoringTypes;
 
     @Builder.Default

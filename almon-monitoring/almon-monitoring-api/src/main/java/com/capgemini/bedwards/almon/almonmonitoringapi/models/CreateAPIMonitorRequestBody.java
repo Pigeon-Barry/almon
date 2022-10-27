@@ -34,6 +34,8 @@ public class CreateAPIMonitorRequestBody {
     @NotBlank
     private String url;
 
+    private String body;
+
     @Min(100)
     @Max(999)
     @NotNull
@@ -61,6 +63,8 @@ public class CreateAPIMonitorRequestBody {
                 .cronExpression(cronExpression)
                 //API Monitor Class
                 .url(url)
+                .method(method)
+                .body(body)
                 .headers(headers)
                 .jsonPathValidations(jsonPathValidations)
                 .expectedStatus(expectedStatusCode)

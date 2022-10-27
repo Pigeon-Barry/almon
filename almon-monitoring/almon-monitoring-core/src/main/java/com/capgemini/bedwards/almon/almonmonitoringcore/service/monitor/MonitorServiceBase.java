@@ -59,7 +59,7 @@ public abstract class MonitorServiceBase<T extends MonitoringType> implements Mo
             enable(monitorType);
         AUTHORITY_SERVICE.addRole(
                 AUTHORITY_SERVICE.createAuthority(
-                        "MONITOR_" + monitorType.getId() + "_CAN_ENABLE_DISABLE",
+                        "SERVICE_" + monitorType.getId().getService().getId() + "_MONITOR_" + monitorType.getId() + "_CAN_ENABLE_DISABLE",
                         "Grants the ability to enable/disable this monitor"
                 ),
                 Collections.singleton(SERVICE_SERVICE.getOrCreateAdminRole(monitorType.getId().getService()))

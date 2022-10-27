@@ -46,17 +46,25 @@ public class AuthServiceImpl implements AuthService {
         if (!checkUserExists(email)) {
             Set<Role> roles = new HashSet<>();
             roles.add(roleRepository.findById("USER").orElse(null));
-
-            if (email.equalsIgnoreCase(rootAccount))
+            boolean enabled = false;
+            if (email.equalsIgnoreCase(rootAccount)) {
                 roles.add(roleRepository.findById("ADMIN").orElse(null));
-            return userRepository.saveAndFlush(
+                enabled = true;
+            }
+            User user = userRepository.saveAndFlush(
                     User.builder()
                             .email(email)
+                            .enabled(enabled)
                             .firstName(firstname)
                             .lastName(lastname)
                             .password(passwordEncoder.encode(password))
                             .roles(roles)
                             .build());
+            if (email.equalsIgnoreCase(rootAccount)) {
+                user.setApprovedBy(user);
+                user = userRepository.save(user);
+            }
+            return user;
         }
         throw new BadCredentialsException("Invalid Credentials");
     }

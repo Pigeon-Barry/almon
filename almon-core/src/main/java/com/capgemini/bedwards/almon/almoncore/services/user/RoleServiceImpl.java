@@ -105,4 +105,9 @@ public class RoleServiceImpl implements RoleService {
         Optional<Role> roleOptional = getRoleFromName(name);
         return roleOptional.orElseGet(() -> createRole(name, description));
     }
+
+    @Override
+    public void deleteServiceRoles(com.capgemini.bedwards.almon.almondatastore.models.service.Service service) {
+        ROLE_REPOSITORY.deleteServiceRoles(service);
+    }
 }

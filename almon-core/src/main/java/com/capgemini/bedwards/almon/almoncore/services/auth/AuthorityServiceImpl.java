@@ -100,4 +100,9 @@ public class AuthorityServiceImpl implements AuthorityService {
         return AUTHORITY_REPOSITORY.saveAndFlush(authority);
     }
 
+    @Override
+    public void deleteServiceAuthorities(com.capgemini.bedwards.almon.almondatastore.models.service.Service service) {
+        AUTHORITY_REPOSITORY.deleteServiceAuthorities(service);
+    }
+
 }

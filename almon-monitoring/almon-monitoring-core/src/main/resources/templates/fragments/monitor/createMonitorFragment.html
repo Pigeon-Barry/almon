@@ -1,0 +1,46 @@
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org"
+      lang="en">
+<th:block th:fragment="createMonitorHeader">
+    <h4 class="text-center">Standard Monitor Values</h4>
+    <hr>
+    <input type="hidden" name="MONITOR_TYPE" th:value="${monitoringType.getId()}">
+    <div class="form-group required">
+        <label for="key" class="control-label">Key:</label>
+        <div class="input-group mb-3">
+            <span class="input-group-text" th:text="${service.getId() + '_'}"></span>
+            <input
+                    th:class="(${#fields.hasErrors('key')}? 'is-invalid ' : '') + 'form-control'"
+                    th:field="*{key}"
+                    type="text" class="form-control" id="key" name="key"
+                    placeholder="Enter Monitor Key">
+            <span th:if="${#fields.hasErrors('key')}" class="invalid-feedback" role="alert">
+                                        <strong th:errors="*{key}"></strong>
+                                </span>
+        </div>
+    </div>
+    <div class="form-group required">
+        <label for="name" class="control-label">Name:</label>
+        <input
+                th:class="(${#fields.hasErrors('name')}? 'is-invalid ' : '') + 'form-control'"
+                type="text" id="name" placeholder="Enter Service Name"
+                name="name" th:field="*{name}"/>
+        <span th:if="${#fields.hasErrors('name')}" class="invalid-feedback" role="alert">
+                                    <strong th:errors="*{name}"></strong>
+                            </span>
+    </div>
+    <div class="form-group">
+        <label for="description" class="control-label">Description:</label>
+        <textarea
+                th:class="(${#fields.hasErrors('description')}? 'is-invalid ' : '') + 'form-control'"
+                id="description" rows="3"
+                placeholder="Enter Service Description"
+                th:field="*{description}"
+        ></textarea>
+
+        <span th:if="${#fields.hasErrors('description')}" class="invalid-feedback" role="alert">
+                                    <strong th:errors="*{description}"></strong>
+                            </span>
+    </div>
+    <br>
+</th:block>

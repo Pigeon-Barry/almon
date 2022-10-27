@@ -21,19 +21,29 @@
                                 <button type="button" class="btn btn-outline-primary ms-1">Placeholder</button>
                             </div>
                             <div>
-                                <th:block
-                                        th:if="${#authorization.expression('hasAuthority(''ENABLE_DISABLE_SERVICES'') || hasAuthority(''SERVICE_' + service.getId() + '_CAN_ENABLE_DISABLE'')')}">
-                                    <button th:if="${service.isEnabled()}" href="#" class="btn btn-danger mx-2"
-                                            th:data-serviceId="${service.getId()}"
-                                            onclick="disableService(this.getAttribute('data-serviceId'),this)"
-                                    >Disable Service
-                                    </button>
-                                    <button th:if="${!service.isEnabled()}" href="#" class="btn btn-success mx-2"
-                                            th:data-serviceId="${service.getId()}"
-                                            onclick="enableService(this.getAttribute('data-serviceId'),this)"
-                                    >Enable Service
-                                    </button>
-                                </th:block>
+                                <div class="d-flex justify-content-center mb-2">
+                                    <th:block
+                                            th:if="${#authorization.expression('hasAuthority(''ENABLE_DISABLE_SERVICES'') || hasAuthority(''SERVICE_' + service.getId() + '_CAN_ENABLE_DISABLE'')')}">
+                                        <button th:if="${service.isEnabled()}" href="#" class="btn btn-danger mx-2"
+                                                th:data-serviceId="${service.getId()}"
+                                                onclick="disableService(this.getAttribute('data-serviceId'),this)"
+                                        >Disable Service
+                                        </button>
+                                        <button th:if="${!service.isEnabled()}" href="#" class="btn btn-success mx-2"
+                                                th:data-serviceId="${service.getId()}"
+                                                onclick="enableService(this.getAttribute('data-serviceId'),this)"
+                                        >Enable Service
+                                        </button>
+                                    </th:block>
+                                    <th:block
+                                            th:if="${#authorization.expression('hasAuthority(''DELETE_SERVICES'') || hasAuthority(''SERVICE_' + service.getId() + '_CAN_DELETE'')')}">
+                                        <button href="#" class="btn btn-danger mx-2"
+                                                th:data-serviceId="${service.getId()}"
+                                                onclick="deleteService(this.getAttribute('data-serviceId'),this)"
+                                        >Delete Service
+                                        </button>
+                                    </th:block>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -81,7 +91,6 @@
                                         <tr>
                                             <th>ID</th>
                                             <th>Name</th>
-                                            <th>Alert Count (24 hours)</th>
                                             <th class="d-flex justify-content-end">Actions</th>
                                         </tr>
                                         </thead>
@@ -89,7 +98,6 @@
                                         <tr th:each="monitorType : ${service.getMonitoringTypes()}">
                                             <td th:text="${monitorType.getId()}">ID</td>
                                             <td th:text="${monitorType.getName()}">Name</td>
-                                            <td>Errors in last 7 days</td>
                                             <td class="d-flex justify-content-end">
                                                 <a
                                                         th:href="@{/web/service/{serviceId}/monitoring/{monitoringTypeId}(serviceId=${service.getId()},monitoringTypeId=${monitorType.getId()})}"
@@ -129,10 +137,37 @@
     </section>
 
 
-    <script>
+    <script th:if="${#authorization.expression('hasAuthority(''DELETE_SERVICES'') || hasAuthority(''SERVICE_' + service.getId() + '_CAN_DELETE'')')}">
 
+        function deleteService(serviceId) {
+            if (!confirmationPrompt(serviceId + " - Delete", "Are you sure you want to delete this service?") || !confirmationPrompt(serviceId + " - Delete", "Are you really sure you want to delete this service this can not be undone?"))
+                return;
+
+            const url = "/web/service/" + serviceId;
+            const token = $("meta[name='_csrf']").attr("content");
+            const header = $("meta[name='_csrf_header']").attr("content");
+            $.ajax({
+                type: 'DELETE',
+                url: url,
+                xhrFields: {
+                    withCredentials: true
+                },
+                beforeSend: function (request) {
+                    request.setRequestHeader(header, token);
+                },
+                complete: function (xhr, textStatus) {
+                    if (xhr.status === 200) {
+                        showPopup("Delete Service","Successfully deleted Service");
+                        redirect("/web/services");
+                    } else {
+                        showAlertError("Failed to delete service. Please consult an administrator");
+                    }
+                }
+            });
+        }
 
     </script>
+
 
     <script th:if="${#authorization.expression('hasAuthority(''ENABLE_DISABLE_SERVICES'') || hasAuthority(''SERVICE_' + service.getId() + '_CAN_ENABLE_DISABLE'')')}">
         function disableService(serviceId, domElement) {

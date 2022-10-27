@@ -13,6 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.validation.constraints.NotNull;
 import java.util.Collections;
@@ -115,7 +116,13 @@ public class ServiceServiceImpl implements ServiceService {
         );
         AUTHORITY_SERVICE.createAuthority(
                 "SERVICE_" + id + "_CAN_EDIT",
-                "Grants the ability to update core details about this service as well as delete permission",
+                "Grants the ability to update core details about this service",
+                null,
+                adminRoleSet
+        );
+        AUTHORITY_SERVICE.createAuthority(
+                "SERVICE_" + id + "_CAN_DELETE",
+                "Grants the ability to delete this service",
                 null,
                 adminRoleSet
         );
@@ -156,8 +163,16 @@ public class ServiceServiceImpl implements ServiceService {
         AUTHORITY_SERVICE.addRole(authority, Collections.singleton(getOrCreateAdminRole(service)));
     }
 
+    @Override
+    public void deleteService(Service service) {
+        SERVICE_REPOSITORY.delete(service);
+        AUTHORITY_SERVICE.deleteServiceAuthorities(service);
+        ROLE_SERVICE.deleteServiceRoles(service);
+    }
+
 
     @Override
+    @Transactional
     public Role getOrCreateUserRole(Service service) {
         return ROLE_SERVICE.findOrCreate("SERVICE_" + service.getId() + "_USER", "Standard User permissions");
     }

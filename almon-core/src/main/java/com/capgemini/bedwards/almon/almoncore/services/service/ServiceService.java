@@ -34,4 +34,6 @@ public interface ServiceService {
     Role getOrCreateAdminRole(Service service);
 
     void assignAdminAuthority(Service service, Authority authority);
+
+    void deleteService(Service service);
 }
