@@ -5,9 +5,9 @@ import com.capgemini.bedwards.almon.almoncore.exceptions.NotFoundException;
 import com.capgemini.bedwards.almon.almoncore.services.auth.AuthorityService;
 import com.capgemini.bedwards.almon.almoncore.services.service.ServiceService;
 import com.capgemini.bedwards.almon.almondatastore.models.monitor.MonitoringType;
-import com.capgemini.bedwards.almon.almonmonitoringcore.model.ScheduledMonitoringType;
+import com.capgemini.bedwards.almon.almondatastore.models.schedule.ScheduledMonitoringType;
+import com.capgemini.bedwards.almon.almondatastore.models.schedule.Scheduler;
 import com.capgemini.bedwards.almon.almonmonitoringcore.repository.monitor.MonitorTypeRepository;
-import com.capgemini.bedwards.almon.almonmonitoringcore.schedule.Scheduler;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
@@ -49,7 +49,6 @@ public abstract class MonitorServiceBase<T extends MonitoringType> implements Mo
         updateEnabledStatus(monitor, false);
         if (monitor instanceof ScheduledMonitoringType)
             SCHEDULER.removeScheduledTask(((ScheduledMonitoringType) monitor).getTaskId());
-
     }
 
     @Override

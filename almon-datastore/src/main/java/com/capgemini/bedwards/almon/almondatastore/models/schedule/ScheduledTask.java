@@ -1,7 +1,6 @@
-package com.capgemini.bedwards.almon.almonmonitoringcore.schedule;
+package com.capgemini.bedwards.almon.almondatastore.models.schedule;
 
 import com.capgemini.bedwards.almon.almondatastore.models.alert.ScheduledAlert;
-import com.capgemini.bedwards.almon.almonmonitoringcore.model.ScheduledMonitoringType;
 import lombok.Data;
 
 @Data

@@ -1,7 +1,7 @@
 package com.capgemini.bedwards.almon.almonmonitoringcore.service.monitor;
 
-import com.capgemini.bedwards.almon.almonmonitoringcore.model.ScheduledMonitoringType;
-import com.capgemini.bedwards.almon.almonmonitoringcore.schedule.ScheduledTask;
+import com.capgemini.bedwards.almon.almondatastore.models.schedule.ScheduledMonitoringType;
+import com.capgemini.bedwards.almon.almondatastore.models.schedule.ScheduledTask;
 
 ;
 

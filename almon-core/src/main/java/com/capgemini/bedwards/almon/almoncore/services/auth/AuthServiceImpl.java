@@ -30,7 +30,7 @@ public class AuthServiceImpl implements AuthService {
     @Lazy
     PasswordEncoder passwordEncoder;
 
-    @Value("${almon.web.rootAccount}")
+    @Value("${almon.web.root-account}")
     private String rootAccount;
 
     @Override

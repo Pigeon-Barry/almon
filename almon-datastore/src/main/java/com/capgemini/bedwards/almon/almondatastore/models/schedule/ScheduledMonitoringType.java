@@ -1,7 +1,6 @@
-package com.capgemini.bedwards.almon.almonmonitoringcore.model;
+package com.capgemini.bedwards.almon.almondatastore.models.schedule;
 
 import com.capgemini.bedwards.almon.almondatastore.models.monitor.MonitoringType;
-import com.capgemini.bedwards.almon.almonmonitoringcore.schedule.ScheduledTask;
 import lombok.*;
 import lombok.experimental.SuperBuilder;
 

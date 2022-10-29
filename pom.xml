@@ -17,7 +17,7 @@
     <description>almon</description>
     <properties>
         <java.version>1.8</java.version>
-        <almon-alerting.version>1.0.0</almon-alerting.version>
+        <almon-notification.version>1.0.0</almon-notification.version>
         <almon-core.version>1.0.0</almon-core.version>
         <almon-datastore.version>1.0.0</almon-datastore.version>
         <almon-monitoring.version>1.0.0</almon-monitoring.version>
@@ -26,7 +26,7 @@
     </properties>
 
     <modules>
-        <module>almon-alerting</module>
+        <module>almon-notification</module>
         <module>almon-core</module>
         <module>almon-datastore</module>
         <module>almon-framework</module>
@@ -37,6 +37,11 @@
 
     <dependencies>
         <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-configuration-processor</artifactId>
+            <optional>true</optional>
+        </dependency>
+        <dependency>
             <groupId>org.apache.commons</groupId>
             <artifactId>commons-lang3</artifactId>
             <version>3.12.0</version>
@@ -44,7 +49,7 @@
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-parent</artifactId>
-            <version>2.7.4</version>
+            <version>2.7.5</version>
             <type>pom</type>
         </dependency>
         <dependency>
@@ -86,7 +91,17 @@
         <dependency>
             <groupId>org.springdoc</groupId>
             <artifactId>springdoc-openapi-ui</artifactId>
-            <version>1.6.9</version>
+            <version>1.6.11</version>
+        </dependency>
+        <dependency>
+            <groupId>com.jayway.jsonpath</groupId>
+            <artifactId>json-path</artifactId>
+            <version>2.7.0</version>
+        </dependency>
+        <dependency>
+            <groupId>com.sun.mail</groupId>
+            <artifactId>javax.mail</artifactId>
+            <version>1.6.2</version>
         </dependency>
     </dependencies>
 </project>

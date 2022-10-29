@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml"
       xmlns:th="http://www.thymeleaf.org" lang="en"
-      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+>
 <th:block th:fragment="base(pageName,activeTab, mainContentFragment)">
     <!--/*@thymesVar id="pageName" type="java.lang.String"*/-->
     <!--/*@thymesVar id="activeTab" type="java.lang.String"*/-->
@@ -10,7 +10,7 @@
           xmlns:th="http://www.thymeleaf.org" lang="en">
     <head>
         <th:block th:insert="fragments/head :: head"/>
-        <title th:text="${@environment.getProperty('almon.app.name')} + '- ' + ${pageName}"></title>
+        <title th:text="${@environment.getProperty('almon.core.app.name')} + '- ' + ${pageName}"></title>
     </head>
     <body>
     <div class="container-fluid">

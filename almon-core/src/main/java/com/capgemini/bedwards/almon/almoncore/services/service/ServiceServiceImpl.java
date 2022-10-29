@@ -6,10 +6,14 @@ import com.capgemini.bedwards.almon.almoncore.services.user.RoleService;
 import com.capgemini.bedwards.almon.almondatastore.models.auth.Authority;
 import com.capgemini.bedwards.almon.almondatastore.models.auth.Role;
 import com.capgemini.bedwards.almon.almondatastore.models.auth.User;
+import com.capgemini.bedwards.almon.almondatastore.models.monitor.MonitoringType;
+import com.capgemini.bedwards.almon.almondatastore.models.schedule.ScheduledMonitoringType;
+import com.capgemini.bedwards.almon.almondatastore.models.schedule.Scheduler;
 import com.capgemini.bedwards.almon.almondatastore.models.service.Service;
 import com.capgemini.bedwards.almon.almondatastore.repository.ServiceRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -27,6 +31,9 @@ public class ServiceServiceImpl implements ServiceService {
     private final ServiceRepository SERVICE_REPOSITORY;
     private final AuthorityService AUTHORITY_SERVICE;
     private final RoleService ROLE_SERVICE;
+    @Autowired
+    @Lazy
+    protected Scheduler SCHEDULER;
 
     @Autowired
     public ServiceServiceImpl(ServiceRepository serviceRepository,
@@ -78,6 +85,14 @@ public class ServiceServiceImpl implements ServiceService {
         Service service = findServiceById(serviceId);
         service.setEnabled(enabled);
         save(service);
+        for (MonitoringType monitoringType : service.getMonitoringTypes()) {
+            if (monitoringType instanceof ScheduledMonitoringType) {
+                if (enabled)
+                    SCHEDULER.scheduleTask(((ScheduledMonitoringType) monitoringType).getScheduledTask());
+                else
+                    SCHEDULER.removeScheduledTask(((ScheduledMonitoringType) monitoringType).getTaskId());
+            }
+        }
     }
 
     @Override

@@ -20,8 +20,8 @@
         </dependency>
         <dependency>
             <groupId>com.capgemini.bedwards.almon</groupId>
-            <artifactId>almon-alerting-core</artifactId>
-            <version>${almon-alerting.version}</version>
+            <artifactId>almon-notification-core</artifactId>
+            <version>${almon-notification.version}</version>
         </dependency>
         <dependency>
             <groupId>org.springframework</groupId>

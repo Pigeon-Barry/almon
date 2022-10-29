@@ -83,6 +83,9 @@
                                                     type="button" class="btn btn-primary">Create New Monitor
                                             </button>
                                         </li>
+                                        <li class="list-group-item" th:if="${!service.isEnabled()}">
+                                            <h3 class="text-danger text-center">WARNING: All monitors are disabled as service is disabled</h3>
+                                        </li>
                                     </ul>
                                 </div>
                                 <div class="card-body row col-12" th:if="${service.getMonitoringTypes().size() > 0}">
@@ -157,7 +160,7 @@
                 },
                 complete: function (xhr, textStatus) {
                     if (xhr.status === 200) {
-                        showPopup("Delete Service","Successfully deleted Service");
+                        showPopup("Delete Service", "Successfully deleted Service");
                         redirect("/web/services");
                     } else {
                         showAlertError("Failed to delete service. Please consult an administrator");
@@ -192,7 +195,7 @@
             if (!confirmationPrompt(suffix + " - Service", "Are you sure you want to " + suffix + " this alert?"))
                 return;
 
-            const url = "/api/service/[[${serviceId}]]/monitoring/" + alertId + "/" + suffix;
+            const url = "/api/service/[[${service.getId()}]]/monitoring/" + alertId + "/" + suffix;
             const token = $("meta[name='_csrf']").attr("content");
             const header = $("meta[name='_csrf_header']").attr("content");
             $.ajax({
@@ -206,17 +209,7 @@
                 },
                 complete: function (xhr, textStatus) {
                     if (xhr.status === 202) {
-                        showAlertSuccess("Alert Successfully " + suffix + "d.");
-                        const dom = $(domElement);
-                        if (enabled) {
-                            dom.removeClass("btn-success").addClass("btn-danger");
-                            dom.attr("onclick", "disableAlert(this.getAttribute('data-alertId'),this)");
-                            dom.text("Disable")
-                        } else {
-                            dom.removeClass("btn-danger").addClass("btn-success");
-                            dom.attr("onclick", "enableAlert(this.getAttribute('data-alertId'),this)");
-                            dom.text("Enable")
-                        }
+                        refreshPage();
                     } else {
                         showAlertError("Failed to " + suffix + " alert. Please consult an administrator");
                     }
@@ -244,17 +237,7 @@
                 },
                 complete: function (xhr, textStatus) {
                     if (xhr.status === 202) {
-                        showAlertSuccess("Service Successfully " + suffix + "d.");
-                        const dom = $(domElement);
-                        if (enabled) {
-                            dom.removeClass("btn-success").addClass("btn-danger");
-                            dom.attr("onclick", "disableService(this.getAttribute('data-serviceId'),this)");
-                            dom.text("Disable Service")
-                        } else {
-                            dom.removeClass("btn-danger").addClass("btn-success");
-                            dom.attr("onclick", "enableService(this.getAttribute('data-serviceId'),this)");
-                            dom.text("Enable Service")
-                        }
+                        refreshPage();
                     } else {
                         showAlertError("Failed to " + suffix + " service. Please consult an administrator");
                     }

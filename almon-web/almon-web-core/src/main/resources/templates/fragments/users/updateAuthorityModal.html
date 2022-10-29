@@ -118,7 +118,7 @@
                 complete: function (xhr, textStatus) {
                     console.log(xhr.status);
                     if (xhr.status === 202) {
-                        location.reload();
+                        refreshPage();
                     } else {
                         showAlertError("Failed to Update Permissions. Please consult an administrator");
                     }

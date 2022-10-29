@@ -41,6 +41,8 @@ public class APIMonitorServiceImpl extends ScheduledMonitorServiceBase<APIMonito
 
     @Override
     public APIMonitoringTask getScheduledTask(APIMonitoringType monitor) {
-        return new APIMonitoringTask(API_ALERT_SERVICE, monitor);
+        if (monitor.getId().getService().isEnabled())
+            return new APIMonitoringTask(API_ALERT_SERVICE, monitor);
+        return null;
     }
 }

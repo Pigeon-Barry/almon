@@ -41,4 +41,10 @@ public abstract class Alert {
 
     @NotNull
     protected Status status;
+
+    protected String message;
+
+    public abstract String getLongMessage();
+    public abstract String getShortMessage();
+    public abstract String getHTMLMessage();
 }

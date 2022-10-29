@@ -1,8 +1,9 @@
 package com.capgemini.bedwards.almon.almonmonitoringapi.models;
 
 import com.capgemini.bedwards.almon.almoncore.util.BeanUtil;
+import com.capgemini.bedwards.almon.almoncore.validators.ValidJsonPath;
+import com.capgemini.bedwards.almon.almondatastore.models.schedule.ScheduledMonitoringType;
 import com.capgemini.bedwards.almon.almonmonitoringapi.service.APIMonitorService;
-import com.capgemini.bedwards.almon.almonmonitoringcore.model.ScheduledMonitoringType;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -38,7 +39,7 @@ public class APIMonitoringType extends ScheduledMonitoringType {
     protected int expectedStatus;
 
     @ElementCollection(fetch = FetchType.EAGER)
-    protected Map<String, String> jsonPathValidations;
+    protected Map<String, @ValidJsonPath String> jsonPathValidations;
 
 
     @Override

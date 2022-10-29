@@ -60,6 +60,13 @@ public class SecurityConfig {
         return authenticationManagerBuilder.build();
     }
 
+    @Bean
+    public SecurityFilterChain coreFilterChain(HttpSecurity http) throws Exception {
+        return http
+                .authorizeRequests(requests -> requests
+                        .antMatchers("/actuator/**").permitAll())
+                .build();
+    }
 
     @Configuration
     @Order(1)
@@ -107,7 +114,6 @@ public class SecurityConfig {
                             .clearAuthentication(true)
                             .permitAll())
                     .authorizeRequests(requests -> requests
-                            .antMatchers("/actuator/**").permitAll()
                             .antMatchers("/web/css/**", "/web/js/**", "/web/img/**", "/web/favicon.ico", "/web/auth/**").permitAll()
                             .antMatchers("/web/auth/pendingApproval").authenticated()
                             .antMatchers("/web/auth/accountDisabled").authenticated()

@@ -53,6 +53,9 @@ function showPopup(title, message){
 function redirect(url){
     window.location = url;
 }
+function refreshPage(){
+    location.reload();
+}
 
 
 $( document ).ready(function() {

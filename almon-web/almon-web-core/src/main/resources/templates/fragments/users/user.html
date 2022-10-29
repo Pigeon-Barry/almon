@@ -172,8 +172,7 @@
                 complete: function (xhr, textStatus) {
                     console.log(xhr.status);
                     if (xhr.status === 202) {
-                        $("#roleContainer_" + role).remove();
-                        location.reload();
+                        refreshPage();
                     } else {
                         showAlertError("Failed to remove role. Please consult an administrator");
                     }

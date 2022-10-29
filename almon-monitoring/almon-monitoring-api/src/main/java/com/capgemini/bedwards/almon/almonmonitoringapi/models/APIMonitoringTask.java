@@ -1,11 +1,20 @@
 package com.capgemini.bedwards.almon.almonmonitoringapi.models;
 
 import com.capgemini.bedwards.almon.almondatastore.models.alert.Status;
+import com.capgemini.bedwards.almon.almondatastore.models.schedule.ScheduledTask;
 import com.capgemini.bedwards.almon.almonmonitoringapi.service.APIAlertService;
-import com.capgemini.bedwards.almon.almonmonitoringcore.schedule.ScheduledTask;
+import com.fasterxml.jackson.core.JsonFactory;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.jayway.jsonpath.DocumentContext;
+import com.jayway.jsonpath.JsonPath;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.web.client.RestTemplateBuilder;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.client.RestTemplate;
+
+import java.util.Map;
 
 @Slf4j
 public class APIMonitoringTask extends ScheduledTask<APIAlertType> {
@@ -32,27 +41,54 @@ public class APIMonitoringTask extends ScheduledTask<APIAlertType> {
     @Override
     public void run() {
         log.info("Running for: " + this.API_MONITORING_TYPE.getTaskId());
-//        Class<Object> responseType = Object.class;
-//
-//        RequestCallback requestCallback = this.REST_TEMPLATE.acceptHeaderRequestCallback(responseType);
-//        ResponseExtractor<ResponseEntity<Object>> responseExtractor = this.REST_TEMPLATE.responseEntityExtractor(responseType);
-//
-//
-//        this.REST_TEMPLATE.execute(this.API_MONITORING_TYPE.getUrl(),
-//                this.API_MONITORING_TYPE.getMethod(),
-//                requestCallback, responseExtractor, null, null);
-//
-//
-//        ResponseEntity<Object> response = this.REST_TEMPLATE.exchange(
-//
-//                requestCallback, responseExtractor);
-        //TODO
-        this.API_ALERT_SERVICE.create(APIAlertType.builder()
-                .monitoringType(this.API_MONITORING_TYPE)
-                .status(Status.PASS)
-                .responseStatusCode(200)
-                .requestDurationMS(100)
-                .build());
+
+        try {
+            final long START_TIME = System.currentTimeMillis();
+            ResponseEntity<String> responseEntity = this.REST_TEMPLATE.getForEntity(this.API_MONITORING_TYPE.getUrl(), String.class);
+            final long END_TIME = System.currentTimeMillis();
+            Status status = Status.PASS;
+            String message = null;
+
+            if (log.isDebugEnabled())
+                log.debug("Response: " + responseEntity);
+            if (responseEntity.getStatusCode().equals(HttpStatus.valueOf(this.API_MONITORING_TYPE.expectedStatus))) {
+                if (this.API_MONITORING_TYPE.getJsonPathValidations() != null && this.API_MONITORING_TYPE.getJsonPathValidations().size() > 0) {
+                    DocumentContext jsonBody = JsonPath.parse(responseEntity.getBody());
+
+                    ObjectMapper mapper = new ObjectMapper();
+                    JsonFactory factory = mapper.getFactory();
+
+                    for (Map.Entry<String, String> jsonPathEntry : this.API_MONITORING_TYPE.getJsonPathValidations().entrySet()) {
+                        JsonPath jsonPath = JsonPath.compile(jsonPathEntry.getKey());
+                        JsonNode value = jsonBody.read(jsonPath);
+                        if (!value.equals(mapper.readTree(factory.createParser(jsonPathEntry.getValue())))) {
+                            status = Status.FAIL;
+                            message = "One or more Json assertions failed: Response body '" + responseEntity.getBody() + "'";
+                            break;
+                        }
+                    }
+                }
+            } else {
+                status = Status.FAIL;
+                message = "Expected a status code of: " + this.API_MONITORING_TYPE.expectedStatus + " but got " + responseEntity.getStatusCodeValue();
+            }
+
+            this.API_ALERT_SERVICE.create(APIAlertType.builder()
+                    .monitoringType(this.API_MONITORING_TYPE)
+                    .status(status)
+                    .message(message)
+                    .responseEntity(responseEntity)
+                    .responseStatusCode(responseEntity.getStatusCodeValue())
+                    .requestDurationMS(END_TIME - START_TIME)
+                    .build());
+        } catch (Throwable e) {
+            log.error("Failed to run task: " + this.getTASK_ID(), e);
+            this.API_ALERT_SERVICE.create(APIAlertType.builder()
+                    .monitoringType(this.API_MONITORING_TYPE)
+                    .status(Status.ERROR)
+                    .message("Monitor failed with error: " + e.getMessage())
+                    .build());
+        }
     }
 
     @Override

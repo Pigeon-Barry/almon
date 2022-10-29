@@ -10,6 +10,7 @@
         <div class="input-group mb-3">
             <span class="input-group-text" th:text="${service.getId() + '_'}"></span>
             <input
+                    oninput="this.value = this.value.toUpperCase()"
                     th:class="(${#fields.hasErrors('key')}? 'is-invalid ' : '') + 'form-control'"
                     th:field="*{key}"
                     type="text" class="form-control" id="key" name="key"

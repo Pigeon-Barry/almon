@@ -3,23 +3,23 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <parent>
-        <groupId>com.capgemini.bedwards</groupId>
-        <artifactId>almon</artifactId>
+        <groupId>com.capgemini.bedwards.almon</groupId>
+        <artifactId>almon-notification</artifactId>
         <version>1.0.0</version>
         <relativePath/> <!-- lookup parent from repository -->
     </parent>
-    <groupId>com.capgemini.bedwards.almon</groupId>
-    <artifactId>almon-alerting</artifactId>
+    <artifactId>almon-notification-core</artifactId>
     <version>1.0.0</version>
-    <packaging>pom</packaging>
-    <name>almon-alerting</name>
-    <description>almon-alerting</description>
-    <properties>
-        <almon-alerting-core.version>1.0.0</almon-alerting-core.version>
-    </properties>
-    <modules>
-        <module>almon-alerting-core</module>
-    </modules>
+    <name>almon-notification-core</name>
+    <description>almon-notification-core</description>
+    <dependencies>
+        <dependency>
+            <groupId>com.capgemini.bedwards.almon</groupId>
+            <artifactId>almon-core</artifactId>
+            <version>${almon-notification-core.version}</version>
+        </dependency>
+
+    </dependencies>
 
     <build>
         <plugins>

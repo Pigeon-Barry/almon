@@ -13,8 +13,13 @@ import javax.validation.ConstraintValidatorContext;
 public class UserDoesNotExistValidator implements ConstraintValidator<UserDoesNotExist, String> {
 
 
+
+    private final AuthService AUTH_SERVICE;
+
     @Autowired
-    AuthService authService;
+    public UserDoesNotExistValidator(AuthService authService){
+        this.AUTH_SERVICE = authService;
+    }
 
     @Override
     public void initialize(UserDoesNotExist constraintAnnotation) {
@@ -23,6 +28,6 @@ public class UserDoesNotExistValidator implements ConstraintValidator<UserDoesNo
 
     @Override
     public boolean isValid(String value, ConstraintValidatorContext context) {
-        return !authService.checkUserExists(value);
+        return !AUTH_SERVICE.checkUserExists(value);
     }
 }

@@ -3,8 +3,8 @@
 <th:block th:fragment="footer">
     <footer class="page-footer font-small blue pt-4">
         <div class="footer-copyright text-center py-3">© [[${#dates.format(#dates.createNow(), 'yyyy')}]] Copyright:
-            <a th:href="${@environment.getProperty('almon.company.url')}"
-               th:text="${@environment.getProperty('almon.company.name')}"></a><br>
+            <a th:href="${@environment.getProperty('almon.core.company.url')}"
+               th:text="${@environment.getProperty('almon.core.company.name')}"></a><br>
             Made by Ben Edwards<br>
         </div>
     </footer>

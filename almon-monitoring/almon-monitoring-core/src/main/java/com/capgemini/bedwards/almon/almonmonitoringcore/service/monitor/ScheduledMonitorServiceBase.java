@@ -2,9 +2,9 @@ package com.capgemini.bedwards.almon.almonmonitoringcore.service.monitor;
 
 import com.capgemini.bedwards.almon.almoncore.services.auth.AuthorityService;
 import com.capgemini.bedwards.almon.almoncore.services.service.ServiceService;
-import com.capgemini.bedwards.almon.almonmonitoringcore.model.ScheduledMonitoringType;
+import com.capgemini.bedwards.almon.almondatastore.models.schedule.ScheduledMonitoringType;
+import com.capgemini.bedwards.almon.almondatastore.models.schedule.Scheduler;
 import com.capgemini.bedwards.almon.almonmonitoringcore.repository.monitor.ScheduledMonitorTypeRepository;
-import com.capgemini.bedwards.almon.almonmonitoringcore.schedule.Scheduler;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
@@ -36,8 +36,6 @@ public abstract class ScheduledMonitorServiceBase<T extends ScheduledMonitoringT
         super.enable(monitor);
         SCHEDULER.scheduleTask(monitor.getScheduledTask());
     }
-
-
 
 
     @Override

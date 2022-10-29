@@ -1,14 +1,14 @@
 package com.capgemini.bedwards.almon.almonmonitoringapi.monitoring;
 
 import com.capgemini.bedwards.almon.almoncore.util.ValidatorUtil;
+import com.capgemini.bedwards.almon.almondatastore.models.schedule.ScheduledTask;
 import com.capgemini.bedwards.almon.almondatastore.models.service.Service;
+import com.capgemini.bedwards.almon.almondatastore.util.HasScheduledTasks;
 import com.capgemini.bedwards.almon.almonmonitoringapi.models.APIMonitoringType;
 import com.capgemini.bedwards.almon.almonmonitoringapi.models.CreateAPIMonitorRequestBody;
 import com.capgemini.bedwards.almon.almonmonitoringapi.service.APIMonitorService;
 import com.capgemini.bedwards.almon.almonmonitoringcore.LinkUtil;
-import com.capgemini.bedwards.almon.almonmonitoringcore.contracts.HasScheduledTasks;
 import com.capgemini.bedwards.almon.almonmonitoringcore.contracts.MonitorType;
-import com.capgemini.bedwards.almon.almonmonitoringcore.schedule.ScheduledTask;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,6 +17,7 @@ import org.springframework.ui.Model;
 import org.springframework.validation.BeanPropertyBindingResult;
 import org.springframework.web.servlet.ModelAndView;
 
+import java.util.Objects;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -79,6 +80,7 @@ public class APIMonitorType implements MonitorType, HasScheduledTasks {
     public Set<ScheduledTask> getScheduledTasks() {
         return API_MONITOR_SERVICE.findAll().stream()
                 .map(API_MONITOR_SERVICE::getScheduledTask)
+                .filter(Objects::nonNull)
                 .collect(Collectors.toSet());
     }
 }
