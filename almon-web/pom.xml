@@ -11,16 +11,9 @@
     <groupId>com.capgemini.bedwards.almon</groupId>
     <artifactId>almon-web</artifactId>
     <version>1.0.0</version>
-    <packaging>pom</packaging>
 
     <name>almon-web</name>
     <description>almon-web</description>
-    <properties>
-        <almon-web-core.version>1.0.0</almon-web-core.version>
-    </properties>
-    <modules>
-        <module>almon-web-core</module>
-    </modules>
     <dependencies>
         <dependency>
             <groupId>org.thymeleaf</groupId>
@@ -37,6 +30,16 @@
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-thymeleaf</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.capgemini.bedwards.almon</groupId>
+            <artifactId>almon-core</artifactId>
+            <version>${almon-core.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.capgemini.bedwards.almon</groupId>
+            <artifactId>almon-monitoring-core</artifactId>
+            <version>${almon-monitoring.version}</version>
         </dependency>
     </dependencies>
 

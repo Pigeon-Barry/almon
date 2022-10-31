@@ -23,7 +23,7 @@
         </dependency>
         <dependency>
             <groupId>com.capgemini.bedwards.almon</groupId>
-            <artifactId>almon-web-core</artifactId>
+            <artifactId>almon-web</artifactId>
             <version>1.0.0</version>
         </dependency>
         <dependency>

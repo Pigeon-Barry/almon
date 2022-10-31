@@ -1,0 +1,53 @@
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org" lang="en"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+
+<!--/*@thymesVar id="activeTab" type="java.lang.String"*/-->
+<th:block th:fragment="autodetect">
+    <th:block th:fragment="authenticated" sec:authorize="isAuthenticated()">
+        <!-- Left Side Of Navbar-->
+        <ul class="navbar-nav mr-auto" sec:authorize="hasAuthority('ACCESS_CORE_PAGES')">
+            <li th:class="nav-item">
+                <a th:class="'nav-link ' +  (${activeTab =='home'} ? 'active' : '')" href="/web">Home</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link text-danger" href="#">Dashboards</a>
+            </li>
+
+            <li th:class="nav-item">
+                <a th:class="'nav-link ' +  (${activeTab =='services'} ? 'active' : '')" href="/web/services">Services</a>
+            </li>
+
+            <li class="nav-item dropdown" sec:authorize="hasAuthority('VIEW_ADMIN_PAGES')">
+                <a  th:class="'nav-link dropdown-toggle ' +  (${activeTab =='admin'} ? 'active' : '')" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                    Admin
+                </a>
+                <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+                    <li><a class="dropdown-item" href="/web/users" sec:authorize="hasAuthority('VIEW_ALL_USERS')">View Users</a></li>
+                    <li><hr class="dropdown-divider"></li>
+                    <li><a class="dropdown-item" href="#">W.I.P</a></li>
+                </ul>
+            </li>
+        </ul>
+        <!-- Right Side Of Navbar-->
+
+        <ul class="navbar-nav ml-auto">
+            <li class="nav-item">
+                <a class="nav-link" href="/web/auth/logout">Logout</a>
+            </li>
+        </ul>
+    </th:block>
+
+    <th:block th:fragment="unauthenticated" sec:authorize="isAnonymous()">
+        <ul class="navbar-nav ml-auto">
+            <li class="nav-item">
+                <a th:class="'nav-link ' +  (${activeTab =='login'} ? 'active' : '')"
+                   href="/web/auth/login">Login</a>
+            </li>
+            <li class="nav-item">
+                <a th:class="'nav-link ' +  (${activeTab =='register'} ? 'active' : '')"
+                   href="/web/auth/register">Register</a>
+            </li>
+        </ul>
+    </th:block>
+</th:block>
