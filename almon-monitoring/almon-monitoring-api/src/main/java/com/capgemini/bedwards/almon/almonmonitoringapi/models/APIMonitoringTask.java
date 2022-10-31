@@ -19,14 +19,14 @@ import java.util.Map;
 @Slf4j
 public class APIMonitoringTask extends ScheduledTask<APIAlertType> {
 
-    private final APIMonitoringType API_MONITORING_TYPE;
+    private final APIMonitor API_MONITORING_TYPE;
     private final APIAlertService API_ALERT_SERVICE;
 
     private final RestTemplate REST_TEMPLATE;
 
-    public APIMonitoringTask(APIAlertService apiAlertService, APIMonitoringType apiMonitoringType) {
-        super(apiMonitoringType);
-        this.API_MONITORING_TYPE = apiMonitoringType;
+    public APIMonitoringTask(APIAlertService apiAlertService, APIMonitor apiMonitor) {
+        super(apiMonitor);
+        this.API_MONITORING_TYPE = apiMonitor;
         this.API_ALERT_SERVICE = apiAlertService;
         this.REST_TEMPLATE = getRestTemplate();
     }
@@ -74,7 +74,7 @@ public class APIMonitoringTask extends ScheduledTask<APIAlertType> {
             }
 
             this.API_ALERT_SERVICE.create(APIAlertType.builder()
-                    .monitoringType(this.API_MONITORING_TYPE)
+                    .monitor(this.API_MONITORING_TYPE)
                     .status(status)
                     .message(message)
                     .responseEntity(responseEntity)
@@ -84,7 +84,7 @@ public class APIMonitoringTask extends ScheduledTask<APIAlertType> {
         } catch (Throwable e) {
             log.error("Failed to run task: " + this.getTASK_ID(), e);
             this.API_ALERT_SERVICE.create(APIAlertType.builder()
-                    .monitoringType(this.API_MONITORING_TYPE)
+                    .monitor(this.API_MONITORING_TYPE)
                     .status(Status.ERROR)
                     .message("Monitor failed with error: " + e.getMessage())
                     .build());

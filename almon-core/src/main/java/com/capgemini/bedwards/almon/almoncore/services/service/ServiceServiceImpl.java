@@ -6,8 +6,8 @@ import com.capgemini.bedwards.almon.almoncore.services.user.RoleService;
 import com.capgemini.bedwards.almon.almondatastore.models.auth.Authority;
 import com.capgemini.bedwards.almon.almondatastore.models.auth.Role;
 import com.capgemini.bedwards.almon.almondatastore.models.auth.User;
-import com.capgemini.bedwards.almon.almondatastore.models.monitor.MonitoringType;
-import com.capgemini.bedwards.almon.almondatastore.models.schedule.ScheduledMonitoringType;
+import com.capgemini.bedwards.almon.almondatastore.models.monitor.Monitor;
+import com.capgemini.bedwards.almon.almondatastore.models.schedule.ScheduledMonitor;
 import com.capgemini.bedwards.almon.almondatastore.models.schedule.Scheduler;
 import com.capgemini.bedwards.almon.almondatastore.models.service.Service;
 import com.capgemini.bedwards.almon.almondatastore.repository.ServiceRepository;
@@ -85,12 +85,12 @@ public class ServiceServiceImpl implements ServiceService {
         Service service = findServiceById(serviceId);
         service.setEnabled(enabled);
         save(service);
-        for (MonitoringType monitoringType : service.getMonitoringTypes()) {
-            if (monitoringType instanceof ScheduledMonitoringType) {
+        for (Monitor monitor : service.getMonitors()) {
+            if (monitor instanceof ScheduledMonitor) {
                 if (enabled)
-                    SCHEDULER.scheduleTask(((ScheduledMonitoringType) monitoringType).getScheduledTask());
+                    SCHEDULER.scheduleTask(((ScheduledMonitor) monitor).getScheduledTask());
                 else
-                    SCHEDULER.removeScheduledTask(((ScheduledMonitoringType) monitoringType).getTaskId());
+                    SCHEDULER.removeScheduledTask(((ScheduledMonitor) monitor).getTaskId());
             }
         }
     }
@@ -142,7 +142,7 @@ public class ServiceServiceImpl implements ServiceService {
                 adminRoleSet
         );
         AUTHORITY_SERVICE.createAuthority(
-                "SERVICE_" + id + "_CAN_CREATE_MONITORING",
+                "SERVICE_" + id + "_CAN_CREATE_MONITORS",
                 "Grants the ability to create new monitors for this service",
                 null,
                 adminRoleSet

@@ -1,7 +1,7 @@
 package com.capgemini.bedwards.almon.almonmonitoringcore.resolver;
 
 import com.capgemini.bedwards.almon.almonmonitoringcore.Monitors;
-import com.capgemini.bedwards.almon.almonmonitoringcore.contracts.MonitorType;
+import com.capgemini.bedwards.almon.almonmonitoringcore.contracts.MonitorAdapter;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import lombok.extern.slf4j.Slf4j;
@@ -58,7 +58,7 @@ public class CreateMonitorRequestResolver implements HandlerMethodArgumentResolv
         if (log.isDebugEnabled())
             log.debug("Json: " + mapper.writerWithDefaultPrettyPrinter().writeValueAsString(jsonRes));
 
-        MonitorType monitorType = MONITORS.getMonitorTypeFromId(Objects.requireNonNull(webRequest.getParameterValues("MONITOR_TYPE"))[0]);
-        return monitorType.getCreateMonitorRequestBody(jsonRes);
+        MonitorAdapter monitorAdapter = MONITORS.getMonitorAdapterFromId(Objects.requireNonNull(webRequest.getParameterValues("MONITOR_TYPE"))[0]);
+        return monitorAdapter.getCreateMonitorRequestBody(jsonRes);
     }
 }

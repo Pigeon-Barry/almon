@@ -2,7 +2,7 @@ package com.capgemini.bedwards.almon.almonmonitoringapi.models;
 
 import com.capgemini.bedwards.almon.almoncore.util.MappingUtil;
 import com.capgemini.bedwards.almon.almoncore.validators.CronExpression;
-import com.capgemini.bedwards.almon.almondatastore.models.monitor.MonitoringType;
+import com.capgemini.bedwards.almon.almondatastore.models.monitor.Monitor;
 import com.capgemini.bedwards.almon.almondatastore.models.service.Service;
 import com.capgemini.bedwards.almon.almondatastore.util.Constants;
 import com.fasterxml.jackson.databind.node.ObjectNode;
@@ -53,10 +53,10 @@ public class CreateAPIMonitorRequestBody {
         return MappingUtil.getObjectMapper().treeToValue(objectNode, CreateAPIMonitorRequestBody.class);
     }
 
-    public APIMonitoringType toAPIMonitoringType(Service service) {
-        return APIMonitoringType.builder()
+    public APIMonitor toAPIMonitor(Service service) {
+        return APIMonitor.builder()
                 //Base class
-                .id(new MonitoringType.MonitoringTypeId(key, service))
+                .id(new Monitor.MonitorId(key, service))
                 .name(name)
                 .description(description)
                 //Scheduled Class

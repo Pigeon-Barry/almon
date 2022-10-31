@@ -11,17 +11,17 @@ import javax.validation.ConstraintValidatorContext;
 
 @Slf4j
 @Component
-public class MonitorTypeExistsValidator implements ConstraintValidator<MonitorTypeExists, String> {
+public class MonitorAdapterExistsValidator implements ConstraintValidator<MonitorAdapterExists, String> {
     private final Monitors MONITORS;
 
     @Autowired
-    public MonitorTypeExistsValidator(Monitors monitors) {
+    public MonitorAdapterExistsValidator(Monitors monitors) {
         this.MONITORS = monitors;
     }
 
 
     @Override
-    public void initialize(MonitorTypeExists constraintAnnotation) {
+    public void initialize(MonitorAdapterExists constraintAnnotation) {
 
     }
 
@@ -30,7 +30,7 @@ public class MonitorTypeExistsValidator implements ConstraintValidator<MonitorTy
         if (id == null || id.length() == 0)
             return true;
         try {
-            MONITORS.getMonitorTypeFromId(id);
+            MONITORS.getMonitorAdapterFromId(id);
             return true;
         } catch (NotFoundException e) {
             return false;

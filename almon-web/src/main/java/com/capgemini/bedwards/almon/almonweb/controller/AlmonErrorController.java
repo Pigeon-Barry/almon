@@ -21,7 +21,6 @@ public class AlmonErrorController implements ErrorController {
         Exception exception = (Exception) request.getAttribute(RequestDispatcher.ERROR_EXCEPTION);
 //        String errorMessage = (String) request.getAttribute(RequestDispatcher.ERROR_MESSAGE);
         log.error("Error received: " + statusObj + ": from " + requestUri, exception);
-
         if (statusObj != null) {
             HttpStatus status = HttpStatus.valueOf(statusObj);
             if (status == HttpStatus.NOT_FOUND) {

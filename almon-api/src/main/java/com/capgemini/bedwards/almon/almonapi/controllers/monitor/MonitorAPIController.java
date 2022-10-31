@@ -1,8 +1,8 @@
 package com.capgemini.bedwards.almon.almonapi.controllers.monitor;
 
 import com.capgemini.bedwards.almon.almoncore.intergrations.api.APIController;
-import com.capgemini.bedwards.almon.almondatastore.models.monitor.MonitoringType;
-import com.capgemini.bedwards.almon.almonmonitoringcore.service.monitor.MonitorService;
+import com.capgemini.bedwards.almon.almondatastore.models.monitor.Monitor;
+import com.capgemini.bedwards.almon.almonmonitoringcore.Monitors;
 import io.swagger.v3.oas.annotations.OpenAPIDefinition;
 import io.swagger.v3.oas.annotations.info.Info;
 import lombok.extern.slf4j.Slf4j;
@@ -22,29 +22,29 @@ import javax.servlet.http.HttpServletRequest;
                 version = "1.0.0")
 )
 @RestController
-@RequestMapping("/api/service/{serviceId}/monitoring/{monitorId}")
+@RequestMapping("/api/service/{serviceId}/monitor/{monitorId}")
 @Slf4j
 public class MonitorAPIController extends APIController {
 
 
-    private MonitorService<MonitoringType> MONITOR_SERVICE;
+    private final Monitors MONITORS;
 
     @Autowired
-    public MonitorAPIController(MonitorService<MonitoringType> monitorService) {
-        this.MONITOR_SERVICE = monitorService;
+    public MonitorAPIController(Monitors monitors) {
+        this.MONITORS = monitors;
     }
 
     @PutMapping("/enable")
     @PreAuthorize("hasAuthority('ENABLE_DISABLE_MONITORS') || hasAuthority('MONITOR_' + #monitor.id + '_CAN_ENABLE_DISABLE')")
-    public ResponseEntity<String> enable(@PathVariable(name = "monitorId") MonitoringType monitor) {
-        MONITOR_SERVICE.enable(monitor);
+    public ResponseEntity<String> enable(@PathVariable(name = "monitorId") Monitor monitor) {
+        MONITORS.getMonitorServiceFromMonitor(monitor).enable(monitor);
         return new ResponseEntity<>(HttpStatus.ACCEPTED);
     }
 
     @PutMapping("/disable")
     @PreAuthorize("hasAuthority('ENABLE_DISABLE_MONITORS') || hasAuthority('MONITOR_' + #monitor.id + '_CAN_ENABLE_DISABLE')")
-    public ResponseEntity<String> disable(@PathVariable(name = "monitorId") MonitoringType monitor, HttpServletRequest request) {
-        MONITOR_SERVICE.disable(monitor);
+    public ResponseEntity<String> disable(@PathVariable(name = "monitorId") Monitor monitor, HttpServletRequest request) {
+        MONITORS.getMonitorServiceFromMonitor(monitor).disable(monitor);
         return new ResponseEntity<>(HttpStatus.ACCEPTED);
     }
 }

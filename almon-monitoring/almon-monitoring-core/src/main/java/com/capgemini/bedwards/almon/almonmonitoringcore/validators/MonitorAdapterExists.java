@@ -11,10 +11,10 @@ import static java.lang.annotation.ElementType.*;
 
 @Target({TYPE, FIELD, ANNOTATION_TYPE, PARAMETER})
 @Retention(RetentionPolicy.RUNTIME)
-@Constraint(validatedBy = MonitorTypeExistsValidator.class)
+@Constraint(validatedBy = MonitorAdapterExistsValidator.class)
 @Documented
-public @interface MonitorTypeExists {
-    String message() default "Monitor Type does not exist";
+public @interface MonitorAdapterExists {
+    String message() default "Monitor Adapter does not exist";
 
     Class<?>[] groups() default {};
 

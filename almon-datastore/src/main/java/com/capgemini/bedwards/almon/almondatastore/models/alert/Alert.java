@@ -1,6 +1,6 @@
 package com.capgemini.bedwards.almon.almondatastore.models.alert;
 
-import com.capgemini.bedwards.almon.almondatastore.models.monitor.MonitoringType;
+import com.capgemini.bedwards.almon.almondatastore.models.monitor.Monitor;
 import lombok.*;
 import lombok.experimental.SuperBuilder;
 import org.hibernate.annotations.GenericGenerator;
@@ -33,7 +33,7 @@ public abstract class Alert {
             @JoinColumn(name = "id.service"),
             @JoinColumn(name = "id.id")
     })
-    protected MonitoringType monitoringType;
+    protected Monitor monitor;
 
     @NotNull
     @Builder.Default

@@ -11,9 +11,9 @@ public abstract class ScheduledTask<T extends ScheduledAlert> implements Runnabl
     public abstract boolean isEnabled();
 
 
-    protected ScheduledTask(ScheduledMonitoringType scheduledMonitoringType) {
-        this.TASK_ID = scheduledMonitoringType.getTaskId();
-        this.cronExpression = scheduledMonitoringType.getCronExpression();
+    protected ScheduledTask(ScheduledMonitor ScheduledMonitor) {
+        this.TASK_ID = ScheduledMonitor.getTaskId();
+        this.cronExpression = ScheduledMonitor.getCronExpression();
     }
 
 }

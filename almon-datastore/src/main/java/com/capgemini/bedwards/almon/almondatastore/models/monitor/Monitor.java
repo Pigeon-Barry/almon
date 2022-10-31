@@ -20,9 +20,9 @@ import java.util.Set;
 @Inheritance(strategy = InheritanceType.JOINED)
 @DiscriminatorColumn(discriminatorType = DiscriminatorType.STRING, name = "type")
 @Table(name = "monitoring_type")
-public abstract class MonitoringType {
+public abstract class Monitor {
     @EmbeddedId
-    protected MonitoringTypeId id;
+    protected MonitorId id;
 
     @NotBlank
     protected String name;
@@ -32,7 +32,7 @@ public abstract class MonitoringType {
 
     protected boolean enabled = false;
 
-    @OneToMany(mappedBy = "monitoringType", fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
+    @OneToMany(mappedBy = "monitor", fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
     protected Set<Alert> alerts;
 
 
@@ -41,7 +41,7 @@ public abstract class MonitoringType {
     @AllArgsConstructor
     @SuperBuilder
     @NoArgsConstructor
-    public static class MonitoringTypeId implements Serializable {
+    public static class MonitorId implements Serializable {
         protected String id;
         @ManyToOne
         @JoinColumn(name = "service_id")

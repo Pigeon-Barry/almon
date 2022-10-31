@@ -1,6 +1,6 @@
 package com.capgemini.bedwards.almon.almondatastore.models.service;
 
-import com.capgemini.bedwards.almon.almondatastore.models.monitor.MonitoringType;
+import com.capgemini.bedwards.almon.almondatastore.models.monitor.Monitor;
 import com.capgemini.bedwards.almon.almondatastore.util.Constants;
 import lombok.*;
 
@@ -29,7 +29,7 @@ public class Service {
     private String description;
 
     @OneToMany(mappedBy = "id.service", fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
-    private Set<MonitoringType> monitoringTypes;
+    private Set<Monitor> monitors;
 
     @Builder.Default
     private boolean enabled = true;

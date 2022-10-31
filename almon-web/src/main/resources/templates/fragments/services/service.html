@@ -1,6 +1,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml"
       xmlns:th="http://www.thymeleaf.org" lang="en"
 >
+>
 <div th:fragment="service">
     <!--/*@thymesVar id="service" type="com.capgemini.bedwards.almon.almondatastore.models.service.Service"*/-->
     <!--/*@thymesVar id="authority" type="com.capgemini.bedwards.almon.almondatastore.models.auth.Authority"*/-->
@@ -78,17 +79,18 @@
                                         <li class="list-group-item d-flex justify-content-between align-items-center p-3">
                                             <p class="mb-0"><strong>Monitors</strong></p>
                                             <button
-                                                    th:if="${#authorization.expression('hasAuthority(''CREATE_MONITORING'') || hasAuthority(''SERVICE_' + service.getId() + '_CAN_CREATE_ALERTS'')')}"
+                                                    th:if="${#authorization.expression('hasAuthority(''CREATE_MONITORS'') || hasAuthority(''SERVICE_' + service.getId() + '_CAN_CREATE_ALERTS'')')}"
                                                     data-bs-toggle="modal" data-bs-target="#selectMonitorTypeModal"
                                                     type="button" class="btn btn-primary">Create New Monitor
                                             </button>
                                         </li>
                                         <li class="list-group-item" th:if="${!service.isEnabled()}">
-                                            <h3 class="text-danger text-center">WARNING: All monitors are disabled as service is disabled</h3>
+                                            <h3 class="text-danger text-center">WARNING: All monitors are disabled as
+                                                service is disabled</h3>
                                         </li>
                                     </ul>
                                 </div>
-                                <div class="card-body row col-12" th:if="${service.getMonitoringTypes().size() > 0}">
+                                <div class="card-body row col-12">
                                     <table class="table table-striped table-responsive-md">
                                         <thead>
                                         <tr>
@@ -98,27 +100,29 @@
                                         </tr>
                                         </thead>
                                         <tbody>
-                                        <tr th:each="monitorType : ${service.getMonitoringTypes()}">
-                                            <td th:text="${monitorType.getId()}">ID</td>
-                                            <td th:text="${monitorType.getName()}">Name</td>
+                                        <tr th:each="monitor : ${service.getMonitors()}"
+                                            th:if="${#authorization.expression('hasAuthority(''VIEW_ALL_MONITORS'') || hasAuthority(''SERVICE_' + service.getId() + '_MONITOR_' + monitor.getId() +'_CAN_VIEW'')')}">
+                                            <td th:text="${monitor.getId()}">ID</td>
+                                            <td th:text="${monitor.getName()}">Name</td>
                                             <td class="d-flex justify-content-end">
                                                 <a
-                                                        th:href="@{/web/service/{serviceId}/monitoring/{monitoringTypeId}(serviceId=${service.getId()},monitoringTypeId=${monitorType.getId()})}"
+                                                        th:href="@{/web/service/{serviceId}/monitor/{MonitorId}(serviceId=${service.getId()},MonitorId=${monitor.getId()})}"
                                                         class="btn btn-primary mx-2">View
                                                     Details</a>
                                                 <th:block
-
-                                                        th:if="${#authorization.expression('hasAuthority(''ENABLE_DISABLE_MONITORS'') || hasAuthority(''MONITOR_' + monitorType.getId() + '_CAN_ENABLE_DISABLE'')')}">
-                                                    <button th:if="${monitorType.isEnabled()}" href="#"
+                                                        th:if="${#authorization.expression('hasAuthority(''ENABLE_DISABLE_MONITORS'') || hasAuthority(''SERVICE_' + service.getId() + '_MONITOR_' + monitor.getId() +'_CAN_ENABLE_DISABLE'')')}">
+                                                    <button th:if="${monitor.isEnabled()}" href="#"
                                                             class="btn btn-danger mx-2"
-                                                            th:data-alertId="${monitorType.getId()}"
-                                                            onclick="disableAlert(this.getAttribute('data-alertId'),this)"
+                                                            th:data-monitorId="${monitor.getId()}"
+                                                            th:data-serviceId="${service.getId()}"
+                                                            onclick="disableMonitor(this.getAttribute('data-serviceId'),this.getAttribute('data-monitorId'),this)"
                                                     >Disable
                                                     </button>
-                                                    <button th:if="${!monitorType.isEnabled()}" href="#"
+                                                    <button th:if="${!monitor.isEnabled()}" href="#"
                                                             class="btn btn-success mx-2"
-                                                            th:data-alertId="${monitorType.getId()}"
-                                                            onclick="enableAlert(this.getAttribute('data-alertId'),this)"
+                                                            th:data-monitorId="${monitor.getId()}"
+                                                            th:data-serviceId="${service.getId()}"
+                                                            onclick="enableMonitor(this.getAttribute('data-serviceId'),this.getAttribute('data-monitorId'),this)"
                                                     >Enable
                                                     </button>
                                                 </th:block>
@@ -135,115 +139,22 @@
         </div>
         <th:block
                 th:include="fragments/monitor/selectMonitorTypeModal :: selectMonitorTypeModal(${service},${monitors},selectMonitorTypeModal)"
-                th:if="${#authorization.expression('hasAuthority(''CREATE_MONITORING'') || hasAuthority(''SERVICE_' + service.getId() + '_CAN_CREATE_ALERTS'')')}"/>
+                th:if="${#authorization.expression('hasAuthority(''CREATE_MONITORS'') || hasAuthority(''SERVICE_' + service.getId() + '_CAN_CREATE_ALERTS'')')}"/>
 
     </section>
 
 
-    <script th:if="${#authorization.expression('hasAuthority(''DELETE_SERVICES'') || hasAuthority(''SERVICE_' + service.getId() + '_CAN_DELETE'')')}">
-
-        function deleteService(serviceId) {
-            if (!confirmationPrompt(serviceId + " - Delete", "Are you sure you want to delete this service?") || !confirmationPrompt(serviceId + " - Delete", "Are you really sure you want to delete this service this can not be undone?"))
-                return;
-
-            const url = "/web/service/" + serviceId;
-            const token = $("meta[name='_csrf']").attr("content");
-            const header = $("meta[name='_csrf_header']").attr("content");
-            $.ajax({
-                type: 'DELETE',
-                url: url,
-                xhrFields: {
-                    withCredentials: true
-                },
-                beforeSend: function (request) {
-                    request.setRequestHeader(header, token);
-                },
-                complete: function (xhr, textStatus) {
-                    if (xhr.status === 200) {
-                        showPopup("Delete Service", "Successfully deleted Service");
-                        redirect("/web/services");
-                    } else {
-                        showAlertError("Failed to delete service. Please consult an administrator");
-                    }
-                }
-            });
-        }
-
+    <script
+            th:src="@{/web/js/service/deleteService.js}"
+            th:if="${#authorization.expression('hasAuthority(''DELETE_SERVICES'') || hasAuthority(''SERVICE_' + service.getId() + '_CAN_DELETE'')')}">
     </script>
 
-
-    <script th:if="${#authorization.expression('hasAuthority(''ENABLE_DISABLE_SERVICES'') || hasAuthority(''SERVICE_' + service.getId() + '_CAN_ENABLE_DISABLE'')')}">
-        function disableService(serviceId, domElement) {
-            updateEnableStatusService(domElement, serviceId, false);
-        }
-
-        function enableService(serviceId, domElement) {
-            updateEnableStatusService(domElement, serviceId, true);
-        }
-
-        function disableAlert(alertId, domElement) {
-            updateEnableStatusAlert(domElement, alertId, false);
-        }
-
-        function enableAlert(alertId, domElement) {
-            updateEnableStatusAlert(domElement, alertId, true);
-        }
-
-        function updateEnableStatusAlert(domElement, alertId, enabled) {
-            const suffix = enabled ? "enable" : "disable";
-
-            if (!confirmationPrompt(suffix + " - Service", "Are you sure you want to " + suffix + " this alert?"))
-                return;
-
-            const url = "/api/service/[[${service.getId()}]]/monitoring/" + alertId + "/" + suffix;
-            const token = $("meta[name='_csrf']").attr("content");
-            const header = $("meta[name='_csrf_header']").attr("content");
-            $.ajax({
-                type: 'PUT',
-                url: url,
-                xhrFields: {
-                    withCredentials: true
-                },
-                beforeSend: function (request) {
-                    request.setRequestHeader(header, token);
-                },
-                complete: function (xhr, textStatus) {
-                    if (xhr.status === 202) {
-                        refreshPage();
-                    } else {
-                        showAlertError("Failed to " + suffix + " alert. Please consult an administrator");
-                    }
-                }
-            });
-        }
-
-        function updateEnableStatusService(domElement, serviceId, enabled) {
-            const suffix = enabled ? "enable" : "disable";
-
-            if (!confirmationPrompt(suffix + " - Service", "Are you sure you want to " + suffix + " this service?"))
-                return;
-
-            const url = "/api/service/" + serviceId + "/" + suffix;
-            const token = $("meta[name='_csrf']").attr("content");
-            const header = $("meta[name='_csrf_header']").attr("content");
-            $.ajax({
-                type: 'PUT',
-                url: url,
-                xhrFields: {
-                    withCredentials: true
-                },
-                beforeSend: function (request) {
-                    request.setRequestHeader(header, token);
-                },
-                complete: function (xhr, textStatus) {
-                    if (xhr.status === 202) {
-                        refreshPage();
-                    } else {
-                        showAlertError("Failed to " + suffix + " service. Please consult an administrator");
-                    }
-                }
-            });
-        }
+    <script
+            th:src="@{/web/js/service/enableDisableService.js}"
+            th:if="${#authorization.expression('hasAuthority(''ENABLE_DISABLE_SERVICES'') || hasAuthority(''SERVICE_' + service.getId() + '_CAN_ENABLE_DISABLE'')')}">
     </script>
 
+    <script
+            th:src="@{/web/js/monitor/enableDisableMonitor.js}">
+    </script>
 </div>

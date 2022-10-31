@@ -5,6 +5,7 @@ import com.capgemini.bedwards.almon.almondatastore.models.auth.Authority;
 import com.capgemini.bedwards.almon.almondatastore.models.auth.Role;
 import com.capgemini.bedwards.almon.almondatastore.models.auth.UpdateType;
 import com.capgemini.bedwards.almon.almondatastore.models.auth.User;
+import com.capgemini.bedwards.almon.almondatastore.models.monitor.Monitor;
 import com.capgemini.bedwards.almon.almondatastore.repository.auth.AuthorityRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -105,4 +106,8 @@ public class AuthorityServiceImpl implements AuthorityService {
         AUTHORITY_REPOSITORY.deleteServiceAuthorities(service);
     }
 
+    @Override
+    public void deleteMonitorAuthorities(Monitor monitor) {
+        AUTHORITY_REPOSITORY.deleteMonitorAuthorities(monitor);
+    }
 }

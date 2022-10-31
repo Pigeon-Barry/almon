@@ -1,6 +1,6 @@
 package com.capgemini.bedwards.almon.almondatastore.models.schedule;
 
-import com.capgemini.bedwards.almon.almondatastore.models.monitor.MonitoringType;
+import com.capgemini.bedwards.almon.almondatastore.models.monitor.Monitor;
 import lombok.*;
 import lombok.experimental.SuperBuilder;
 
@@ -14,7 +14,7 @@ import javax.persistence.Entity;
 @ToString
 @SuperBuilder
 @Entity
-public abstract class ScheduledMonitoringType extends MonitoringType {
+public abstract class ScheduledMonitor extends Monitor {
 
     private String cronExpression;
 

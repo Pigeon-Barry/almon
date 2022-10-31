@@ -4,11 +4,11 @@ import com.capgemini.bedwards.almon.almoncore.util.ValidatorUtil;
 import com.capgemini.bedwards.almon.almondatastore.models.schedule.ScheduledTask;
 import com.capgemini.bedwards.almon.almondatastore.models.service.Service;
 import com.capgemini.bedwards.almon.almondatastore.util.HasScheduledTasks;
-import com.capgemini.bedwards.almon.almonmonitoringapi.models.APIMonitoringType;
+import com.capgemini.bedwards.almon.almonmonitoringapi.models.APIMonitor;
 import com.capgemini.bedwards.almon.almonmonitoringapi.models.CreateAPIMonitorRequestBody;
 import com.capgemini.bedwards.almon.almonmonitoringapi.service.APIMonitorService;
 import com.capgemini.bedwards.almon.almonmonitoringcore.LinkUtil;
-import com.capgemini.bedwards.almon.almonmonitoringcore.contracts.MonitorType;
+import com.capgemini.bedwards.almon.almonmonitoringcore.contracts.MonitorAdapter;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,12 +23,12 @@ import java.util.stream.Collectors;
 
 @Component
 @Slf4j
-public class APIMonitorType implements MonitorType, HasScheduledTasks {
+public class APIMonitorAdapter implements MonitorAdapter, HasScheduledTasks {
 
     private final APIMonitorService API_MONITOR_SERVICE;
 
     @Autowired
-    public APIMonitorType(APIMonitorService apiMonitorService) {
+    public APIMonitorAdapter(APIMonitorService apiMonitorService) {
         this.API_MONITOR_SERVICE = apiMonitorService;
     }
 
@@ -37,14 +37,13 @@ public class APIMonitorType implements MonitorType, HasScheduledTasks {
         return "ACTIVE_API";
     }
 
-
     @Override
     public String getDescription() {
         return "Actively runs APIs calls at a set interval validating the response returned is correct";
     }
 
     public ModelAndView getCreatePageWeb(Service service, Model model) {
-        ModelAndView modelAndView = MonitorType.super.getCreatePageWeb(service, model);
+        ModelAndView modelAndView = MonitorAdapter.super.getCreatePageWeb(service, model);
         if (!modelAndView.getModelMap().containsAttribute("formData"))
             modelAndView.getModelMap().addAttribute("formData", new CreateAPIMonitorRequestBody());
         return modelAndView;
@@ -60,20 +59,25 @@ public class APIMonitorType implements MonitorType, HasScheduledTasks {
             model.addAttribute("previousFormData", formData);
             return getCreatePageWeb(service, model);
         }
-        APIMonitoringType apiMonitoringType = createAPIMonitorType(requestBody, service);
+        APIMonitor apiMonitor = createAPIMonitorType(requestBody, service);
 
-        return new ModelAndView("redirect:" + LinkUtil.getMonitorWebViewLink(service, apiMonitoringType));
+        return new ModelAndView("redirect:" + LinkUtil.getMonitorWebViewLink(service, apiMonitor));
     }
 
 
-    private APIMonitoringType createAPIMonitorType(CreateAPIMonitorRequestBody requestBody, Service service) {
-        return API_MONITOR_SERVICE.create(requestBody.toAPIMonitoringType(service));
+    private APIMonitor createAPIMonitorType(CreateAPIMonitorRequestBody requestBody, Service service) {
+        return API_MONITOR_SERVICE.create(requestBody.toAPIMonitor(service));
     }
 
 
     @Override
     public Object getCreateMonitorRequestBody(ObjectNode objectNode) {
         return CreateAPIMonitorRequestBody.from(objectNode);
+    }
+
+    @Override
+    public Class<APIMonitor> getMonitorClass() {
+        return APIMonitor.class;
     }
 
     @Override

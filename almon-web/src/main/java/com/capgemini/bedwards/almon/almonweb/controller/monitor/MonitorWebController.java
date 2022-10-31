@@ -2,14 +2,73 @@ package com.capgemini.bedwards.almon.almonweb.controller.monitor;
 
 
 import com.capgemini.bedwards.almon.almoncore.intergrations.web.WebController;
+import com.capgemini.bedwards.almon.almondatastore.models.monitor.Monitor;
+import com.capgemini.bedwards.almon.almondatastore.models.service.Service;
+import com.capgemini.bedwards.almon.almonmonitoringcore.Monitors;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.ModelAndView;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.validation.Valid;
 
 @Controller
-@RequestMapping("/web/service/{serviceId}/monitoring/{monitoringType}")
+@RequestMapping("/web/service/{serviceId}/monitor/{monitorId}")
 @Slf4j
 @PreAuthorize("isAuthenticated()")
 public class MonitorWebController extends WebController {
+
+    private final Monitors MONITORS;
+
+    @Autowired
+    public MonitorWebController(Monitors monitors) {
+        this.MONITORS = monitors;
+    }
+
+
+    @PutMapping("/enable")
+    @PreAuthorize("hasAuthority('ENABLE_DISABLE_MONITORS') || hasAuthority('SERVICE_' + #service.id + '_MONITOR_' + #monitor.id + '_CAN_ENABLE_DISABLE')")
+    public ResponseEntity<String> enable(
+            @Valid @PathVariable(name = "serviceId") Service service,
+            @Valid @PathVariable(name = "monitorId") Monitor monitor) {
+        MONITORS.getMonitorServiceFromMonitor(monitor).enable(monitor);
+        return new ResponseEntity<>(HttpStatus.ACCEPTED);
+    }
+
+    @PutMapping("/disable")
+    @PreAuthorize("hasAuthority('ENABLE_DISABLE_MONITORS') || hasAuthority('SERVICE_' + #service.id + '_MONITOR_' + #monitor.id + '_CAN_ENABLE_DISABLE')")
+    public ResponseEntity<String> disable(
+            @Valid @PathVariable(name = "serviceId") Service service,
+            @Valid @PathVariable(name = "monitorId") Monitor monitor,
+            HttpServletRequest request) {
+        MONITORS.getMonitorServiceFromMonitor(monitor).disable(monitor);
+        return new ResponseEntity<>(HttpStatus.ACCEPTED);
+    }
+
+    @DeleteMapping()
+    @PreAuthorize("hasAuthority('DELETE_MONITORS') || hasAuthority('SERVICE_' + #service.id + '_MONITOR_' + #monitor.id + '_CAN_DELETE')")
+    public ResponseEntity<Void> delete(
+            @Valid @PathVariable(name = "serviceId") Service service,
+            @Valid @PathVariable(name = "monitorId")
+            Monitor monitor,
+            Model model) {
+        MONITORS.getMonitorServiceFromMonitor(monitor).delete(monitor);
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
+
+
+    @GetMapping("")
+    @PreAuthorize("hasAuthority('VIEW_ALL_MONITORS') || hasAuthority('SERVICE_' + #service.id + '_MONITOR_' + #monitor.id + '_CAN_VIEW')")
+    public ModelAndView createNewAlertTypePage(
+            @Valid @PathVariable(name = "serviceId") Service service,
+            @Valid @PathVariable(name = "monitorId") Monitor monitor,
+            Model model) {
+        return MONITORS.getMonitorAdapterFromMonitor(monitor).getViewPageWeb(service, monitor, model);
+    }
 }

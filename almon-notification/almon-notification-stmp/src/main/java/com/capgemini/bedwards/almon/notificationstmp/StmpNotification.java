@@ -45,7 +45,7 @@ public class StmpNotification implements Notification {
 
     @Override
     public void sendNotification(Alert alert) {
-        sendEmail("ben.edwards2000@live.co.uk", alert.getStatus() + " - " + alert.getMonitoringType().getId() + " - " + alert.getMonitoringType().getName(), alert.getHTMLMessage());
+        sendEmail("ben.edwards2000@live.co.uk", alert.getStatus() + " - " + alert.getMonitor().getId() + " - " + alert.getMonitor().getName(), alert.getHTMLMessage());
     }
 
 

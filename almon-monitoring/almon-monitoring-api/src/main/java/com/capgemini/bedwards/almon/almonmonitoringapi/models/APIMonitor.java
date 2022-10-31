@@ -2,7 +2,7 @@ package com.capgemini.bedwards.almon.almonmonitoringapi.models;
 
 import com.capgemini.bedwards.almon.almoncore.util.BeanUtil;
 import com.capgemini.bedwards.almon.almoncore.validators.ValidJsonPath;
-import com.capgemini.bedwards.almon.almondatastore.models.schedule.ScheduledMonitoringType;
+import com.capgemini.bedwards.almon.almondatastore.models.schedule.ScheduledMonitor;
 import com.capgemini.bedwards.almon.almonmonitoringapi.service.APIMonitorService;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -26,7 +26,7 @@ import java.util.Map;
 @ToString
 @Getter
 @DiscriminatorValue("ACTIVE_API")
-public class APIMonitoringType extends ScheduledMonitoringType {
+public class APIMonitor extends ScheduledMonitor {
     @NotNull
     private HttpMethod method;
     protected String url;

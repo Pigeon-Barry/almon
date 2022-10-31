@@ -4,7 +4,7 @@
 
 <!--/*@thymesVar id="service" type="com.capgemini.bedwards.almon.almondatastore.models.auth.User"*/-->
 <!--/*@thymesVar id="monitors" type="com.capgemini.bedwards.almon.almonmonitoringcore.Monitors"*/-->
-<!--/*@thymesVar id="monitorType" type="com.capgemini.bedwards.almon.almonmonitoringcore.contracts.MonitorType"*/-->
+<!--/*@thymesVar id="monitorAdapter" type="com.capgemini.bedwards.almon.almonmonitoringcore.contracts.MonitorAdapter"*/-->
 <!--/*@thymesVar id=com.capgemini.bedwards.almon.almonmonitoringcore.contracts.MonitorType"modelId" type="java.lang.String"*/-->
 
 <div th:fragment="selectMonitorTypeModal(service,monitors,modelId)">
@@ -30,11 +30,11 @@
                         </tr>
                         </thead>
                         <tbody>
-                        <tr th:each="monitorType : ${monitors.getMonitorTypes()}">
-                            <td th:text="${monitorType.getName()}"></td>
-                            <td th:text="${monitorType.getDescription()}"></td>
+                        <tr th:each="monitorAdapter : ${monitors.getMonitorAdapters()}">
+                            <td th:text="${monitorAdapter.getName()}"></td>
+                            <td th:text="${monitorAdapter.getDescription()}"></td>
                             <td>
-                                <a th:href="@{/web/service/{serviceId}/monitoring/{monitoringType}/create(serviceId=${service.getId()},monitoringType=${monitorType.getId()})}" class="btn btn-primary" role="button">Create</a>
+                                <a th:href="@{/web/service/{serviceId}/monitor/{monitor}/create(serviceId=${service.getId()},monitor=${monitorAdapter.getId()})}" class="btn btn-primary" role="button">Create</a>
                             </td>
                         </tr>
                         </tbody>

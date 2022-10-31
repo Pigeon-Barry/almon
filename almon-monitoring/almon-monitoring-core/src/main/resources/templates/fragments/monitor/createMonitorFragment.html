@@ -4,7 +4,7 @@
 <th:block th:fragment="createMonitorHeader">
     <h4 class="text-center">Standard Monitor Values</h4>
     <hr>
-    <input type="hidden" name="MONITOR_TYPE" th:value="${monitoringType.getId()}">
+    <input type="hidden" name="MONITOR_TYPE" th:value="${monitor.getId()}">
     <div class="form-group required">
         <label for="key" class="control-label">Key:</label>
         <div class="input-group mb-3">

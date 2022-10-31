@@ -1,7 +1,7 @@
 package com.capgemini.bedwards.almon.almonmonitoringcore.service.alert;
 
 import com.capgemini.bedwards.almon.almondatastore.models.alert.Alert;
-import com.capgemini.bedwards.almon.almondatastore.models.monitor.MonitoringType;
+import com.capgemini.bedwards.almon.almondatastore.models.monitor.Monitor;
 import com.capgemini.bedwards.almon.almondatastore.repository.alert.AlertRepository;
 import com.capgemini.bedwards.almon.notificationcore.Notification;
 import lombok.extern.slf4j.Slf4j;
@@ -15,7 +15,7 @@ import java.util.Set;
 public abstract class AlertServiceImpl<T extends Alert> implements AlertService<T> {
     private final List<Notification> NOTIFICATIONS;
 
-    private Set<MonitoringType> SENT_ALERTS;
+    private Set<Monitor> SENT_ALERTS;
 
     @Autowired
     public AlertServiceImpl(List<Notification> notifications) {
@@ -31,12 +31,12 @@ public abstract class AlertServiceImpl<T extends Alert> implements AlertService<
         log.info("Saving alert: " + alert);
         alert = getRepository().save(alert);
         if (alert.getStatus().shouldSendAlert()) {
-            if (!SENT_ALERTS.contains(alert.getMonitoringType())) {
-                SENT_ALERTS.add(alert.getMonitoringType());
+            if (!SENT_ALERTS.contains(alert.getMonitor())) {
+                SENT_ALERTS.add(alert.getMonitor());
                 sendAlert(alert);
             }
         } else {
-            SENT_ALERTS.remove(alert.getMonitoringType());
+            SENT_ALERTS.remove(alert.getMonitor());
         }
         return alert;
     }
