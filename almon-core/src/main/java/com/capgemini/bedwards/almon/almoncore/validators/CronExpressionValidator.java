@@ -17,6 +17,7 @@ public class CronExpressionValidator implements ConstraintValidator<CronExpressi
 
     @Override
     public boolean isValid(String value, ConstraintValidatorContext context) {
+
         return org.springframework.scheduling.support.CronExpression.isValidExpression(value);
     }
 }

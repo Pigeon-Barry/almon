@@ -6,13 +6,25 @@
     <th:block th:include="fragments/monitor/createMonitorFragment :: createMonitorHeader"/>
     <div class="form-group required">
         <label for="cronExpression" class="control-label">Cron Expression:</label>
-        <input
-                th:class="(${#fields.hasErrors('cronExpression')}? 'is-invalid ' : '') + 'form-control'"
-                type="text" id="cronExpression" placeholder="Enter Cron Expression"
-                name="cronExpression" th:field="*{cronExpression}"/>
+        <div class="input-group mb-3">
+
+            <input
+                    th:class="(${#fields.hasErrors('cronExpression')}? 'is-invalid ' : '') + 'form-control'"
+                    type="text" id="cronExpression" placeholder="Enter Cron Expression"
+                    name="cronExpression" th:field="*{cronExpression}"/>
+
+            <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#cronHelpModal">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+                     class="bi bi-info-circle-fill" viewBox="0 0 16 16">
+                    <path d="M8 16A8 8 0 1 0 8 0a8 8 0 0 0 0 16zm.93-9.412-1 4.705c-.07.34.029.533.304.533.194 0 .487-.07.686-.246l-.088.416c-.287.346-.92.598-1.465.598-.703 0-1.002-.422-.808-1.319l.738-3.468c.064-.293.006-.399-.287-.47l-.451-.081.082-.381 2.29-.287zM8 5.5a1 1 0 1 1 0-2 1 1 0 0 1 0 2z"></path>
+                </svg>
+                Info
+            </button>
+        </div>
         <span th:if="${#fields.hasErrors('cronExpression')}" class="invalid-feedback" role="alert">
-                                        <strong th:errors="*{cronExpression}"></strong>
-                                </span>
+            <strong th:errors="*{cronExpression}"></strong>
+        </span>
     </div>
     <br>
+    <th:block th:include="fragments/modals/CronHelpModal :: cronHelpModal"/>
 </th:block>
