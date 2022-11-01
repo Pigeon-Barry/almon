@@ -1,9 +1,12 @@
 <html xmlns="http://www.w3.org/1999/xhtml"
       xmlns:th="http://www.thymeleaf.org" lang="en">
-<div th:fragment="standard">
+
+<div th:fragment="standard(elementName,pagintationPrefix)">
+    <!--/*@thymesVar id="currentPage" type="java.lang.Integer"*/-->
+    <!--/*@thymesVar id="totalPages" type="java.lang.Integer"*/-->
     <div class="row col-12">
         <div class="col-sm-6">
-            Total Users: [[${totalItems}]]
+            Total [[${elementName}]]: [[${totalItems}]]
         </div>
         <div class="col-sm-6">
             <div class="dropdown d-flex flex-row-reverse">
@@ -12,32 +15,43 @@
                     Items per page: [[${pageSize}]]
                 </a>
                 <ul class="dropdown-menu">
-                    <li><a class="dropdown-item" href="#" onclick="updateQueryParam('pageSize',10)">10</a></li>
-                    <li><a class="dropdown-item" href="#" onclick="updateQueryParam('pageSize',25)">25</a></li>
-                    <li><a class="dropdown-item" href="#" onclick="updateQueryParam('pageSize',50)">50</a></li>
-                    <li><a class="dropdown-item" href="#" onclick="updateQueryParam('pageSize',100)">100</a></li>
+                    <li><a class="dropdown-item" href="#"
+                           th:data-paramName="${pagintationPrefix} + 'PageSize'"
+                           onclick="updateQueryParam(this.getAttribute('data-paramName'),10)">10</a></li>
+                    <li><a class="dropdown-item" href="#"
+                           th:data-paramName="${pagintationPrefix} + 'PageSize'"
+                           onclick="updateQueryParam(this.getAttribute('data-paramName'),25)">25</a></li>
+                    <li><a class="dropdown-item" href="#"
+                           th:data-paramName="${pagintationPrefix} + 'PageSize'"
+                           onclick="updateQueryParam(this.getAttribute('data-paramName'),50)">50</a></li>
+                    <li><a class="dropdown-item" href="#"
+                           th:data-paramName="${pagintationPrefix} + 'PageSize'"
+                           onclick="updateQueryParam(this.getAttribute('data-paramName'),100)">100</a></li>
                 </ul>
             </div>
         </div>
     </div>
 
-
+    <br>
     <nav th:if="${totalPages > 1}" aria-label="Page navigation example">
         <ul class="pagination justify-content-center">
             <li th:class="'page-item ' + (${currentPage <= 1} ? 'disabled' : '')">
                 <a class="page-link" href="#" tabindex="-1" aria-disabled="true"
-                   th:onclick="'javascript:updateQueryParam(\'pageNumber\',' + ${currentPage - 1} + ')'"
+                   th:data-paramName="${pagintationPrefix} + 'PageNumber'"
+                   th:onclick="'javascript:updateQueryParam(this.getAttribute(\'data-paramName\'),' + ${currentPage - 1} + ')'"
                 >Previous</a>
             </li>
 
             <th:block th:with="pageStartTmp=(${currentPage > 3 ? (currentPage - 3 ) : 1})">
                 <th:block
                         th:with="pageEnd=(${(currentPage + 6 - (currentPage - pageStartTmp)) < totalPages ? (currentPage + 6 - (currentPage - pageStartTmp)) : totalPages})">
-                    <th:block th:with="pageStart=(${pageEnd - pageStartTmp != 7 ? (pageEnd - 6 > 0 ? pageEnd - 6 : 1) : pageStartTmp})">
+                    <th:block
+                            th:with="pageStart=(${pageEnd - pageStartTmp != 7 ? (pageEnd - 6 > 0 ? pageEnd - 6 : 1) : pageStartTmp})">
                         <th:block th:each="i: ${#numbers.sequence(pageStart, pageEnd)}">
                             <li th:class="'page-item ' + ${currentPage == i ? 'active' : ''} "><a class="page-link"
                                                                                                   href="#"
-                                                                                                  th:onclick="'javascript:updateQueryParam(\'pageNumber\',' + ${i} + ')'">[[${i}]]</a>
+                                                                                                  th:data-paramName="${pagintationPrefix} + 'PageNumber'"
+                                                                                                  th:onclick="'javascript:updateQueryParam(this.getAttribute(\'data-paramName\'),' + ${i} + ')'">[[${i}]]</a>
                             </li>
                         </th:block>
                     </th:block>
@@ -46,7 +60,8 @@
             <li class="page-item">
             <li th:class="'page-item ' + (${currentPage < totalPages} ? '' : 'disabled')">
                 <a class="page-link" href="#"
-                   th:onclick="'javascript:updateQueryParam(\'pageNumber\',' + ${currentPage + 1} + ')'"
+                   th:data-paramName="${pagintationPrefix} + 'PageNumber'"
+                   th:onclick="'javascript:updateQueryParam(this.getAttribute(\'data-paramName\'),' + ${currentPage + 1} + ')'"
                 >Next</a>
             </li>
         </ul>

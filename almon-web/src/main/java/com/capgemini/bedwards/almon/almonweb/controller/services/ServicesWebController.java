@@ -32,25 +32,25 @@ public class ServicesWebController extends WebController {
     ServiceService serviceService;
 
     @GetMapping()
-    public String getAllUsers(@RequestParam(defaultValue = "1") int pageNumber,
-                              @RequestParam(defaultValue = "25") int pageSize,
+    public String getAllServices(@RequestParam(defaultValue = "1") int servicePageNumber,
+                              @RequestParam(defaultValue = "25") int servicePageSize,
                               Model model) {
         User user = SecurityUtil.getAuthenticatedUser();
         log.debug("UserID: " + user.getId());
 
         Page<Service> page;
         if (SecurityUtil.hasAuthority("VIEW_ALL_SERVICES"))
-            page = serviceService.findPaginated(pageNumber, pageSize);
+            page = serviceService.findPaginated(servicePageNumber, servicePageSize);
         else
-            page = serviceService.findPaginatedFromUser(pageNumber, pageSize, SecurityUtil.getAuthenticatedUser());
+            page = serviceService.findPaginatedFromUser(servicePageNumber, servicePageSize, SecurityUtil.getAuthenticatedUser());
         List<Service> listServices = page.getContent();
 
 
-        model.addAttribute("currentPage", pageNumber);
+        model.addAttribute("currentPage", servicePageNumber);
         model.addAttribute("totalPages", page.getTotalPages());
         model.addAttribute("totalItems", page.getTotalElements());
         model.addAttribute("listServices", listServices);
-        model.addAttribute("pageSize", pageSize);
+        model.addAttribute("pageSize", servicePageSize);
         return "/services/services";
     }
 

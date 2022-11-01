@@ -114,7 +114,7 @@ public class SecurityConfig {
                             .clearAuthentication(true)
                             .permitAll())
                     .authorizeRequests(requests -> requests
-                            .antMatchers("/web/css/**", "/web/js/**", "/web/img/**", "/web/favicon.ico", "/web/auth/**").permitAll()
+                            .antMatchers("/web/css/**", "/web/js/**", "/web/img/**", "/web/fonts/**", "/web/favicon.ico", "/web/auth/**").permitAll()
                             .antMatchers("/web/auth/pendingApproval").authenticated()
                             .antMatchers("/web/auth/accountDisabled").authenticated()
                             .antMatchers("/web/admin/**").hasAnyAuthority("VIEW_ADMIN_PAGES")

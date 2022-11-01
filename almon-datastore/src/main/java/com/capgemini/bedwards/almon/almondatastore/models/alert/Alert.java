@@ -1,6 +1,7 @@
 package com.capgemini.bedwards.almon.almondatastore.models.alert;
 
 import com.capgemini.bedwards.almon.almondatastore.models.monitor.Monitor;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.*;
 import lombok.experimental.SuperBuilder;
 import org.hibernate.annotations.GenericGenerator;
@@ -33,6 +34,7 @@ public abstract class Alert {
             @JoinColumn(name = "id.service"),
             @JoinColumn(name = "id.id")
     })
+    @JsonIgnore
     protected Monitor monitor;
 
     @NotNull

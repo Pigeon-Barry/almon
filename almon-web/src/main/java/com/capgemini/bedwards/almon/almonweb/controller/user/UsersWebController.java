@@ -25,8 +25,8 @@ public class UsersWebController  extends WebController {
 
     @GetMapping()
     @PreAuthorize("hasAuthority('VIEW_ALL_USERS')")
-    public String getAllUsers(@RequestParam(defaultValue = "1") int pageNumber,
-                              @RequestParam(defaultValue = "25") int pageSize,
+    public String getAllUsers(@RequestParam(defaultValue = "1") int userPageNumber,
+                              @RequestParam(defaultValue = "25") int userPageSize,
                               @RequestParam(required = false) String enabled,
                               Model model) {
         log.info("enabled: " + enabled);
@@ -34,15 +34,15 @@ public class UsersWebController  extends WebController {
         Boolean enabledVal = enabled == null || enabled.equalsIgnoreCase("false") == enabled.equalsIgnoreCase("true") ? null : Boolean.parseBoolean(enabled);
 
 
-        Page<User> page = userService.findPaginatedWithFilter(pageNumber, pageSize, enabledVal);
+        Page<User> page = userService.findPaginatedWithFilter(userPageNumber, userPageSize, enabledVal);
         List<User> listUsers = page.getContent();
 
 
-        model.addAttribute("currentPage", pageNumber);
+        model.addAttribute("currentPage", userPageNumber);
         model.addAttribute("totalPages", page.getTotalPages());
         model.addAttribute("totalItems", page.getTotalElements());
         model.addAttribute("listUsers", listUsers);
-        model.addAttribute("pageSize", pageSize);
+        model.addAttribute("pageSize", userPageSize);
         return "/users/users";
     }
 }

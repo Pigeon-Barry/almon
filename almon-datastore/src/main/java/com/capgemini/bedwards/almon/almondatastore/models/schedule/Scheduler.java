@@ -22,19 +22,19 @@ public class Scheduler {
     private final Map<String, ScheduledFuture<?>> JOBS = new HashMap<>();
 
     @Autowired
-    public Scheduler(TaskScheduler taskScheduler, List<HasScheduledTasks> tasksList) {
+    public Scheduler(TaskScheduler taskScheduler, List<HasScheduledTasks<?>> tasksList) {
         this.TASK_SCHEDULER = taskScheduler;
         if (tasksList != null) {
             tasksList.forEach(hasScheduledTasks -> hasScheduledTasks.getScheduledTasks().forEach(this::scheduleTask));
         }
     }
 
-    public void scheduleTask(ScheduledTask scheduledTask) {
-        if(!scheduledTask.isEnabled()){
+    public void scheduleTask(ScheduledTask<?> scheduledTask) {
+        if (!scheduledTask.isEnabled()) {
             log.info("Scheduled task with ID: " + scheduledTask.getTASK_ID() + " is disabled ignoring");
             return;
         }
-        log.info("Scheduling task with job id: " + scheduledTask.getTASK_ID() + " and cron expression: '" + scheduledTask.getCronExpression() +"'");
+        log.info("Scheduling task with job id: " + scheduledTask.getTASK_ID() + " and cron expression: '" + scheduledTask.getCronExpression() + "'");
         ScheduledFuture<?> scheduledFuture = TASK_SCHEDULER.schedule(scheduledTask, new CronTrigger(scheduledTask.getCronExpression(), TimeZone.getTimeZone(TimeZone.getDefault().getID())));
         JOBS.put(scheduledTask.getTASK_ID(), scheduledFuture);
     }

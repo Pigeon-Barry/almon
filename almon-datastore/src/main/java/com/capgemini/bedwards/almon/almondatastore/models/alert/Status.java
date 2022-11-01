@@ -12,4 +12,9 @@ public enum Status {
     public boolean shouldSendAlert() {
         return SHOULD_SEND_ALERT;
     }
+
+    @Override
+    public String toString() {
+        return name();
+    }
 }

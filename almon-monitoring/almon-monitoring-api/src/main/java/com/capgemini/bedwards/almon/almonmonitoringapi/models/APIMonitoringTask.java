@@ -3,11 +3,9 @@ package com.capgemini.bedwards.almon.almonmonitoringapi.models;
 import com.capgemini.bedwards.almon.almondatastore.models.alert.Status;
 import com.capgemini.bedwards.almon.almondatastore.models.schedule.ScheduledTask;
 import com.capgemini.bedwards.almon.almonmonitoringapi.service.APIAlertService;
-import com.fasterxml.jackson.core.JsonFactory;
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.jayway.jsonpath.DocumentContext;
+import com.jayway.jsonpath.Configuration;
 import com.jayway.jsonpath.JsonPath;
+import com.jayway.jsonpath.PathNotFoundException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.web.client.RestTemplateBuilder;
 import org.springframework.http.HttpStatus;
@@ -39,9 +37,8 @@ public class APIMonitoringTask extends ScheduledTask<APIAlertType> {
     }
 
     @Override
-    public void run() {
+    public APIAlertType execute() {
         log.info("Running for: " + this.API_MONITORING_TYPE.getTaskId());
-
         try {
             final long START_TIME = System.currentTimeMillis();
             ResponseEntity<String> responseEntity = this.REST_TEMPLATE.getForEntity(this.API_MONITORING_TYPE.getUrl(), String.class);
@@ -53,27 +50,28 @@ public class APIMonitoringTask extends ScheduledTask<APIAlertType> {
                 log.debug("Response: " + responseEntity);
             if (responseEntity.getStatusCode().equals(HttpStatus.valueOf(this.API_MONITORING_TYPE.expectedStatus))) {
                 if (this.API_MONITORING_TYPE.getJsonPathValidations() != null && this.API_MONITORING_TYPE.getJsonPathValidations().size() > 0) {
-                    DocumentContext jsonBody = JsonPath.parse(responseEntity.getBody());
-
-                    ObjectMapper mapper = new ObjectMapper();
-                    JsonFactory factory = mapper.getFactory();
+                    Object jsonBody = Configuration.defaultConfiguration().jsonProvider().parse(responseEntity.getBody());
 
                     for (Map.Entry<String, String> jsonPathEntry : this.API_MONITORING_TYPE.getJsonPathValidations().entrySet()) {
                         JsonPath jsonPath = JsonPath.compile(jsonPathEntry.getKey());
-                        JsonNode value = jsonBody.read(jsonPath);
-                        if (!value.equals(mapper.readTree(factory.createParser(jsonPathEntry.getValue())))) {
-                            status = Status.FAIL;
-                            message = "One or more Json assertions failed: Response body '" + responseEntity.getBody() + "'";
-                            break;
+                        try {
+                            String value = jsonPath.read(jsonBody);
+                            if (value.equals(jsonPathEntry.getValue()))
+                                continue;
+                            message = "Expected JsonPath '" + jsonPath.getPath() + "' to return '" + jsonPathEntry.getValue() + "' but instead it returned '" + value + "'";
+                        } catch (PathNotFoundException e) {
+                            log.error("Error: " + e.getMessage(), e);
+                            message = "Path:  '" + jsonPath.getPath() + "' not found in body '" + jsonBody + "'";
                         }
+                        status = Status.FAIL;
+                        break;
                     }
                 }
             } else {
                 status = Status.FAIL;
                 message = "Expected a status code of: " + this.API_MONITORING_TYPE.expectedStatus + " but got " + responseEntity.getStatusCodeValue();
             }
-
-            this.API_ALERT_SERVICE.create(APIAlertType.builder()
+            return this.API_ALERT_SERVICE.create(APIAlertType.builder()
                     .monitor(this.API_MONITORING_TYPE)
                     .status(status)
                     .message(message)
@@ -83,7 +81,7 @@ public class APIMonitoringTask extends ScheduledTask<APIAlertType> {
                     .build());
         } catch (Throwable e) {
             log.error("Failed to run task: " + this.getTASK_ID(), e);
-            this.API_ALERT_SERVICE.create(APIAlertType.builder()
+            return this.API_ALERT_SERVICE.create(APIAlertType.builder()
                     .monitor(this.API_MONITORING_TYPE)
                     .status(Status.ERROR)
                     .message("Monitor failed with error: " + e.getMessage())

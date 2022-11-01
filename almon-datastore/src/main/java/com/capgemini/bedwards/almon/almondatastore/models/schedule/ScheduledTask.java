@@ -1,5 +1,6 @@
 package com.capgemini.bedwards.almon.almondatastore.models.schedule;
 
+import com.capgemini.bedwards.almon.almondatastore.models.alert.Alert;
 import com.capgemini.bedwards.almon.almondatastore.models.alert.ScheduledAlert;
 import lombok.Data;
 
@@ -11,9 +12,14 @@ public abstract class ScheduledTask<T extends ScheduledAlert> implements Runnabl
     public abstract boolean isEnabled();
 
 
+    public abstract Alert execute();
+
     protected ScheduledTask(ScheduledMonitor ScheduledMonitor) {
         this.TASK_ID = ScheduledMonitor.getTaskId();
         this.cronExpression = ScheduledMonitor.getCronExpression();
     }
-
+    @Override
+    public void run() {
+        execute();
+    }
 }

@@ -1,11 +1,15 @@
 package com.capgemini.bedwards.almon.almonmonitoringcore.service.alert;
 
 import com.capgemini.bedwards.almon.almondatastore.models.alert.Alert;
+import com.capgemini.bedwards.almon.almondatastore.models.alert.AlertSpecification;
 import com.capgemini.bedwards.almon.almondatastore.models.monitor.Monitor;
 import com.capgemini.bedwards.almon.almondatastore.repository.alert.AlertRepository;
 import com.capgemini.bedwards.almon.notificationcore.Notification;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 
 import java.util.HashSet;
 import java.util.List;
@@ -45,5 +49,11 @@ public abstract class AlertServiceImpl<T extends Alert> implements AlertService<
         for (Notification notification : this.NOTIFICATIONS) {
             notification.sendNotification(alert);
         }
+    }
+
+    @Override
+    public Page<T> getAlertsPaginated(AlertSpecification<T> specification, int pageNumber, int pageSize) {
+        Pageable pageable = PageRequest.of(pageNumber - 1, pageSize);
+        return getRepository().findAll(specification, pageable);
     }
 }

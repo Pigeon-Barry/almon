@@ -2,6 +2,8 @@ package com.capgemini.bedwards.almon.almonweb.controller.monitor;
 
 
 import com.capgemini.bedwards.almon.almoncore.intergrations.web.WebController;
+import com.capgemini.bedwards.almon.almondatastore.models.alert.Alert;
+import com.capgemini.bedwards.almon.almondatastore.models.alert.AlertFilterOptions;
 import com.capgemini.bedwards.almon.almondatastore.models.monitor.Monitor;
 import com.capgemini.bedwards.almon.almondatastore.models.service.Service;
 import com.capgemini.bedwards.almon.almonmonitoringcore.Monitors;
@@ -68,7 +70,19 @@ public class MonitorWebController extends WebController {
     public ModelAndView createNewAlertTypePage(
             @Valid @PathVariable(name = "serviceId") Service service,
             @Valid @PathVariable(name = "monitorId") Monitor monitor,
+            @ModelAttribute AlertFilterOptions alertFilterOptions,
+            @RequestParam(defaultValue = "1") int alertPageNumber,
+            @RequestParam(defaultValue = "10") int alertPageSize,
             Model model) {
-        return MONITORS.getMonitorAdapterFromMonitor(monitor).getViewPageWeb(service, monitor, model);
+        return MONITORS.getMonitorAdapterFromMonitor(monitor).getViewPageWeb(service, monitor, model, alertFilterOptions, alertPageNumber, alertPageSize);
+    }
+
+    @PostMapping("/run")
+    @PreAuthorize("hasAuthority('RUN_MONITORS') || hasAuthority('SERVICE_' + #service.id + '_MONITOR_' + #monitor.id + '_CAN_RUN')")
+    public ResponseEntity<Alert> run(
+            @Valid @PathVariable(name = "serviceId") Service service,
+            @Valid @PathVariable(name = "monitorId") Monitor monitor) {
+        Alert alert = MONITORS.getMonitorAdapterFromMonitor(monitor).execute(monitor);
+        return ResponseEntity.ok(alert);
     }
 }
