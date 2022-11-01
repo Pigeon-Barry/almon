@@ -99,7 +99,10 @@
                                         </ul>
                                     </li>
 
-                                    <li class="list-group-item  d-flex justify-content-end">
+                                    <li class="list-group-item  d-flex justify-content-between">
+                                        <button onclick="resetAlertFilter()" type="button" class="btn btn-danger">
+                                            Reset Filter
+                                        </button>
                                         <button type="submit" class="btn btn-primary">
                                             Apply Filter
                                         </button>
@@ -186,6 +189,13 @@
     </section>
 
     <script type="text/javascript">
+
+        function resetAlertFilter() {
+            if (!confirmationPrompt("Reset Filter", "Are you sure you want to reset this filter?"))
+                return;
+            deleteQueryParam(['status','from','to']);
+        }
+
         const PICKER_DATE_FORMAT = 'DD/MM/YYYY h:mm:ss A';
         const SUBMIT_DATE_FORMAT = 'YYYY-MM-DD HH:mm:ss';
 

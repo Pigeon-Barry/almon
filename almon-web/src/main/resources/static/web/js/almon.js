@@ -24,6 +24,19 @@ function deleteQueryParam(name) {
     }
 }
 
+function deleteQueryParam(paramNames) {
+    if ('URLSearchParams' in window) {
+        const searchParams = new URLSearchParams(window.location.search);
+        console.log(paramNames);
+        paramNames.forEach(function (name,index){
+            console.log(name);
+            searchParams.delete(name);
+        });
+        window.location.search = searchParams.toString();
+    }
+}
+
+
 
 function showAlertSuccess(message) {
     showAlert(message, "alert-success")

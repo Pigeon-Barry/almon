@@ -34,6 +34,8 @@ public class AlertSpecification<T extends Alert> implements Specification<T> {
             predicates.add(builder.lessThanOrEqualTo(root.get("createdAt"), ALERT_FILTER_OPTIONS.getTo()));
 
 
+        query.orderBy(builder.desc(root.get("createdAt")));
+
 //        if (ALERT_FILTER_OPTIONS.getMonitors() != null && ALERT_FILTER_OPTIONS.getMonitors().length > 0)
 //            predicates.add(root.get("monitor").in(ALERT_FILTER_OPTIONS.getMonitors()));
 
