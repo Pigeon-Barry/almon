@@ -51,6 +51,13 @@ public class User {
     @ManyToMany(cascade = CascadeType.REMOVE, fetch = FetchType.EAGER)
     private Set<Role> roles;
 
+    public String getProfilePage(){
+        return "/web/user/" + getId();
+    }
+    public String getProfilePicture(){
+        return "/web/img/ProfilePicturePlaceholder.png";
+    }
+
     public User() {
 
     }

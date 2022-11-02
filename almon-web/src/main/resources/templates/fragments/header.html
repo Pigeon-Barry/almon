@@ -16,16 +16,15 @@
     <!-- Nav Bar -->
 
 
-    <nav class="navbar navbar-expand-sm navbar-dark bg-dark text-center text-md-left ">
-        <a class="navbar-brand m-2" th:text="${@environment.getProperty('almon.core.app.name')}">
-        </a>
+    <nav class="navbar navbar-expand-sm navbar-dark bg-dark">
+        <a class="navbar-brand m-2" th:text="${@environment.getProperty('almon.core.app.name')}"></a>
         <!-- Collaps nav bar links on small screens -->
-        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportContent"
+        <button class="navbar-toggler ms-auto" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportContent"
                 aria-controls="navbarSupportedContent" aria-expanded="false">
             <span class="navbar-toggler-icon"></span>
         </button>
 
-        <div class="collapse navbar-collapse" id="navbarSupportContent">
+        <div class="navbar-collapse collapse " id="navbarSupportContent">
             <th:block th:insert="fragments/auth/navContent :: autodetect"/>
         </div>
     </nav>

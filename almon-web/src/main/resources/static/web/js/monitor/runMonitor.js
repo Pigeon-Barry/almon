@@ -21,6 +21,7 @@ function runMonitor(serviceId, monitorId, overlayId) {
             $("#" + overlayId).hide();
             if (xhr.status === 200) {
                 showPopup("Monitor Executed successfully","Monitor Executed successfully. Alert status " +  $.parseJSON(xhr.responseText).status);
+                refreshPage();
             } else {
                 showAlertError("Failed to run monitor. Please consult an administrator");
             }

@@ -12,7 +12,7 @@
                 <div class="col-lg-4">
                     <div class="card mb-4">
                         <div class="card-body text-center">
-                            <img th:src="@{/web/img/ProfilePicturePlaceholder.png}"
+                            <img th:src="${user.getProfilePicture()}"
                                  alt="avatar"
                                  class="rounded-circle img-fluid" style="width: 150px;">
                             <h5 class="my-3" th:text="${user.getFullName()}"></h5>
@@ -128,7 +128,6 @@
                                 <div class="card-body">
                                     <ul class="list-group list-group-flush rounded-3">
                                         <li class="list-group-item d-flex justify-content-start align-items-center p-3">
-                                            <i class="fas fa-globe fa-lg text-warning"></i>
                                             <p class="mb-0"><strong>Alert Subscriptions</strong></p>
                                         </li>
                                         <!--                                    <li class="list-group-item d-flex justify-content-start p-3" th:each="role : ${user.getRoles()}">-->
