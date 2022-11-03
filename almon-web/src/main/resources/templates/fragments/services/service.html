@@ -67,7 +67,7 @@
                                                    th:data-notificationId="${notification.getId()}"
                                                    th:data-serviceId="${service.getId()}"
                                                    th:checked="${notifications.isUserSubscribedToNotificationAtServiceLevel(user,notification,service)}"
-                                                   onclick="updateNotificationStatus(this.getAttribute('data-notificationId'),this.getAttribute('data-serviceId'),this.is(':checked'))"
+                                                   onclick="updateServiceNotificationStatus(this.getAttribute('data-notificationId'),this.getAttribute('data-serviceId'),this.is(':checked'))"
                                             >
                                         </div>
                                     </div>
