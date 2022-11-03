@@ -8,6 +8,7 @@
     <!--/*@thymesVar id="listAlerts" type="java.util.List"*/-->
     <!--/*@thymesVar id="alert" type="com.capgemini.bedwards.almon.almondatastore.models.alert.Alert"*/-->
     <!--/*@thymesVar id="alertFilterOptions" type="com.capgemini.bedwards.almon.almondatastore.models.alert.AlertFilterOptions"*/-->
+    <!--/*@thymesVar id="notifications" type="com.capgemini.bedwards.almon.notificationcore.Notifications"*/-->
     <div class="overlay" id="runningOverlay">
         <div class="spinner"></div>
         <br/>
@@ -109,6 +110,34 @@
                                     </li>
                                 </ul>
                             </form>
+                        </div>
+                    </div>
+                    <br>
+                    <div class="card mb-4 mb-lg-0">
+                        <div class="card-body p-0">
+                            <ul class="list-group list-group-flush rounded-3">
+                                <li class="list-group-item d-flex justify-content-between align-items-center">
+                                    <p class="mb-0"><strong>Notification Subscriptions</strong></p>
+                                </li>
+                                <li class="list-group-item d-flex justify-content-between"
+                                    th:each="notification : ${notifications.getNotifications()}">
+
+                                    <p data-bs-toggle="tooltip" data-bs-placement="top"
+                                       th:data-bs-title="${notification.getHelpText()}"
+                                       data-bs-custom-class="primary-tooltip"
+                                       class="mb-0" th:text="${notification.getDisplayName()}"></p>
+                                    <div class="justify-content-end">
+                                        <div class="form-check form-switch">
+                                            <input class="form-check-input" type="checkbox"
+                                                   th:data-notificationId="${notification.getId()}"
+                                                   th:data-serviceId="${service.getId()}"
+                                                   th:checked="${notifications.isUserSubscribedToNotification(user,notification,service)}"
+                                                   onclick="updateNotificationStatus(this.getAttribute('data-notificationId'),this.getAttribute('data-serviceId'),this.is(':checked'))"
+                                            >
+                                        </div>
+                                    </div>
+                                </li>
+                            </ul>
                         </div>
                     </div>
                 </div>

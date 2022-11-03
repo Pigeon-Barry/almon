@@ -35,3 +35,7 @@
         transform: rotate(360deg);
     }
 }
+
+.primary-tooltip {
+    --bs-tooltip-bg: var(--bs-primary);
+}

@@ -5,6 +5,7 @@ import com.capgemini.bedwards.almon.almoncore.intergrations.web.WebController;
 import com.capgemini.bedwards.almon.almoncore.services.service.ServiceService;
 import com.capgemini.bedwards.almon.almondatastore.models.service.Service;
 import com.capgemini.bedwards.almon.almonmonitoringcore.Monitors;
+import com.capgemini.bedwards.almon.notificationcore.Notifications;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -25,11 +26,13 @@ public class ServiceWebController extends WebController {
 
     private final ServiceService SERVICE_SERVICE;
     private final Monitors MONITORS;
+    private final Notifications NOTIFICATIONS;
 
     @Autowired
-    public ServiceWebController(ServiceService serviceService, Monitors monitors) {
+    public ServiceWebController(ServiceService serviceService, Monitors monitors, Notifications notifications) {
         this.SERVICE_SERVICE = serviceService;
         this.MONITORS = monitors;
+        this.NOTIFICATIONS = notifications;
     }
 
 
@@ -38,6 +41,7 @@ public class ServiceWebController extends WebController {
     public String getUsersList(@PathVariable(name = "serviceId") Service service, Model model) {
         model.addAttribute("service", service);
         model.addAttribute("monitors", MONITORS);
+        model.addAttribute("notifications", NOTIFICATIONS);
         return "services/service";
     }
 

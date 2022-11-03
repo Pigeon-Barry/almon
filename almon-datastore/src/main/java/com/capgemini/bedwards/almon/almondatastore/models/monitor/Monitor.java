@@ -2,12 +2,15 @@ package com.capgemini.bedwards.almon.almondatastore.models.monitor;
 
 import com.capgemini.bedwards.almon.almondatastore.models.alert.Alert;
 import com.capgemini.bedwards.almon.almondatastore.models.service.Service;
+import com.capgemini.bedwards.almon.almondatastore.util.Constants;
 import lombok.*;
 import lombok.experimental.SuperBuilder;
+import org.hibernate.validator.constraints.Length;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
 import java.io.Serializable;
+import java.util.Objects;
 import java.util.Set;
 
 @Getter
@@ -42,6 +45,8 @@ public abstract class Monitor {
     @SuperBuilder
     @NoArgsConstructor
     public static class MonitorId implements Serializable {
+        @Length(max = Constants.MONITOR_ID_MAX_LENGTH)
+        @Column(length = Constants.SERVICE_ID_MAX_LENGTH)
         protected String id;
         @ManyToOne
         @JoinColumn(name = "service_id")
@@ -50,6 +55,21 @@ public abstract class Monitor {
         public String toString() {
             return getService().getId() + "-" + getId();
         }
+
     }
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        Monitor monitor = (Monitor) o;
+
+        return Objects.equals(id, monitor.id);
+    }
+
+    @Override
+    public int hashCode() {
+        return id != null ? id.hashCode() : 0;
+    }
 }

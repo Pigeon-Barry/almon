@@ -44,7 +44,6 @@ public class UserWebController  extends WebController {
         User user = userService.getUserById(userId);
         List<Role> roles = roleService.getAllRoles();
         List<Authority> authorities = authorityService.getAllAuthorities();
-        model.addAttribute("user", user);
         model.addAttribute("roles", roles);
         model.addAttribute("authorities", authorities);
         return "users/user";

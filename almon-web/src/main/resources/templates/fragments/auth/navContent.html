@@ -40,8 +40,8 @@
                 <a class="nav-link" href="/web/auth/logout">Logout</a>
             </li>
             <li class="nav-item">
-                <a class="nav-link" th:href="${#authentication.getPrincipal().getProfilePage()}">
-                    <img th:src="${#authentication.getPrincipal().getProfilePicture()}"
+                <a class="nav-link" th:href="${user.getProfilePage()}">
+                    <img th:src="${user.getProfilePicture()}"
                          alt="avatar" class="rounded-circle img-fluid" style="width: 50px;">
                 </a>
             </li>

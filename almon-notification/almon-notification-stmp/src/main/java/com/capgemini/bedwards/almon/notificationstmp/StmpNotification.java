@@ -1,7 +1,7 @@
 package com.capgemini.bedwards.almon.notificationstmp;
 
 import com.capgemini.bedwards.almon.almondatastore.models.alert.Alert;
-import com.capgemini.bedwards.almon.notificationcore.Notification;
+import com.capgemini.bedwards.almon.almondatastore.models.contract.Notification;
 import com.capgemini.bedwards.almon.notificationcore.service.NotificationService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -46,6 +46,21 @@ public class StmpNotification implements Notification {
     @Override
     public void sendNotification(Alert alert) {
         sendEmail("ben.edwards2000@live.co.uk", alert.getStatus() + " - " + alert.getMonitor().getId() + " - " + alert.getMonitor().getName(), alert.getHTMLMessage());
+    }
+
+    @Override
+    public String getDisplayName() {
+        return "Email";
+    }
+
+    @Override
+    public String getHelpText() {
+        return "Upon a failed check. This will send an email with the failure details to the registered email address on this account";
+    }
+
+    @Override
+    public String getId() {
+        return "STMP";
     }
 
 

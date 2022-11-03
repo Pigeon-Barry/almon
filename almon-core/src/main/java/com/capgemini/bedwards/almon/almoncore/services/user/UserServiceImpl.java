@@ -5,7 +5,6 @@ import com.capgemini.bedwards.almon.almoncore.exceptions.NotFoundException;
 import com.capgemini.bedwards.almon.almondatastore.models.auth.User;
 import com.capgemini.bedwards.almon.almondatastore.repository.auth.UserRepository;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -18,13 +17,17 @@ import java.util.UUID;
 @Service
 @Slf4j
 public class UserServiceImpl implements UserService {
-    @Autowired
-    UserRepository userRepository;
+
+    private final UserRepository USER_REPOSITORY;
+
+    public UserServiceImpl(UserRepository userRepository) {
+        this.USER_REPOSITORY = userRepository;
+    }
 
     @Override
     public Page<User> findPaginated(int pageNo, int pageSize) {
         Pageable pageable = PageRequest.of(pageNo - 1, pageSize);
-        return userRepository.findAll(pageable);
+        return USER_REPOSITORY.findAll(pageable);
     }
 
     @Override
@@ -32,13 +35,13 @@ public class UserServiceImpl implements UserService {
         if (enabled == null)
             return findApprovalsPaginated(pageNo, pageSize);
         Pageable pageable = PageRequest.of(pageNo - 1, pageSize);
-        return userRepository.findUsersByEnabledEquals(pageable, enabled);
+        return USER_REPOSITORY.findUsersByEnabledEquals(pageable, enabled);
     }
 
     @Override
     public Page<User> findApprovalsPaginated(int pageNo, int pageSize) {
         Pageable pageable = PageRequest.of(pageNo - 1, pageSize);
-        return userRepository.findAll(pageable);
+        return USER_REPOSITORY.findAll(pageable);
     }
 
     @Override
@@ -79,11 +82,17 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public Optional<User> findById(UUID userId) {
-        return userRepository.findById(userId);
+        return USER_REPOSITORY.findById(userId);
     }
+
 
     @Override
     public User save(User user) {
-        return userRepository.saveAndFlush(user);
+        return USER_REPOSITORY.saveAndFlush(user);
     }
+
+
+
+
+
 }

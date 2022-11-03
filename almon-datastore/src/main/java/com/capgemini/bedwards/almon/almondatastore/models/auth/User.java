@@ -1,5 +1,7 @@
 package com.capgemini.bedwards.almon.almondatastore.models.auth;
 
+import com.capgemini.bedwards.almon.almondatastore.models.subscription.MonitorSubscription;
+import com.capgemini.bedwards.almon.almondatastore.models.subscription.ServiceSubscription;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -24,6 +26,7 @@ public class User {
     @GeneratedValue(generator = "uuid")
     @GenericGenerator(name = "uuid", strategy = "com.capgemini.bedwards.almon.almondatastore.util.UUIDGenerator")
     @Type(type = "org.hibernate.type.UUIDCharType")
+    @Column(length = 36)
     private UUID id;
 
     @NotNull
@@ -51,10 +54,18 @@ public class User {
     @ManyToMany(cascade = CascadeType.REMOVE, fetch = FetchType.EAGER)
     private Set<Role> roles;
 
-    public String getProfilePage(){
+    @OneToMany(mappedBy = "id.user", fetch = FetchType.EAGER, cascade = CascadeType.REMOVE)
+    private Set<ServiceSubscription> serviceSubscriptions;
+
+    @OneToMany(mappedBy = "id.user", fetch = FetchType.EAGER, cascade = CascadeType.REMOVE)
+    private Set<MonitorSubscription> monitorSubscriptions;
+
+
+    public String getProfilePage() {
         return "/web/user/" + getId();
     }
-    public String getProfilePicture(){
+
+    public String getProfilePicture() {
         return "/web/img/ProfilePicturePlaceholder.png";
     }
 
@@ -68,7 +79,7 @@ public class User {
 
 
     public boolean isAuthorityFromRole(Authority authority) {
-        return getRoles().stream().anyMatch(role -> role.getAuthorities().contains(authority)) ;
+        return getRoles().stream().anyMatch(role -> role.getAuthorities().contains(authority));
     }
 
 }

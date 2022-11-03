@@ -4,7 +4,7 @@ import com.capgemini.bedwards.almon.almondatastore.models.alert.Alert;
 import com.capgemini.bedwards.almon.almondatastore.models.alert.AlertSpecification;
 import com.capgemini.bedwards.almon.almondatastore.models.monitor.Monitor;
 import com.capgemini.bedwards.almon.almondatastore.repository.alert.AlertRepository;
-import com.capgemini.bedwards.almon.notificationcore.Notification;
+import com.capgemini.bedwards.almon.notificationcore.Notifications;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -12,17 +12,17 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 
 @Slf4j
 public abstract class AlertServiceImpl<T extends Alert> implements AlertService<T> {
-    private final List<Notification> NOTIFICATIONS;
 
+
+    private final Notifications NOTIFICATIONS;
     private Set<Monitor> SENT_ALERTS;
 
     @Autowired
-    public AlertServiceImpl(List<Notification> notifications) {
+    public AlertServiceImpl(Notifications notifications) {
         this.NOTIFICATIONS = notifications;
         this.SENT_ALERTS = new HashSet<>();
     }
@@ -46,9 +46,7 @@ public abstract class AlertServiceImpl<T extends Alert> implements AlertService<
     }
 
     public void sendAlert(T alert) {
-        for (Notification notification : this.NOTIFICATIONS) {
-            notification.sendNotification(alert);
-        }
+        this.NOTIFICATIONS.send(alert);
     }
 
     @Override

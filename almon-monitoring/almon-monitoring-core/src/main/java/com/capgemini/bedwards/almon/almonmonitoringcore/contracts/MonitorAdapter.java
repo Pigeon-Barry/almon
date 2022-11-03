@@ -1,5 +1,6 @@
 package com.capgemini.bedwards.almon.almonmonitoringcore.contracts;
 
+import com.capgemini.bedwards.almon.almoncore.util.BeanUtil;
 import com.capgemini.bedwards.almon.almondatastore.models.alert.Alert;
 import com.capgemini.bedwards.almon.almondatastore.models.alert.AlertFilterOptions;
 import com.capgemini.bedwards.almon.almondatastore.models.alert.AlertSpecification;
@@ -7,6 +8,7 @@ import com.capgemini.bedwards.almon.almondatastore.models.monitor.Monitor;
 import com.capgemini.bedwards.almon.almondatastore.models.service.Service;
 import com.capgemini.bedwards.almon.almonmonitoringcore.service.alert.AlertService;
 import com.capgemini.bedwards.almon.almonmonitoringcore.service.monitor.MonitorService;
+import com.capgemini.bedwards.almon.notificationcore.Notifications;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.springframework.data.domain.Page;
@@ -38,6 +40,7 @@ public interface MonitorAdapter<T extends Monitor, A extends Alert> {
         modelAndView.addAllObjects(model.asMap());
         modelAndView.addObject("monitor", monitor);
         model.addAttribute("service", service);
+        model.addAttribute("notifications", BeanUtil.getBeanOfClass(Notifications.class));
 
         alertFilterOptions.setMonitors(new Monitor[]{monitor});
 

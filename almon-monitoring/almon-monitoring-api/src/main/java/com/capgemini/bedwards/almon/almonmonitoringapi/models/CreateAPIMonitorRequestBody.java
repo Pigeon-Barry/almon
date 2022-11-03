@@ -20,6 +20,7 @@ public class CreateAPIMonitorRequestBody {
 
     @NotBlank
     @Pattern(regexp = Constants.MONITOR_KEY_REGEX, message = Constants.MONITOR_KEY_REGEX_INVALID_MESSAGE)
+    @Size(max = Constants.MONITOR_ID_MAX_LENGTH)
     private String key;
     @NotBlank
     protected String name;

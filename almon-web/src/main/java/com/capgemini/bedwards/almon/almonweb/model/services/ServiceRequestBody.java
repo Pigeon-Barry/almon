@@ -6,12 +6,14 @@ import lombok.Data;
 
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Pattern;
+import javax.validation.constraints.Size;
 
 @Data
 public class ServiceRequestBody {
 
     @NotBlank
     @Pattern(regexp = Constants.SERVICE_REGEX, message = Constants.SERVICE_REGEX_INVALID_MESSAGE)
+    @Size(max = Constants.SERVICE_ID_MAX_LENGTH)
     @ServiceDoesNotExist(message = "A Service with this key already exists")
     private String key;
 

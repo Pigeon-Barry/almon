@@ -1,11 +1,11 @@
 <html xmlns="http://www.w3.org/1999/xhtml"
       xmlns:th="http://www.thymeleaf.org" lang="en"
 >
->
 <div th:fragment="service">
     <!--/*@thymesVar id="service" type="com.capgemini.bedwards.almon.almondatastore.models.service.Service"*/-->
     <!--/*@thymesVar id="authority" type="com.capgemini.bedwards.almon.almondatastore.models.auth.Authority"*/-->
     <!--/*@thymesVar id="monitors" type="om.capgemini.bedwards.almon.almonmonitoringcore.Monitors"*/-->
+    <!--/*@thymesVar id="notifications" type="com.capgemini.bedwards.almon.notificationcore.Notifications"*/-->
     <!--/*@thymesVar id="roles" type="java.util.List"*/-->
     <section style="background-color: #eee;">
         <div class="container py-5">
@@ -46,6 +46,33 @@
                                     </th:block>
                                 </div>
                             </div>
+                        </div>
+                    </div>
+                    <div class="card mb-4 mb-lg-0">
+                        <div class="card-body p-0">
+                            <ul class="list-group list-group-flush rounded-3">
+                                <li class="list-group-item d-flex justify-content-between align-items-center">
+                                    <p class="mb-0"><strong>Notification Subscriptions</strong></p>
+                                </li>
+                                <li class="list-group-item d-flex justify-content-between"
+                                    th:each="notification : ${notifications.getNotifications()}">
+
+                                    <p data-bs-toggle="tooltip" data-bs-placement="top"
+                                       th:data-bs-title="${notification.getHelpText()}"
+                                       data-bs-custom-class="primary-tooltip"
+                                       class="mb-0" th:text="${notification.getDisplayName()}"></p>
+                                    <div class="justify-content-end">
+                                        <div class="form-check form-switch">
+                                            <input class="form-check-input" type="checkbox"
+                                                   th:data-notificationId="${notification.getId()}"
+                                                   th:data-serviceId="${service.getId()}"
+                                                   th:checked="${notifications.isUserSubscribedToNotificationAtServiceLevel(user,notification,service)}"
+                                                   onclick="updateNotificationStatus(this.getAttribute('data-notificationId'),this.getAttribute('data-serviceId'),this.is(':checked'))"
+                                            >
+                                        </div>
+                                    </div>
+                                </li>
+                            </ul>
                         </div>
                     </div>
                 </div>
@@ -143,6 +170,9 @@
 
     </section>
 
+
+    <script th:src="@{/web/js/notification/subscribe.js}">
+    </script>
 
     <script
             th:src="@{/web/js/service/deleteService.js}"
