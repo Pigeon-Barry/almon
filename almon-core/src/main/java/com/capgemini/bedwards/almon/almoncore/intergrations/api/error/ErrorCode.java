@@ -1,9 +1,9 @@
 package com.capgemini.bedwards.almon.almoncore.intergrations.api.error;
 
-import org.springframework.http.ResponseEntity;
-
 public enum ErrorCode {
     NOT_FOUND("Not Found"),
+    NOT_SUBSCRIBED("You are not subscribed"),
+    ALREADY_SUBSCRIBED("You are already subscribed"),
     INTERNAL_SERVER_ERROR("Please contact system administrators"),
 
     UNAUTHORISED_WEB("You are not authorised to view this page"),
@@ -11,7 +11,7 @@ public enum ErrorCode {
 
     private final String ERROR_DESCRIPTION;
 
-    ErrorCode( String errorDescription) {
+    ErrorCode(String errorDescription) {
         this.ERROR_DESCRIPTION = errorDescription;
     }
 

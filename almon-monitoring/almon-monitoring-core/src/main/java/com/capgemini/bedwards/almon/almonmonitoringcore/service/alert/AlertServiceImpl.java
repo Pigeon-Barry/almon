@@ -4,7 +4,7 @@ import com.capgemini.bedwards.almon.almondatastore.models.alert.Alert;
 import com.capgemini.bedwards.almon.almondatastore.models.alert.AlertSpecification;
 import com.capgemini.bedwards.almon.almondatastore.models.monitor.Monitor;
 import com.capgemini.bedwards.almon.almondatastore.repository.alert.AlertRepository;
-import com.capgemini.bedwards.almon.notificationcore.Notifications;
+import com.capgemini.bedwards.almon.notificationcore.service.NotificationService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -18,12 +18,12 @@ import java.util.Set;
 public abstract class AlertServiceImpl<T extends Alert> implements AlertService<T> {
 
 
-    private final Notifications NOTIFICATIONS;
+    private final NotificationService NOTIFICATION_SERVICE;
     private Set<Monitor> SENT_ALERTS;
 
     @Autowired
-    public AlertServiceImpl(Notifications notifications) {
-        this.NOTIFICATIONS = notifications;
+    public AlertServiceImpl(NotificationService notificationService) {
+        this.NOTIFICATION_SERVICE = notificationService;
         this.SENT_ALERTS = new HashSet<>();
     }
 
@@ -46,7 +46,7 @@ public abstract class AlertServiceImpl<T extends Alert> implements AlertService<
     }
 
     public void sendAlert(T alert) {
-        this.NOTIFICATIONS.send(alert);
+        this.NOTIFICATION_SERVICE.send(alert);
     }
 
     @Override

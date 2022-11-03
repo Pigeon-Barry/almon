@@ -2,7 +2,6 @@ package com.capgemini.bedwards.almon.notificationstmp;
 
 import com.capgemini.bedwards.almon.almondatastore.models.alert.Alert;
 import com.capgemini.bedwards.almon.almondatastore.models.contract.Notification;
-import com.capgemini.bedwards.almon.notificationcore.service.NotificationService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -18,15 +17,12 @@ import java.util.Properties;
 @Component
 public class StmpNotification implements Notification {
 
-    private final NotificationService NOTIFICATION_SERVICE;
     private final Session SESSION;
 
     private final NotificationSTMPConfig CONFIG;
 
-
     @Autowired
-    public StmpNotification(NotificationService notificationService, NotificationSTMPConfig notificationSTMPConfig) {
-        this.NOTIFICATION_SERVICE = notificationService;
+    public StmpNotification(NotificationSTMPConfig notificationSTMPConfig) {
         this.CONFIG = notificationSTMPConfig;
 
         Properties prop = new Properties();

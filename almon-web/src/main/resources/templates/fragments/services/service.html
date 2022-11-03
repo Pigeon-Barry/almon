@@ -5,7 +5,7 @@
     <!--/*@thymesVar id="service" type="com.capgemini.bedwards.almon.almondatastore.models.service.Service"*/-->
     <!--/*@thymesVar id="authority" type="com.capgemini.bedwards.almon.almondatastore.models.auth.Authority"*/-->
     <!--/*@thymesVar id="monitors" type="om.capgemini.bedwards.almon.almonmonitoringcore.Monitors"*/-->
-    <!--/*@thymesVar id="notifications" type="com.capgemini.bedwards.almon.notificationcore.Notifications"*/-->
+    <!--/*@thymesVar id="notificationHelper" type="com.capgemini.bedwards.almon.notificationcore.NotificationHelper"*/-->
     <!--/*@thymesVar id="roles" type="java.util.List"*/-->
     <section style="background-color: #eee;">
         <div class="container py-5">
@@ -55,7 +55,7 @@
                                     <p class="mb-0"><strong>Notification Subscriptions</strong></p>
                                 </li>
                                 <li class="list-group-item d-flex justify-content-between"
-                                    th:each="notification : ${notifications.getNotifications()}">
+                                    th:each="notification : ${notificationHelper.getNotifications()}">
 
                                     <p data-bs-toggle="tooltip" data-bs-placement="top"
                                        th:data-bs-title="${notification.getHelpText()}"
@@ -66,8 +66,8 @@
                                             <input class="form-check-input" type="checkbox"
                                                    th:data-notificationId="${notification.getId()}"
                                                    th:data-serviceId="${service.getId()}"
-                                                   th:checked="${notifications.isUserSubscribedToNotificationAtServiceLevel(user,notification,service)}"
-                                                   onclick="updateServiceNotificationStatus(this.getAttribute('data-notificationId'),this.getAttribute('data-serviceId'),this.is(':checked'))"
+                                                   th:checked="${notificationHelper.isUserSubscribedToNotificationAtServiceLevel(user,notification,service)}"
+                                                   onclick="updateServiceNotificationStatus(this.getAttribute('data-notificationId'),this.getAttribute('data-serviceId'),this)"
                                             >
                                         </div>
                                     </div>

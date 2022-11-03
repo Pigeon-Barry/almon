@@ -4,7 +4,7 @@ import com.capgemini.bedwards.almon.almondatastore.repository.alert.ScheduledAle
 import com.capgemini.bedwards.almon.almonmonitoringapi.models.APIAlertType;
 import com.capgemini.bedwards.almon.almonmonitoringapi.repositorty.APIAlertRepository;
 import com.capgemini.bedwards.almon.almonmonitoringcore.service.alert.ScheduledAlertServiceImpl;
-import com.capgemini.bedwards.almon.notificationcore.Notifications;
+import com.capgemini.bedwards.almon.notificationcore.service.NotificationService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -17,8 +17,8 @@ public class APIAlertServiceImpl extends ScheduledAlertServiceImpl<APIAlertType>
     private final APIAlertRepository API_ALERT_REPOSITORY;
 
     @Autowired
-    public APIAlertServiceImpl(Notifications notifications, APIAlertRepository apiAlertRepository) {
-        super(notifications);
+    public APIAlertServiceImpl(NotificationService notificationService, APIAlertRepository apiAlertRepository) {
+        super(notificationService);
         this.API_ALERT_REPOSITORY = apiAlertRepository;
     }
 

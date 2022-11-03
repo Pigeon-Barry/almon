@@ -106,7 +106,6 @@
                     request.setRequestHeader(header, token);
                 },
                 complete: function (xhr, textStatus) {
-                    console.log(xhr.status);
                     if (xhr.status === 202) {
                         refreshPage();
                     } else {

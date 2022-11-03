@@ -26,6 +26,8 @@ public class MonitorSubscription {
 
     @Embeddable
     @Data
+    @NoArgsConstructor
+    @AllArgsConstructor
     public static class SubscriptionId implements Serializable {
         private String notificationType;
         @ManyToOne
