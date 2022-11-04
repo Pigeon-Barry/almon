@@ -101,8 +101,14 @@
                         </div>
 
                         <br/>
-                        <div class="form-group">
-                            <button type="submit" class="form-control btn-block btn btn-primary">Update Service</button>
+                        <div class="  d-flex justify-content-between">
+                            <button type="button" class="form-control btn-block btn btn-danger mx-2"
+                                    th:data-serviceId="${service.getId()}"
+                                    onclick="{if(confirm('Are you sure you want to cancel?')) redirect('/web/service/' + this.getAttribute('data-serviceId'))}"
+                            >Cancel
+                            </button>
+                            <button type="submit" class="form-control btn-block btn btn-primary mx-2">Update Service
+                            </button>
                         </div>
                     </form>
                 </div>

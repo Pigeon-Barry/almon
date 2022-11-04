@@ -29,7 +29,14 @@
                             <div class="d-flex justify-content-center mb-2"
                                  th:if="${#authorization.expression('hasAuthority(''RUN_MONITORS'') || hasAuthority(''SERVICE_' + service.getId() + '_MONITOR_' + monitor.getId() +'_CAN_RUN'')')}"
                             >
-                                <button type="button" class="btn btn-primary"
+                                <button type="button" class="btn btn-primary mx-2"
+                                        th:data-monitorId="${monitor.getId()}"
+                                        th:data-serviceId="${service.getId()}"
+                                        onclick="redirect('/web/service/' + this.getAttribute('data-serviceId') + '/monitor/' + this.getAttribute('data-monitorId') + '/update')"
+                                >Update
+                                </button>
+
+                                <button type="button" class="btn btn-outline-primary mx-2"
                                         th:data-monitorId="${monitor.getId()}"
                                         th:data-serviceId="${service.getId()}"
                                         onclick="runMonitor(this.getAttribute('data-serviceId'),this.getAttribute('data-monitorId'),'runningOverlay')"
