@@ -16,19 +16,17 @@ import java.util.Objects;
 
 @Component
 @Slf4j
-public class CreateMonitorRequestResolver implements HandlerMethodArgumentResolver {
-
-
+public class UpdateMonitorRequestResolver implements HandlerMethodArgumentResolver {
     private final Monitors MONITORS;
 
-    public CreateMonitorRequestResolver(Monitors monitors) {
+    public UpdateMonitorRequestResolver(Monitors monitors) {
         this.MONITORS = monitors;
     }
 
 
     @Override
     public boolean supportsParameter(MethodParameter methodParameter) {
-        return methodParameter.getParameterAnnotation(ConvertCreateMonitorRequest.class) != null;
+        return methodParameter.getParameterAnnotation(ConvertUpdateMonitorRequest.class) != null;
     }
 
     @Override
@@ -37,10 +35,9 @@ public class CreateMonitorRequestResolver implements HandlerMethodArgumentResolv
                                   NativeWebRequest webRequest,
                                   WebDataBinderFactory binderFactory) throws Exception {
 
-
         ObjectNode jsonRes = FormUtil.getObjectNodeFromRequest(webRequest.getParameterMap());
 
         MonitorAdapter monitorAdapter = MONITORS.getMonitorAdapterFromId(Objects.requireNonNull(webRequest.getParameterValues("MONITOR_TYPE"))[0]);
-        return monitorAdapter.getCreateMonitorRequestBody(jsonRes);
+        return monitorAdapter.getUpdateMonitorRequestBody(jsonRes);
     }
 }

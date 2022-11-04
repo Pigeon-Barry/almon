@@ -93,6 +93,13 @@ public abstract class MonitorServiceBase<T extends Monitor> implements MonitorSe
                 ),
                 Collections.singleton(SERVICE_SERVICE.getOrCreateAdminRole(monitorType.getId().getService()))
         );
+        AUTHORITY_SERVICE.addRole(
+                AUTHORITY_SERVICE.createAuthority(
+                        "SERVICE_" + monitorType.getId().getService().getId() + "_MONITOR_" + monitorType.getId() + "_CAN_UPDATE",
+                        "Grants the ability to update  this monitor"
+                ),
+                Collections.singleton(SERVICE_SERVICE.getOrCreateAdminRole(monitorType.getId().getService()))
+        );
         return monitorType;
     }
 

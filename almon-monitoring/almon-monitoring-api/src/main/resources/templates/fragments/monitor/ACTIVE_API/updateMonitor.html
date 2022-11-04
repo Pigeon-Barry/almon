@@ -1,25 +1,26 @@
 <html xmlns="http://www.w3.org/1999/xhtml"
       xmlns:th="http://www.thymeleaf.org"
       lang="en">
+
 <!--/*@thymesVar id="serviceRequestBody" type="com.capgemini.bedwards.almon.almonmonitoringapi.models.CreateAPIMonitorRequestBody"*/-->
-<!--/*@thymesVar id="service" type="com.capgemini.bedwards.almon.almondatastore.models.service.Service"*/-->
+<!--/*@thymesVar id="monitor" type="com.capgemini.bedwards.almon.almondatastore.models.monitor.Monitor"*/-->
 <!--/*@thymesVar id="monitorAdapter" type="com.capgemini.bedwards.almon.almonmonitoringapi.monitoring.APIMonitorAdapter"*/-->
 <!--/*@thymesVar id="formData" type="com.capgemini.bedwards.almon.almonmonitoringapi.models.CreateAPIMonitorRequestBody"*/-->
-<!--/*@thymesVar id="previousFormData" type="com.capgemini.bedwards.almon.almonmonitoringapi.models.CreateAPIMonitorRequestBody"*/-->
-<div class="container" th:fragment="create">
+
+<div class="container" th:fragment="update">
     <div class="row justify-content-center">
         <div class="col-12 col-md-8">
             <div class="card">
-                <h3 class="card-header">Create API Monitor</h3>
+                <h3 class="card-header">Update API Monitor</h3>
                 <div class="card-body">
                     <form
                             id="monitorForm"
                             th:object="${formData}"
-                            th:action="@{/web/service/{serviceId}/monitor/{monitor}/create(serviceId=${service.getId()},monitor=${monitorAdapter.getId()})}"
+                            th:action="@{/web/service/{serviceId}/monitor/{monitorId}/update(serviceId=${monitor.getId().getService().getId()},monitorId=${monitor.getId()})}"
                             method="post">
 
                         <th:block
-                                th:include="fragments/monitor/createScheduledMonitorFragment :: createScheduledMonitorHeader"/>
+                                th:include="fragments/monitor/updateScheduledMonitorFragment :: updateScheduledMonitorHeader"/>
 
                         <h4 class="text-center">API Monitor Values</h4>
                         <hr>
@@ -31,17 +32,17 @@
                                     <option value="POST">POST</option>
                                     <option value="PUT">PUT</option>
                                 </select>
-                                <span th:if="${#fields.hasErrors('method')}" class="invalid-feedback" role="alert">
-                                        <strong th:errors="*{method}"></strong>
-                            </span>
                                 <input
                                         th:class="(${#fields.hasErrors('url')}? 'is-invalid ' : '') + 'form-control'"
                                         type="text" id="url" placeholder="Enter Service Name"
                                         name="url" th:field="*{url}"/>
-                                <span th:if="${#fields.hasErrors('url')}" class="invalid-feedback" role="alert">
+                            </div>
+                            <span th:if="${#fields.hasErrors('url')}" class="invalid-feedback" role="alert">
                                         <strong th:errors="*{url}"></strong>
                             </span>
-                            </div>
+                            <span th:if="${#fields.hasErrors('method')}" class="invalid-feedback" role="alert">
+                                        <strong th:errors="*{method}"></strong>
+                            </span>
                         </div>
 
                         <div class="form-group">
@@ -52,6 +53,7 @@
                                     placeholder="Enter Request Body"
                                     th:field="*{body}"
                             ></textarea>
+
                             <span th:if="${#fields.hasErrors('body')}" class="invalid-feedback" role="alert">
                                     <strong th:errors="*{body}"></strong>
                             </span>
@@ -111,7 +113,7 @@
                         </div>
                         <br/>
                         <div class="form-group">
-                            <button type="submit" class="form-control btn-block btn btn-primary">Create Monitor</button>
+                            <button type="submit" class="form-control btn-block btn btn-primary">Update Monitor</button>
                         </div>
                     </form>
                 </div>
@@ -141,7 +143,6 @@
                 '<th><input class="form-control map-key" type="text" placeholder="Enter Header Name" name="map-key"  value="' + defaultKey + '"/></th>\n' +
                 '<th><input class="form-control map-value" type="text" placeholder="Enter Header Value" name="map-value" data-name-prefix="headers." value="' + defaultValue + '"/></th>\n' +
                 '</tr>';
-
             $("#headerTable").append(headerText);
         }
 
@@ -150,9 +151,10 @@
                 $(this).prop("disabled", true);
                 const headerKey = $(this).val();
                 const headerValDom = $(this).closest('.map').find('.map-value');
-                if (headerKey.length === 0)
+
+                if (headerKey.length === 0) {
                     headerValDom.prop("disabled", true);
-                else {
+                } else {
                     headerValDom.attr('name', headerValDom.data("name-prefix") + headerKey);
                 }
             });
@@ -161,16 +163,16 @@
 
     </script>
 
-    <script th:inline="javascript" th:if="${previousFormData != null && previousFormData.getHeaders() != null}">
-        /*[# th:each="header : ${previousFormData.getHeaders().entrySet()}"]*/
+    <script th:inline="javascript" th:if="${formData != null && formData.getHeaders() != null}">
+        /*[# th:each="header : ${formData.getHeaders().entrySet()}"]*/
         addHeader(/*[[${header.getKey()}]]*/, /*[[${header.getValue()}]]*/);
         /*[/]*/
     </script>
 
     <script th:inline="javascript"
-            th:if="${previousFormData != null && previousFormData.getJsonPathValidations() != null}">
-        /*[# th:each="jsonPathVerification : ${previousFormData.getJsonPathValidations().entrySet()}"]*/
-        addJsonPathVerification([[${jsonPathVerification.getKey()}]], [[${jsonPathVerification.getValue()}]], [[${#fields.errors('previousFormData.jsonPathValidations['+ jsonPathVerification.getKey()+ ']')}]]);
+            th:if="${formData != null && formData.getJsonPathValidations() != null}">
+        /*[# th:each="jsonPathVerification : ${formData.getJsonPathValidations().entrySet()}"]*/
+        addJsonPathVerification([[${jsonPathVerification.getKey()}]], [[${jsonPathVerification.getValue()}]], [[${#fields.errors('formData.jsonPathValidations['+ jsonPathVerification.getKey()+ ']')}]]);
         /*[/]*/
     </script>
 

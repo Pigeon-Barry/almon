@@ -78,10 +78,7 @@ public class ServiceWebController extends WebController {
             ServiceUpdateRequestBody serviceUpdateRequestBody,
             Model model) {
         model.addAttribute("service",service);
-        if(serviceUpdateRequestBody.getDescription() == null)
-            serviceUpdateRequestBody.setDescription(service.getDescription());
-        if(serviceUpdateRequestBody.getName() == null)
-            serviceUpdateRequestBody.setName(service.getName());
+        serviceUpdateRequestBody.populate(service);
 
         return "/services/updateService";
     }

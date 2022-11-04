@@ -1,12 +1,14 @@
 package com.capgemini.bedwards.almon.almonmonitoringapi.monitoring;
 
 import com.capgemini.bedwards.almon.almoncore.util.ValidatorUtil;
+import com.capgemini.bedwards.almon.almondatastore.models.monitor.Monitor;
 import com.capgemini.bedwards.almon.almondatastore.models.schedule.ScheduledTask;
 import com.capgemini.bedwards.almon.almondatastore.models.service.Service;
 import com.capgemini.bedwards.almon.almondatastore.util.HasScheduledTasks;
 import com.capgemini.bedwards.almon.almonmonitoringapi.models.APIAlertType;
 import com.capgemini.bedwards.almon.almonmonitoringapi.models.APIMonitor;
 import com.capgemini.bedwards.almon.almonmonitoringapi.models.CreateAPIMonitorRequestBody;
+import com.capgemini.bedwards.almon.almonmonitoringapi.models.UpdateAPIMonitorRequestBody;
 import com.capgemini.bedwards.almon.almonmonitoringapi.service.APIAlertService;
 import com.capgemini.bedwards.almon.almonmonitoringapi.service.APIMonitorService;
 import com.capgemini.bedwards.almon.almonmonitoringcore.LinkUtil;
@@ -38,7 +40,11 @@ public class APIMonitorAdapter implements MonitorAdapter<APIMonitor, APIAlertTyp
     }
 
     @Override
-    public String getName() {
+    public String getId() {
+        return getStaticId();
+    }
+
+    public static String getStaticId() {
         return "ACTIVE_API";
     }
 
@@ -64,6 +70,13 @@ public class APIMonitorAdapter implements MonitorAdapter<APIMonitor, APIAlertTyp
         return modelAndView;
     }
 
+    @Override
+    public ModelAndView getUpdatePageWeb(Monitor monitor, Model model) {
+        ModelAndView modelAndView = MonitorAdapter.super.getUpdatePageWeb(monitor, model);
+        if (!modelAndView.getModelMap().containsAttribute("formData"))
+            modelAndView.getModelMap().addAttribute("formData", new UpdateAPIMonitorRequestBody().populate((APIMonitor) monitor));
+        return modelAndView;
+    }
 
     @Override
     public ModelAndView createMonitorWeb(Service service, Object formData, Model model) {
@@ -76,7 +89,23 @@ public class APIMonitorAdapter implements MonitorAdapter<APIMonitor, APIAlertTyp
         }
         APIMonitor apiMonitor = createAPIMonitorType(requestBody, service);
 
-        return new ModelAndView("redirect:" + LinkUtil.getMonitorWebViewLink(service, apiMonitor));
+        return new ModelAndView("redirect:" + LinkUtil.getMonitorWebViewLink(apiMonitor));
+    }
+
+    @Override
+    public ModelAndView updateMonitorWeb(Monitor monitor, Object formData, Model model) {
+        UpdateAPIMonitorRequestBody requestBody = (UpdateAPIMonitorRequestBody) formData;
+        BeanPropertyBindingResult errors = ValidatorUtil.validate(requestBody, "formData");
+        model.addAttribute("formData", formData);
+
+        if (errors.hasErrors()) {
+            model.addAttribute("org.springframework.validation.BindingResult.formData", errors);
+            return getUpdatePageWeb(monitor, model);
+        }
+
+        monitor = this.API_MONITOR_SERVICE.save(requestBody.updateAPIMonitor((APIMonitor) monitor));
+
+        return new ModelAndView("redirect:" + LinkUtil.getMonitorWebViewLink(monitor));
     }
 
 
@@ -88,6 +117,11 @@ public class APIMonitorAdapter implements MonitorAdapter<APIMonitor, APIAlertTyp
     @Override
     public Object getCreateMonitorRequestBody(ObjectNode objectNode) {
         return CreateAPIMonitorRequestBody.from(objectNode);
+    }
+
+    @Override
+    public Object getUpdateMonitorRequestBody(ObjectNode objectNode) {
+        return UpdateAPIMonitorRequestBody.from(objectNode);
     }
 
     @Override

@@ -3,11 +3,9 @@ package com.capgemini.bedwards.almon.almonmonitoringapi.models;
 import com.capgemini.bedwards.almon.almoncore.util.BeanUtil;
 import com.capgemini.bedwards.almon.almoncore.validators.ValidJsonPath;
 import com.capgemini.bedwards.almon.almondatastore.models.schedule.ScheduledMonitor;
+import com.capgemini.bedwards.almon.almonmonitoringapi.monitoring.APIMonitorAdapter;
 import com.capgemini.bedwards.almon.almonmonitoringapi.service.APIMonitorService;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.ToString;
+import lombok.*;
 import lombok.experimental.SuperBuilder;
 import org.springframework.http.HttpMethod;
 
@@ -25,6 +23,7 @@ import java.util.Map;
 @NoArgsConstructor
 @ToString
 @Getter
+@Setter
 @DiscriminatorValue("ACTIVE_API")
 public class APIMonitor extends ScheduledMonitor {
     @NotNull
@@ -41,15 +40,13 @@ public class APIMonitor extends ScheduledMonitor {
     @ElementCollection(fetch = FetchType.EAGER)
     protected Map<String, @ValidJsonPath String> jsonPathValidations;
 
-
-    @Override
-    public String getTaskId() {
-        return "ACTIVE_API-" + getId().toString();
-    }
-
-
     @Override
     public APIMonitoringTask getScheduledTask() {
         return BeanUtil.getBeanOfClass(APIMonitorService.class).getScheduledTask(this);
+    }
+
+    @Override
+    public String getMonitorType() {
+        return APIMonitorAdapter.getStaticId();
     }
 }

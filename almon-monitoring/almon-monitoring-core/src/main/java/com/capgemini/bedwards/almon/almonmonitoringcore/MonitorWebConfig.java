@@ -7,6 +7,7 @@ import com.capgemini.bedwards.almon.almonmonitoringcore.convertor.MonitorConvert
 import com.capgemini.bedwards.almon.almonmonitoringcore.convertor.NotificationConvertor;
 import com.capgemini.bedwards.almon.almonmonitoringcore.convertor.ServiceConvertor;
 import com.capgemini.bedwards.almon.almonmonitoringcore.resolver.CreateMonitorRequestResolver;
+import com.capgemini.bedwards.almon.almonmonitoringcore.resolver.UpdateMonitorRequestResolver;
 import com.capgemini.bedwards.almon.almonmonitoringcore.service.monitor.MonitorService;
 import com.capgemini.bedwards.almon.notificationcore.service.NotificationService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -42,6 +43,7 @@ public class MonitorWebConfig implements WebMvcConfigurer {
     @Override
     public void addArgumentResolvers(List<HandlerMethodArgumentResolver> argumentResolvers) {
         argumentResolvers.add(new CreateMonitorRequestResolver(MONITORS));
+        argumentResolvers.add(new UpdateMonitorRequestResolver(MONITORS));
     }
 
     @Override

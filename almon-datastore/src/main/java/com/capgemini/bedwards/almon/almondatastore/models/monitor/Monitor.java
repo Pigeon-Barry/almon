@@ -39,6 +39,7 @@ public abstract class Monitor {
     protected Set<Alert> alerts;
 
 
+    public abstract String getMonitorType();
     @Data
     @Embeddable
     @AllArgsConstructor

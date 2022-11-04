@@ -1,9 +1,9 @@
 <html xmlns="http://www.w3.org/1999/xhtml"
       xmlns:th="http://www.thymeleaf.org"
       lang="en">
-<th:block th:fragment="createScheduledMonitorHeader">
+<th:block th:fragment="updateScheduledMonitorHeader">
 
-    <th:block th:include="fragments/monitor/createMonitorFragment :: createMonitorHeader"/>
+    <th:block th:include="fragments/monitor/updateMonitorFragment :: updateMonitorHeader"/>
     <div class="form-group required">
         <label for="cronExpression" class="control-label">Cron Expression:</label>
         <div class="input-group mb-3">
@@ -12,7 +12,6 @@
                     th:class="(${#fields.hasErrors('cronExpression')}? 'is-invalid ' : '') + 'form-control'"
                     type="text" id="cronExpression" placeholder="Enter Cron Expression"
                     name="cronExpression" th:field="*{cronExpression}"/>
-
             <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#cronHelpModal">
                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
                      class="bi bi-info-circle-fill" viewBox="0 0 16 16">

@@ -153,7 +153,8 @@ public class ServiceServiceImpl implements ServiceService {
                 adminRoleSet
         );
         AUTHORITY_SERVICE.createAuthority(
-                "SERVICE_" + id + "_CAN_CREATE_MONITORS",
+                "SERVICE_" + id + "_" +
+                        "CAN_CREATE_MONITORS",
                 "Grants the ability to create new monitors for this service",
                 null,
                 adminRoleSet

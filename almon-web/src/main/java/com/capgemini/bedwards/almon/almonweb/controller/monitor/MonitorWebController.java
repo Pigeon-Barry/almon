@@ -7,6 +7,7 @@ import com.capgemini.bedwards.almon.almondatastore.models.alert.AlertFilterOptio
 import com.capgemini.bedwards.almon.almondatastore.models.monitor.Monitor;
 import com.capgemini.bedwards.almon.almondatastore.models.service.Service;
 import com.capgemini.bedwards.almon.almonmonitoringcore.Monitors;
+import com.capgemini.bedwards.almon.almonmonitoringcore.resolver.ConvertUpdateMonitorRequest;
 import com.capgemini.bedwards.almon.notificationcore.service.NotificationService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -88,5 +89,26 @@ public class MonitorWebController extends WebController {
             @Valid @PathVariable(name = "monitorId") Monitor monitor) {
         Alert alert = MONITORS.getMonitorAdapterFromMonitor(monitor).execute(monitor);
         return ResponseEntity.ok(alert);
+    }
+
+
+    @GetMapping("/update")
+    @PreAuthorize("hasAuthority('RUN_MONITORS') || hasAuthority('SERVICE_' + #service.id + '_MONITOR_' + #monitor.id + '_CAN_UPDATE')")
+    public ModelAndView updateMonitor(
+            @Valid @PathVariable(name = "serviceId") Service service,
+            @Valid @PathVariable(name = "monitorId") Monitor monitor,
+            Model model) {
+        return MONITORS.getMonitorAdapterFromMonitor(monitor).getUpdatePageWeb(monitor, model);
+    }
+
+    @PostMapping(value = "/update")
+    @PreAuthorize("hasAuthority('RUN_MONITORS') || hasAuthority('SERVICE_' + #service.id + '_MONITOR_' + #monitor.id + '_CAN_UPDATE')")
+    public ModelAndView updateMonitor(
+            @Valid @PathVariable(name = "serviceId") Service service,
+            @Valid @PathVariable(name = "monitorId") Monitor monitor,
+            @Valid @ConvertUpdateMonitorRequest Object formData,
+            Model model) {
+
+        return MONITORS.getMonitorAdapterFromMonitor(monitor).updateMonitorWeb(monitor, formData, model);
     }
 }

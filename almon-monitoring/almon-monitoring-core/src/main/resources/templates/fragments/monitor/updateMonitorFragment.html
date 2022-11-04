@@ -1,0 +1,45 @@
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org"
+      lang="en">
+<th:block th:fragment="updateMonitorHeader">
+    <!--/*@thymesVar id="monitor" type="com.capgemini.bedwards.almon.almondatastore.models.monitor.Monitor"*/-->
+    <h4 class="text-center">Standard Monitor Values</h4>
+    <hr>
+    <input type="hidden" name="MONITOR_TYPE" th:value="${monitor.getMonitorType()}">
+    <div class="form-group required">
+        <label for="key" class="control-label">Key:</label>
+        <div class="input-group mb-3">
+            <span class="input-group-text" th:text="${monitor.getId().getService().getId() + '_'}"></span>
+            <input
+                    th:value="${monitor.getId().getId()}"
+                    class="form-control"
+                    type="text"
+                    id="key"
+                    disabled="disabled">
+        </div>
+    </div>
+    <div class="form-group required">
+        <label for="name" class="control-label">Name:</label>
+        <input
+                th:class="(${#fields.hasErrors('name')}? 'is-invalid ' : '') + 'form-control'"
+                type="text" id="name" placeholder="Enter Service Name"
+                name="name" th:field="*{name}"/>
+        <span th:if="${#fields.hasErrors('name')}" class="invalid-feedback" role="alert">
+                                    <strong th:errors="*{name}"></strong>
+                            </span>
+    </div>
+    <div class="form-group">
+        <label for="description" class="control-label">Description:</label>
+        <textarea
+                th:class="(${#fields.hasErrors('description')}? 'is-invalid ' : '') + 'form-control'"
+                id="description" rows="3"
+                placeholder="Enter Service Description"
+                th:field="*{description}"
+        ></textarea>
+
+        <span th:if="${#fields.hasErrors('description')}" class="invalid-feedback" role="alert">
+                                    <strong th:errors="*{description}"></strong>
+                            </span>
+    </div>
+    <br>
+</th:block>

@@ -17,16 +17,20 @@ import java.util.List;
 
 
 public interface MonitorAdapter<T extends Monitor, A extends Alert> {
-    String getName();
-
-    default String getId() {
-        return getName();
+    default String getName() {
+        return getId();
     }
+
+    String getId();
 
     String getDescription();
 
     default String getCreatePageWebView() {
         return "monitor/" + getId() + "/createMonitor";
+    }
+
+    default String getUpdatePageWebView() {
+        return "monitor/" + getId() + "/updateMonitor";
     }
 
     default String getViewMonitorPageWebView() {
@@ -62,16 +66,28 @@ public interface MonitorAdapter<T extends Monitor, A extends Alert> {
         model.addAttribute("service", service);
         ModelAndView modelAndView = new ModelAndView(getCreatePageWebView());
         modelAndView.addAllObjects(model.asMap());
-        modelAndView.addObject("monitor", this);
+        modelAndView.addObject("monitorAdapter", this);
+        return modelAndView;
+    }
+
+    default ModelAndView getUpdatePageWeb(Monitor monitor, Model model) {
+        model.addAttribute("monitor", monitor);
+        ModelAndView modelAndView = new ModelAndView(getUpdatePageWebView());
+        modelAndView.addAllObjects(model.asMap());
+        modelAndView.addObject("monitorAdapter", this);
         return modelAndView;
     }
 
     ModelAndView createMonitorWeb(Service service, Object formData, Model model);
 
+    ModelAndView updateMonitorWeb(Monitor monitor, Object formData, Model model);
+
     Object getCreateMonitorRequestBody(ObjectNode jsonRes);
 
+    Object getUpdateMonitorRequestBody(ObjectNode jsonRes);
 
     Class<T> getMonitorClass();
 
     A execute(T monitor);
+
 }

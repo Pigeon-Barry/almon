@@ -1,14 +1,13 @@
 package com.capgemini.bedwards.almon.almonmonitoringcore;
 
 import com.capgemini.bedwards.almon.almondatastore.models.monitor.Monitor;
-import com.capgemini.bedwards.almon.almondatastore.models.service.Service;
 
 public abstract class LinkUtil {
 
     private LinkUtil() {
     }
 
-    public static String getMonitorWebViewLink(Service service, Monitor monitor) {
-        return "/web/service/" + service.getId() + "/monitor/" + monitor.getId();
+    public static String getMonitorWebViewLink(Monitor monitor) {
+        return "/web/service/" + monitor.getId().getService().getId() + "/monitor/" + monitor.getId();
     }
 }

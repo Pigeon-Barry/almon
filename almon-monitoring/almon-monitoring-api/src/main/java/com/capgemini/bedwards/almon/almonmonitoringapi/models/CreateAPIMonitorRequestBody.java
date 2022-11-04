@@ -1,34 +1,25 @@
 package com.capgemini.bedwards.almon.almonmonitoringapi.models;
 
 import com.capgemini.bedwards.almon.almoncore.util.MappingUtil;
-import com.capgemini.bedwards.almon.almoncore.validators.CronExpression;
-import com.capgemini.bedwards.almon.almondatastore.models.monitor.Monitor;
+import com.capgemini.bedwards.almon.almoncore.validators.ValidJsonPath;
 import com.capgemini.bedwards.almon.almondatastore.models.service.Service;
-import com.capgemini.bedwards.almon.almondatastore.util.Constants;
+import com.capgemini.bedwards.almon.almonmonitoringcore.models.CreateScheduledMonitorRequestBody;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import lombok.Data;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpMethod;
 
-import javax.validation.constraints.*;
+import javax.validation.constraints.Max;
+import javax.validation.constraints.Min;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 import java.util.Map;
 
 @Data
 @Slf4j
-public class CreateAPIMonitorRequestBody {
+public class CreateAPIMonitorRequestBody extends CreateScheduledMonitorRequestBody {
 
-    @NotBlank
-    @Pattern(regexp = Constants.MONITOR_KEY_REGEX, message = Constants.MONITOR_KEY_REGEX_INVALID_MESSAGE)
-    @Size(max = Constants.MONITOR_ID_MAX_LENGTH)
-    private String key;
-    @NotBlank
-    protected String name;
-
-    @CronExpression
-    protected String cronExpression;
-
-    protected String description;
 
     @NotNull
     private HttpMethod method;
@@ -44,10 +35,7 @@ public class CreateAPIMonitorRequestBody {
 
     private Map<String, String> headers;
 
-    private Map<String, String> jsonPathValidations;
-//
-//    private Map<String, String> xPathValidations;
-
+    private Map<String, @ValidJsonPath String> jsonPathValidations;
 
     @SneakyThrows
     public static CreateAPIMonitorRequestBody from(ObjectNode objectNode) {
@@ -55,14 +43,7 @@ public class CreateAPIMonitorRequestBody {
     }
 
     public APIMonitor toAPIMonitor(Service service) {
-        return APIMonitor.builder()
-                //Base class
-                .id(new Monitor.MonitorId(key, service))
-                .name(name)
-                .description(description)
-                //Scheduled Class
-                .cronExpression(cronExpression)
-                //API Monitor Class
+        return toScheduledMonitor(APIMonitor.builder(), service)
                 .url(url)
                 .method(method)
                 .body(body)

@@ -1,6 +1,7 @@
 package com.capgemini.bedwards.almon.almonweb.controller;
 
 import com.capgemini.bedwards.almon.almoncore.util.SecurityUtil;
+import com.capgemini.bedwards.almon.almondatastore.models.auth.User;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.web.servlet.error.ErrorController;
 import org.springframework.http.HttpStatus;
@@ -23,7 +24,9 @@ public class AlmonErrorController implements ErrorController {
         Exception exception = (Exception) request.getAttribute(RequestDispatcher.ERROR_EXCEPTION);
 //        String errorMessage = (String) request.getAttribute(RequestDispatcher.ERROR_MESSAGE);
         log.error("Error received: " + statusObj + ": from " + requestUri, exception);
-        model.addAttribute("user", SecurityUtil.getAuthenticatedUser());
+        User user =  SecurityUtil.getAuthenticatedUser();
+        if (user != null)
+            model.addAttribute("user", user);
         if (statusObj != null) {
             HttpStatus status = HttpStatus.valueOf(statusObj);
             if (status == HttpStatus.NOT_FOUND) {

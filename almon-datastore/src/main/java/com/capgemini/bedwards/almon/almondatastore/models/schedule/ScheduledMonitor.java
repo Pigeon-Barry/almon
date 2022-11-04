@@ -18,8 +18,9 @@ public abstract class ScheduledMonitor extends Monitor {
 
     private String cronExpression;
 
-    public abstract String getTaskId();
-
+    public String getTaskId() {
+        return getMonitorType() + "-" + getId().toString();
+    }
 
     public abstract ScheduledTask getScheduledTask();
 }

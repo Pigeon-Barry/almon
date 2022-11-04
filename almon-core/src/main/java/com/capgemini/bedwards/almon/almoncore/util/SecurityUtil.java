@@ -9,7 +9,7 @@ public final class SecurityUtil {
     }
 
     public static User getAuthenticatedUser() {
-        if (!getAuthentication().isAuthenticated() || !(getAuthentication().getPrincipal() instanceof User))
+        if (getAuthentication() == null || !getAuthentication().isAuthenticated() || !(getAuthentication().getPrincipal() instanceof User))
             return null;
         return (User) getAuthentication().getPrincipal();
     }
