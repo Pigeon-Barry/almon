@@ -16,6 +16,8 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 @Service
 @Slf4j
@@ -69,15 +71,19 @@ public class NotificationServiceImpl implements NotificationService {
     @Override
     public boolean unsubscribe(User user, Monitor monitor, Notification notification) {
         Optional<MonitorSubscription> monitorSubscriptionOptional = this.getNotificationHelper().getSubscription(user, monitor, notification);
-        if (monitorSubscriptionOptional.isPresent()) {
-            MonitorSubscription monitorSubscription = monitorSubscriptionOptional.get();
-            if (monitorSubscription.isSubscribed()) {
-                monitorSubscription.setSubscribed(false);
-                this.MONITOR_SUBSCRIPTION_REPOSITORY.save(monitorSubscription);
-                return true;
-            }
+        MonitorSubscription monitorSubscription;
+
+        if (!monitorSubscriptionOptional.isPresent()) {
+            monitorSubscription = new MonitorSubscription(new MonitorSubscription.SubscriptionId(notification.getId(), monitor, user), false);
+            user.getMonitorSubscriptions().add(monitorSubscription);
+        } else {
+            monitorSubscription = monitorSubscriptionOptional.get();
+            if (!monitorSubscription.isSubscribed())
+                return false;
         }
-        return false;
+        monitorSubscription.setSubscribed(false);
+        this.MONITOR_SUBSCRIPTION_REPOSITORY.save(monitorSubscription);
+        return true;
     }
 
     @Override
@@ -105,9 +111,24 @@ public class NotificationServiceImpl implements NotificationService {
     }
 
     public <T extends Alert> void send(T alert) {
+        log.info("Sending Notifications for alert: " + alert);
         for (Notification notification : this.NOTIFICATIONS) {
-            notification.sendNotification(alert);
+            notification.sendNotification(getSubscribedUsers(alert, notification), alert);
         }
+    }
+
+    private <T extends Alert> Set<User> getSubscribedUsers(T alert, Notification notification) {
+        List<MonitorSubscription> monitorSubscriptionList = MONITOR_SUBSCRIPTION_REPOSITORY.getFromNotificationId(notification.getId(), alert.getMonitor());
+        Set<User> monitorSubscriptionUsers = monitorSubscriptionList.stream().map(monitorSubscription -> monitorSubscription.getId().getUser()).collect(Collectors.toSet());
+
+        List<ServiceSubscription> serviceSubscriptionList;
+        if (monitorSubscriptionUsers.size() > 0)
+            serviceSubscriptionList = SERVICE_SUBSCRIPTION_REPOSITORY.getFromNotificationIdWhereNotUser(notification.getId(), monitorSubscriptionUsers);
+        else
+            serviceSubscriptionList = SERVICE_SUBSCRIPTION_REPOSITORY.getFromNotificationId(notification.getId());
+        Set<User> users = monitorSubscriptionList.stream().filter(MonitorSubscription::isSubscribed).map(monitorSubscription -> monitorSubscription.getId().getUser()).collect(Collectors.toSet());
+        users.addAll(serviceSubscriptionList.stream().filter(ServiceSubscription::isSubscribed).map(serviceSubscription -> serviceSubscription.getId().getUser()).collect(Collectors.toSet()));
+        return users;
     }
 
     @Override
@@ -116,5 +137,11 @@ public class NotificationServiceImpl implements NotificationService {
         if (notificationOptional.isPresent())
             return notificationOptional.get();
         throw new NotFoundException("Notification with id: '" + source + "' not found");
+    }
+
+    @Override
+    public void clearSubscriptions(User user, Monitor monitor) {
+        this.MONITOR_SUBSCRIPTION_REPOSITORY.deleteById_UserAndId_Monitor(user, monitor);
+        user.getMonitorSubscriptions().clear();
     }
 }

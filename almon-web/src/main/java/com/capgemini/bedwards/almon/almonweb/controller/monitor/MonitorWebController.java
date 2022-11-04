@@ -7,6 +7,7 @@ import com.capgemini.bedwards.almon.almondatastore.models.alert.AlertFilterOptio
 import com.capgemini.bedwards.almon.almondatastore.models.monitor.Monitor;
 import com.capgemini.bedwards.almon.almondatastore.models.service.Service;
 import com.capgemini.bedwards.almon.almonmonitoringcore.Monitors;
+import com.capgemini.bedwards.almon.notificationcore.service.NotificationService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -27,10 +28,12 @@ import javax.validation.Valid;
 public class MonitorWebController extends WebController {
 
     private final Monitors MONITORS;
+    private final NotificationService NOTIFICATION_SERVICE;
 
     @Autowired
-    public MonitorWebController(Monitors monitors) {
+    public MonitorWebController(Monitors monitors, NotificationService notificationService) {
         this.MONITORS = monitors;
+        this.NOTIFICATION_SERVICE = notificationService;
     }
 
 
@@ -74,6 +77,7 @@ public class MonitorWebController extends WebController {
             @RequestParam(defaultValue = "1") int alertPageNumber,
             @RequestParam(defaultValue = "10") int alertPageSize,
             Model model) {
+        model.addAttribute("notificationHelper", NOTIFICATION_SERVICE.getNotificationHelper());
         return MONITORS.getMonitorAdapterFromMonitor(monitor).getViewPageWeb(service, monitor, model, alertFilterOptions, alertPageNumber, alertPageSize);
     }
 

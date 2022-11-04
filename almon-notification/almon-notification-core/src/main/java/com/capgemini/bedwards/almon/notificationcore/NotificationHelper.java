@@ -34,7 +34,7 @@ public class NotificationHelper {
         ).findFirst();
     }
 
-    public Optional<MonitorSubscription> getSubscription(User user, Monitor monitor , Notification notification) {
+    public Optional<MonitorSubscription> getSubscription(User user, Monitor monitor, Notification notification) {
         return user.getMonitorSubscriptions().stream().filter(monitorSubscription ->
                 monitorSubscription.getId().getMonitor().equals(monitor) &&
                         monitorSubscription.getId().getNotificationType().equals(notification.getId())
@@ -52,6 +52,14 @@ public class NotificationHelper {
     }
 
     public boolean isUserSubscribedToNotification(User user, Notification notification, Monitor monitor) {
-        return isUserSubscribedToNotificationAtServiceLevel(user, notification, monitor.getId().getService()) || isUserSubscribedToNotificationAtMonitorLevel(user, notification, monitor);
+        if (getSubscription(user, monitor, notification).isPresent())
+            return isUserSubscribedToNotificationAtMonitorLevel(user, notification, monitor);
+        return isUserSubscribedToNotificationAtServiceLevel(user, notification, monitor.getId().getService());
+    }
+
+    public boolean isUserOverridingServiceSubscriptionForMonitor(User user, Monitor monitor) {
+        return user.getMonitorSubscriptions().stream().anyMatch(monitorSubscription ->
+                monitorSubscription.getId().getMonitor().equals(monitor)
+        );
     }
 }

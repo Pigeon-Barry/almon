@@ -38,7 +38,6 @@ public interface MonitorAdapter<T extends Monitor, A extends Alert> {
         modelAndView.addAllObjects(model.asMap());
         modelAndView.addObject("monitor", monitor);
         model.addAttribute("service", service);
-
         alertFilterOptions.setMonitors(new Monitor[]{monitor});
 
         System.out.println("1FILTER: " + ToStringBuilder.reflectionToString(alertFilterOptions));

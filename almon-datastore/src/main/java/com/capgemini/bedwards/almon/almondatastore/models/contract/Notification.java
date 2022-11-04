@@ -1,10 +1,13 @@
 package com.capgemini.bedwards.almon.almondatastore.models.contract;
 
 import com.capgemini.bedwards.almon.almondatastore.models.alert.Alert;
+import com.capgemini.bedwards.almon.almondatastore.models.auth.User;
+
+import java.util.Set;
 
 public interface Notification {
 
-    void sendNotification(Alert alert);
+    void sendNotification(Set<User> subscribedUsers, Alert alert);
 
     String getDisplayName();
 

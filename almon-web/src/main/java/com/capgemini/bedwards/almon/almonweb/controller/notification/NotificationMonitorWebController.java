@@ -21,7 +21,7 @@ import javax.validation.Valid;
 
 
 @Controller
-@RequestMapping("/web/notification/monitor/{monitorId}/{notificationId}")
+@RequestMapping("/web/notification/monitor/{monitorId}")
 @Slf4j
 @PreAuthorize("isAuthenticated()")
 public class NotificationMonitorWebController {
@@ -33,7 +33,7 @@ public class NotificationMonitorWebController {
         this.NOTIFICATION_SERVICE = notificationService;
     }
 
-    @PutMapping("/subscribe")
+    @PutMapping("/{notificationId}/subscribe")
     public ResponseEntity<Object> subscribe(
             @Valid @PathVariable(name = "monitorId")
             Monitor monitor,
@@ -48,7 +48,7 @@ public class NotificationMonitorWebController {
             return new ResponseEntity<>(new ErrorResponse(ErrorCode.ALREADY_SUBSCRIBED), HttpStatus.UNPROCESSABLE_ENTITY);
     }
 
-    @PutMapping("/unsubscribe")
+    @PutMapping("/{notificationId}/unsubscribe")
     public ResponseEntity<Object> unsubscribe(
             @Valid @PathVariable(name = "monitorId")
             Monitor monitor,
@@ -61,6 +61,15 @@ public class NotificationMonitorWebController {
             return new ResponseEntity<>(null, HttpStatus.OK);
         else
             return new ResponseEntity<>(new ErrorResponse(ErrorCode.NOT_SUBSCRIBED), HttpStatus.UNPROCESSABLE_ENTITY);
+    }
+
+    @DeleteMapping("/subscriptions")
+    public ResponseEntity<Object> clearSubscriptions(
+            @Valid @PathVariable(name = "monitorId")
+            Monitor monitor,
+            Model model) {
+        this.NOTIFICATION_SERVICE.clearSubscriptions(SecurityUtil.getAuthenticatedUser(), monitor);
+        return new ResponseEntity<>(null, HttpStatus.OK);
     }
 
     @ExceptionHandler(NotFoundException.class)

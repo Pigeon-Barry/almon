@@ -7,6 +7,34 @@ function updateServiceNotificationStatus(notificationId, serviceId, checkBoxDomE
 }
 
 
+function clearMonitorSubscriptions(monitorId) {
+    if (!confirmationPrompt("Inherit Subscriptions", "Are you sure you want to inherit your subscriptions from the service? This can not be undone and will reset your current settings."))
+        return;
+
+    const url = "/web/notification/monitor/" + monitorId + "/subscriptions";
+
+    const token = $("meta[name='_csrf']").attr("content");
+    const header = $("meta[name='_csrf_header']").attr("content");
+    $.ajax({
+        type: 'DELETE',
+        url: url,
+        xhrFields: {
+            withCredentials: true
+        },
+        beforeSend: function (request) {
+            request.setRequestHeader(header, token);
+        },
+        complete: function (xhr, textStatus) {
+            if (xhr.status === 200) {
+                refreshPage();
+            } else {
+                showAlertError("Failed to inherit notification subscriptions. Please consult an administrator");
+            }
+        }
+    });
+}
+
+
 function updateNotificationStatus(baseUrl, notificationId, checkBoxDomElement) {
     const suffix = checkBoxDomElement.checked ? "subscribe" : "unsubscribe";
     const url = baseUrl + "/" + notificationId + "/" + suffix;

@@ -46,7 +46,7 @@ public abstract class Monitor {
     @NoArgsConstructor
     public static class MonitorId implements Serializable {
         @Length(max = Constants.MONITOR_ID_MAX_LENGTH)
-        @Column(length = Constants.SERVICE_ID_MAX_LENGTH)
+        @Column(length = Constants.MONITOR_ID_MAX_LENGTH)
         protected String id;
         @ManyToOne
         @JoinColumn(name = "service_id")

@@ -21,4 +21,6 @@ public interface NotificationService {
     <T extends Alert> void send(T alert);
 
     Notification getNotificationFromId(String source);
+
+    void clearSubscriptions(User authenticatedUser, Monitor monitor);
 }
