@@ -18,8 +18,11 @@
                             <!--                        <p class="text-muted mb-1">Placeholder</p>-->
                             <!--                        <p class="text-muted mb-4">Placeholder</p>-->
                             <div class="d-flex justify-content-center mb-2">
-                                <button type="button" class="btn btn-primary">Placeholder</button>
-                                <button type="button" class="btn btn-outline-primary ms-1">Placeholder</button>
+                                <button type="button" class="btn btn-primary"
+                                        th:data-serviceId="${service.getId()}"
+                                        onclick="redirect('/web/service/' + this.getAttribute('data-serviceId') + '/update')"
+                                >Update
+                                </button>
                             </div>
                             <div>
                                 <div class="d-flex justify-content-center mb-2">

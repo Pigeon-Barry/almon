@@ -19,7 +19,6 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.transaction.annotation.Transactional;
 
-import javax.validation.constraints.NotNull;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.Optional;
@@ -65,13 +64,13 @@ public class ServiceServiceImpl implements ServiceService {
     }
 
     @Override
-    public void enableService(String serviceId) {
-        updateEnabledStatus(serviceId, true);
+    public void enableService(Service service) {
+        updateEnabledStatus(service, true);
     }
 
     @Override
-    public void disableService(String serviceId) {
-        updateEnabledStatus(serviceId, false);
+    public void disableService(Service service) {
+        updateEnabledStatus(service, false);
     }
 
     @Override
@@ -80,9 +79,8 @@ public class ServiceServiceImpl implements ServiceService {
     }
 
 
-    private void updateEnabledStatus(@NotNull String serviceId, boolean enabled) {
-        log.info((enabled ? "Enabling" : "Disabling") + " Service: " + serviceId);
-        Service service = findServiceById(serviceId);
+    private void updateEnabledStatus(Service service, boolean enabled) {
+        log.info((enabled ? "Enabling" : "Disabling") + " Service: " + service.getId());
         service.setEnabled(enabled);
         save(service);
         for (Monitor monitor : service.getMonitors()) {
@@ -103,6 +101,13 @@ public class ServiceServiceImpl implements ServiceService {
     @Override
     public boolean checkKeyExists(String key) {
         return SERVICE_REPOSITORY.existsById(key);
+    }
+
+    @Override
+    public Service updateService(Service service, String name, String description) {
+        service.setName(name);
+        service.setDescription(description);
+        return save(service);
     }
 
     @Override
@@ -138,6 +143,12 @@ public class ServiceServiceImpl implements ServiceService {
         AUTHORITY_SERVICE.createAuthority(
                 "SERVICE_" + id + "_CAN_DELETE",
                 "Grants the ability to delete this service",
+                null,
+                adminRoleSet
+        );
+        AUTHORITY_SERVICE.createAuthority(
+                "SERVICE_" + id + "_CAN_UPDATE",
+                "Grants the ability to update this service",
                 null,
                 adminRoleSet
         );

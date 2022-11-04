@@ -28,21 +28,25 @@ import java.util.List;
 @PreAuthorize("isAuthenticated()")
 public class ServicesWebController extends WebController {
 
+    private final ServiceService SERVICE_SERVICE;
+
     @Autowired
-    ServiceService serviceService;
+    public ServicesWebController(ServiceService serviceService) {
+        this.SERVICE_SERVICE = serviceService;
+    }
 
     @GetMapping()
     public String getAllServices(@RequestParam(defaultValue = "1") int servicePageNumber,
-                              @RequestParam(defaultValue = "25") int servicePageSize,
-                              Model model) {
+                                 @RequestParam(defaultValue = "25") int servicePageSize,
+                                 Model model) {
         User user = SecurityUtil.getAuthenticatedUser();
         log.debug("UserID: " + user.getId());
 
         Page<Service> page;
         if (SecurityUtil.hasAuthority("VIEW_ALL_SERVICES"))
-            page = serviceService.findPaginated(servicePageNumber, servicePageSize);
+            page = SERVICE_SERVICE.findPaginated(servicePageNumber, servicePageSize);
         else
-            page = serviceService.findPaginatedFromUser(servicePageNumber, servicePageSize, SecurityUtil.getAuthenticatedUser());
+            page = SERVICE_SERVICE.findPaginatedFromUser(servicePageNumber, servicePageSize, SecurityUtil.getAuthenticatedUser());
         List<Service> listServices = page.getContent();
 
 
@@ -62,11 +66,11 @@ public class ServicesWebController extends WebController {
 
     @PostMapping("/create")
     @PreAuthorize("hasAuthority('CREATE_SERVICE')")
-    public String register(@Valid ServiceRequestBody serviceRequestBody, Errors errors, Model model) {
+    public String createService(@Valid ServiceRequestBody serviceRequestBody, Errors errors, Model model) {
         if (errors.hasErrors()) {
             return "/services/createService";
         }
-        Service service = serviceService.createService(SecurityUtil.getAuthenticatedUser(), serviceRequestBody.getKey(), serviceRequestBody.getName(), serviceRequestBody.getDescription());
+        Service service = SERVICE_SERVICE.createService(SecurityUtil.getAuthenticatedUser(), serviceRequestBody.getKey(), serviceRequestBody.getName(), serviceRequestBody.getDescription());
 
         return "redirect:/web/service/" + service.getId();
     }

@@ -2,6 +2,7 @@ package com.capgemini.bedwards.almon.almonapi.controllers.service;
 
 import com.capgemini.bedwards.almon.almoncore.intergrations.api.APIController;
 import com.capgemini.bedwards.almon.almoncore.services.service.ServiceService;
+import com.capgemini.bedwards.almon.almondatastore.models.service.Service;
 import io.swagger.v3.oas.annotations.OpenAPIDefinition;
 import io.swagger.v3.oas.annotations.info.Info;
 import lombok.extern.slf4j.Slf4j;
@@ -35,16 +36,16 @@ public class ServiceAPIController extends APIController {
 
 
     @PutMapping("/enable")
-    @PreAuthorize("hasAuthority('ENABLE_DISABLE_SERVICES') || hasAuthority('SERVICE_' + #serviceId + '_CAN_ENABLE_DISABLE')")
-    public ResponseEntity<String> enable(@PathVariable(name = "serviceId") String serviceId) {
-        SERVICE_SERVICE.enableService(serviceId);
+    @PreAuthorize("hasAuthority('ENABLE_DISABLE_SERVICES') || hasAuthority('SERVICE_' + #service.id + '_CAN_ENABLE_DISABLE')")
+    public ResponseEntity<String> enable(@PathVariable(name = "serviceId") Service service) {
+        SERVICE_SERVICE.enableService(service);
         return new ResponseEntity<>(HttpStatus.ACCEPTED);
     }
 
     @PutMapping("/disable")
-    @PreAuthorize("hasAuthority('ENABLE_DISABLE_SERVICES') || hasAuthority('SERVICE_' + #serviceId + '_CAN_ENABLE_DISABLE')")
-    public ResponseEntity<String> disable(@PathVariable(name = "serviceId") String serviceId, HttpServletRequest request) {
-        SERVICE_SERVICE.disableService(serviceId);
+    @PreAuthorize("hasAuthority('ENABLE_DISABLE_SERVICES') || hasAuthority('SERVICE_' + #service.id + '_CAN_ENABLE_DISABLE')")
+    public ResponseEntity<String> disable(@PathVariable(name = "serviceId") Service service, HttpServletRequest request) {
+        SERVICE_SERVICE.disableService(service);
         return new ResponseEntity<>(HttpStatus.ACCEPTED);
     }
 }

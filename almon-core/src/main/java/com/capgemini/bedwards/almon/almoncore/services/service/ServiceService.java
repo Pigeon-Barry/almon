@@ -23,9 +23,9 @@ public interface ServiceService {
 
     Service findServiceById(String serviceId);
 
-    void enableService(String serviceId);
+    void enableService(Service service);
 
-    void disableService(String serviceId);
+    void disableService(Service service);
 
     Service save(Service service);
 
@@ -36,4 +36,6 @@ public interface ServiceService {
     void assignAdminAuthority(Service service, Authority authority);
 
     void deleteService(Service service);
+
+    Service updateService(Service service, String name, String description);
 }

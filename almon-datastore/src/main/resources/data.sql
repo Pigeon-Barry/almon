@@ -1,3 +1,8 @@
+INSERT INTO db_almon.role(name)
+VALUES ('USER'),
+       ('ADMIN')
+;
+
 INSERT INTO db_almon.authority (authority)
 VALUES ('ACCESS_CORE_PAGES'),
        ('ENABLE_DISABLE_ACCOUNTS'),
@@ -8,6 +13,7 @@ VALUES ('ACCESS_CORE_PAGES'),
        ('ASSIGN_ROLES'),
        ('ASSIGN_PERMISSIONS'),
        ('CREATE_SERVICE'),
+       ('UPDATE_SERVICE'),
        ('CREATE_MONITORS'),
        ('VIEW_ALL_MONITORS'),
        ('VIEW_ALL_SERVICES'),
@@ -15,11 +21,6 @@ VALUES ('ACCESS_CORE_PAGES'),
        ('RUN_MONITORS'),
        ('DELETE_MONITORS'),
        ('ENABLE_DISABLE_MONITORS')
-;
-
-INSERT INTO db_almon.role(name)
-VALUES ('USER'),
-       ('ADMIN')
 ;
 
 
@@ -46,5 +47,6 @@ VALUES ('VIEW_ADMIN_PAGES', 'ADMIN'),
        ('DELETE_SERVICES','ADMIN'),
        ('DELETE_MONITORS','ADMIN'),
        ('RUN_MONITORS','ADMIN'),
-       ('ENABLE_DISABLE_MONITORS','ADMIN')
+       ('ENABLE_DISABLE_MONITORS','ADMIN'),
+       ('UPDATE_SERVICE','ADMIN')
 ;
