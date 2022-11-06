@@ -6,7 +6,9 @@ import com.capgemini.bedwards.almon.almondatastore.models.auth.User;
 import com.capgemini.bedwards.almon.almondatastore.models.service.Service;
 import org.springframework.data.domain.Page;
 
+import java.util.Map;
 import java.util.Optional;
+import java.util.Set;
 
 public interface ServiceService {
     Page<Service> findPaginated(int pageNo, int pageSize);
@@ -38,4 +40,8 @@ public interface ServiceService {
     void deleteService(Service service);
 
     Service updateService(Service service, String name, String description);
+
+    Map<String, Set<User>> getUsersByServiceRole(Service service);
+
+    boolean removeUser(Service service, User user);
 }

@@ -35,4 +35,5 @@ public interface AuthorityService {
     void deleteServiceAuthorities(Service service);
 
     void deleteMonitorAuthorities(Monitor monitor);
+
 }

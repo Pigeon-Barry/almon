@@ -1,6 +1,7 @@
 package com.capgemini.bedwards.almon.almonmonitoringcore;
 
 import com.capgemini.bedwards.almon.almoncore.services.service.ServiceService;
+import com.capgemini.bedwards.almon.almoncore.services.user.UserService;
 import com.capgemini.bedwards.almon.almondatastore.models.monitor.Monitor;
 import com.capgemini.bedwards.almon.almondatastore.models.schedule.ScheduledMonitor;
 import com.capgemini.bedwards.almon.almonmonitoringcore.convertor.*;
@@ -26,6 +27,7 @@ public class MonitorWebConfig implements WebMvcConfigurer {
     public final ScheduledMonitorService<ScheduledMonitor> SCHEDULED_MONITOR_SERVICE;
     public final ServiceService SERVICE_SERVICE;
     public final NotificationService NOTIFICATION_SERVICE;
+    public final UserService USER_SERVICE;
 
     @Autowired
 
@@ -33,8 +35,10 @@ public class MonitorWebConfig implements WebMvcConfigurer {
                             @Qualifier("monitorServiceImpl") MonitorService<Monitor> monitorService,
                             @Qualifier("scheduledMonitorServiceImpl") ScheduledMonitorService<ScheduledMonitor> scheduledMonitorService,
                             ServiceService serviceService,
+                            UserService userService,
                             NotificationService notificationService) {
         this.MONITORS = monitors;
+        this.USER_SERVICE = userService;
         this.SERVICE_SERVICE = serviceService;
         this.MONITOR_SERVICE = monitorService;
         this.SCHEDULED_MONITOR_SERVICE = scheduledMonitorService;
@@ -51,6 +55,7 @@ public class MonitorWebConfig implements WebMvcConfigurer {
     @Override
     public void addFormatters(FormatterRegistry registry) {
         registry.addConverter(new MonitorConvertor(MONITOR_SERVICE));
+        registry.addConverter(new UserConvertor(USER_SERVICE));
         registry.addConverter(new ScheduledMonitorConvertor(SCHEDULED_MONITOR_SERVICE));
         registry.addConverter(new MonitorAdapterConvertor(MONITORS));
         registry.addConverter(new ServiceConvertor(SERVICE_SERVICE));

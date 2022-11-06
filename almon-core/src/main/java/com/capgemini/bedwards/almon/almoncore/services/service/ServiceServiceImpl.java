@@ -19,10 +19,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.Collections;
-import java.util.HashSet;
-import java.util.Optional;
-import java.util.Set;
+import java.util.*;
 
 @org.springframework.stereotype.Service
 @Slf4j
@@ -111,6 +108,24 @@ public class ServiceServiceImpl implements ServiceService {
     }
 
     @Override
+    public Map<String, Set<User>> getUsersByServiceRole(Service service) {
+        Set<User> adminUsers = ROLE_SERVICE.getUsersByRole(getOrCreateAdminRole(service));
+        Set<User> standardUsers = ROLE_SERVICE.getUsersByRole(getOrCreateUserRole(service));
+
+        standardUsers.removeAll(adminUsers);
+        return new HashMap<String, Set<User>>() {{
+            put("ADMIN", adminUsers);
+            put("STANDARD", standardUsers);
+        }};
+    }
+
+    @Override
+    public boolean removeUser(Service service, User user) {
+        return ROLE_SERVICE.removeRole(user, getOrCreateAdminRole(service))
+                || ROLE_SERVICE.removeRole(user, getOrCreateUserRole(service));
+    }
+
+    @Override
     public Service createService(String id, String name, String description) {
         log.info("Creating new service with id: " + id + " name: " + name + " description: " + description);
         Service service = SERVICE_REPOSITORY.saveAndFlush(Service.builder()
@@ -162,6 +177,12 @@ public class ServiceServiceImpl implements ServiceService {
         AUTHORITY_SERVICE.createAuthority(
                 "SERVICE_" + id + "_CAN_ENABLE_DISABLE",
                 "Grants the ability to create alerts for this service",
+                null,
+                adminRoleSet
+        );
+        AUTHORITY_SERVICE.createAuthority(
+                "SERVICE_" + id + "_CAN_ASSIGN_ROLES",
+                "Grants the ability to assign roles to other users",
                 null,
                 adminRoleSet
         );

@@ -8,7 +8,6 @@ import com.capgemini.bedwards.almon.almondatastore.models.service.Service;
 import com.capgemini.bedwards.almon.almonmonitoringcore.service.alert.AlertService;
 import com.capgemini.bedwards.almon.almonmonitoringcore.service.monitor.MonitorService;
 import com.fasterxml.jackson.databind.node.ObjectNode;
-import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.springframework.data.domain.Page;
 import org.springframework.ui.Model;
 import org.springframework.web.servlet.ModelAndView;
@@ -40,7 +39,6 @@ public interface MonitorAdapter<T extends Monitor, A extends Alert> {
     default ModelAndView getViewPageWeb(Service service, Monitor monitor, Model model, AlertFilterOptions alertFilterOptions, int alertPageNumber, int alertPageSize) {
         ModelAndView modelAndView = new ModelAndView(getViewMonitorPageWebView());
         modelAndView.addAllObjects(model.asMap());
-        System.out.println("HERE: " + ToStringBuilder.reflectionToString(monitor));
         modelAndView.addObject("monitor", monitor);
         model.addAttribute("service", service);
         alertFilterOptions.setMonitors(new Monitor[]{monitor});

@@ -3,7 +3,7 @@
       xmlns:th="http://www.thymeleaf.org" lang="en"
       xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 <div th:fragment="user">
-    <!--/*@thymesVar id="user" type="com.capgemini.bedwards.almon.almondatastore.models.auth.User"*/-->
+    <!--/*@thymesVar id="pageUser" type="com.capgemini.bedwards.almon.almondatastore.models.auth.User"*/-->
     <!--/*@thymesVar id="authority" type="com.capgemini.bedwards.almon.almondatastore.models.auth.Authority"*/-->
     <!--/*@thymesVar id="roles" type="java.util.List"*/-->
     <section style="background-color: #eee;">
@@ -12,10 +12,10 @@
                 <div class="col-lg-4">
                     <div class="card mb-4">
                         <div class="card-body text-center">
-                            <img th:src="${user.getProfilePicture()}"
+                            <img th:src="${pageUser.getProfilePicture()}"
                                  alt="avatar"
                                  class="rounded-circle img-fluid" style="width: 150px;">
-                            <h5 class="my-3" th:text="${user.getFullName()}"></h5>
+                            <h5 class="my-3" th:text="${pageUser.getFullName()}"></h5>
                             <!--                        <p class="text-muted mb-1">Placeholder</p>-->
                             <!--                        <p class="text-muted mb-4">Placeholder</p>-->
                             <div class="d-flex justify-content-center mb-2">
@@ -24,15 +24,15 @@
                             </div>
                             <div>
                                 <th:block sec:authorize="hasAuthority('ENABLE_DISABLE_ACCOUNTS')">
-                                    <button th:if="${user.isEnabled()}" href="#" class="btn btn-danger mx-2"
-                                            th:data-userId="${user.getId()}"
-                                            th:disabled="${#authentication.principal.getId().equals(user.getId())}"
+                                    <button th:if="${pageUser.isEnabled()}" href="#" class="btn btn-danger mx-2"
+                                            th:data-userId="${pageUser.getId()}"
+                                            th:disabled="${#authentication.principal.getId().equals(pageUser.getId())}"
                                             onclick="disableAccount(this.getAttribute('data-userId'),this)"
                                     >Disable Account
                                     </button>
-                                    <button th:if="${!user.isEnabled()}" href="#" class="btn btn-success mx-2"
-                                            th:data-userId="${user.getId()}"
-                                            th:disabled="${#authentication.principal.getId().equals(user.getId())}"
+                                    <button th:if="${!pageUser.isEnabled()}" href="#" class="btn btn-success mx-2"
+                                            th:data-userId="${pageUser.getId()}"
+                                            th:disabled="${#authentication.principal.getId().equals(pageUser.getId())}"
                                             onclick="enableAccount(this.getAttribute('data-userId'),this)"
                                     >Enable Account
                                     </button>
@@ -52,7 +52,7 @@
                                     </div>
                                 </li>
                                 <li class="list-group-item d-flex justify-content-between"
-                                    th:each="role : ${user.getRoles()}"
+                                    th:each="role : ${pageUser.getRoles()}"
                                     th:id="'roleContainer_' + ${role.getName()}">
                                     <p class="mb-0" th:text="${role.getName()}"></p>
                                     <div class="justify-content-end" sec:authorize="hasAuthority('ASSIGN_ROLES')">
@@ -84,7 +84,7 @@
                                         </button>
                                     </div>
                                 </li>
-                                <li class="list-group-item"   th:each="authority : ${user.getAuthorities()}">
+                                <li class="list-group-item"   th:each="authority : ${pageUser.getAuthorities()}">
                                     <p class="mb-0" th:text="${authority.getAuthority()}"></p>
                                 </li>
                             </ul>
@@ -99,7 +99,7 @@
                                     <p class="mb-0">Full Name</p>
                                 </div>
                                 <div class="col-sm-9">
-                                    <p class="text-muted mb-0" th:text="${user.getFullName()}"></p>
+                                    <p class="text-muted mb-0" th:text="${pageUser.getFullName()}"></p>
                                 </div>
                             </div>
                             <hr>
@@ -108,7 +108,7 @@
                                     <p class="mb-0">Email</p>
                                 </div>
                                 <div class="col-sm-9">
-                                    <p class="text-muted mb-0" th:text="${user.email}"></p>
+                                    <p class="text-muted mb-0" th:text="${pageUser.email}"></p>
                                 </div>
                             </div>
                             <hr>
@@ -117,7 +117,7 @@
                                     <p class="mb-0">Phone</p>
                                 </div>
                                 <div class="col-sm-9">
-                                    <p class="text-muted mb-0" th:text="${user.phoneNumber ?: 'N.A'}"></p>
+                                    <p class="text-muted mb-0" th:text="${pageUser.phoneNumber ?: 'N.A'}"></p>
                                 </div>
                             </div>
                         </div>
@@ -153,7 +153,7 @@
             sec:authorize="hasAuthority('ASSIGN_PERMISSIONS')"/>
 
     <script sec:authorize="hasAuthority('ASSIGN_ROLES')">
-        const userId = "[[${user.getId()}]]";
+        const userId = "[[${pageUser.getId()}]]";
 
         function deleteRole(role) {
             if (!confirmationPrompt("Role Deletion", "Are you sure you want remove role " + role + " form user [[${user.getEmail()}]]"))

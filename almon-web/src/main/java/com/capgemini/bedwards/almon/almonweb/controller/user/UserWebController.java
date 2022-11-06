@@ -22,7 +22,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.List;
-import java.util.UUID;
 
 @Controller
 @RequestMapping("/web/user/{userId}")
@@ -38,29 +37,27 @@ public class UserWebController  extends WebController {
 
     @GetMapping()
 
-    @PreAuthorize("hasAuthority('VIEW_ALL_USERS') || #userId == authentication.principal.id")
-    public String getUsersList(@PathVariable(name = "userId") UUID userId, Model model) {
-
-        User user = userService.getUserById(userId);
+    @PreAuthorize("hasAuthority('VIEW_ALL_USERS') || #user.id == authentication.principal.id")
+    public String getUserList(@PathVariable(name = "userId") User user, Model model) {
         List<Role> roles = roleService.getAllRoles();
         List<Authority> authorities = authorityService.getAllAuthorities();
         model.addAttribute("roles", roles);
+        model.addAttribute("pageUser", user);
         model.addAttribute("authorities", authorities);
         return "users/user";
     }
 
-
     @PutMapping("/enable")
     @PreAuthorize("hasAuthority('ENABLE_DISABLE_ACCOUNTS')")
-    public ResponseEntity<String> enableAccount(@PathVariable(name = "userId") UUID userId) {
-        userService.enableAccount(SecurityUtil.getAuthenticatedUser(), userId);
+    public ResponseEntity<String> enableAccount(@PathVariable(name = "userId") User user) {
+        userService.enableAccount(SecurityUtil.getAuthenticatedUser(), user);
         return new ResponseEntity<>(HttpStatus.ACCEPTED);
     }
 
     @PutMapping("/disable")
     @PreAuthorize("hasAuthority('ENABLE_DISABLE_ACCOUNTS')")
-    public ResponseEntity<String> disableAccount(@PathVariable(name = "userId") UUID userId, HttpServletRequest request) {
-        userService.disableAccount(SecurityUtil.getAuthenticatedUser(),userId);
+    public ResponseEntity<String> disableAccount(@PathVariable(name = "userId") User user, HttpServletRequest request) {
+        userService.disableAccount(SecurityUtil.getAuthenticatedUser(),user);
         return new ResponseEntity<>(HttpStatus.ACCEPTED);
     }
 }

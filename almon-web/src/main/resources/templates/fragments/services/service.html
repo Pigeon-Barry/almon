@@ -6,6 +6,12 @@
     <!--/*@thymesVar id="authority" type="com.capgemini.bedwards.almon.almondatastore.models.auth.Authority"*/-->
     <!--/*@thymesVar id="monitors" type="om.capgemini.bedwards.almon.almonmonitoringcore.Monitors"*/-->
     <!--/*@thymesVar id="notificationHelper" type="com.capgemini.bedwards.almon.notificationcore.NotificationHelper"*/-->
+
+
+    <!--/*@thymesVar id="serviceAdmin" type="com.capgemini.bedwards.almon.almondatastore.models.auth.User"*/-->
+    <!--/*@thymesVar id="serviceUser" type="com.capgemini.bedwards.almon.almondatastore.models.auth.User"*/-->
+
+    <!--/*@thymesVar id="serviceUsers" type="java.util.Map"*/-->
     <!--/*@thymesVar id="roles" type="java.util.List"*/-->
     <section style="background-color: #eee;">
         <div class="container py-5">
@@ -73,6 +79,64 @@
                                                    onclick="updateServiceNotificationStatus(this.getAttribute('data-notificationId'),this.getAttribute('data-serviceId'),this)"
                                             >
                                         </div>
+                                    </div>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                    <br>
+                    <div class="card mb-4 mb-lg-0">
+                        <div class="card-body p-0">
+                            <ul class="list-group list-group-flush rounded-3">
+                                <li class="list-group-item d-flex justify-content-between align-items-center">
+                                    <p class="mb-0"><strong>Users</strong></p>
+                                    <div class="justify-content-end">
+                                        <button class="btn btn-primary" type="button"
+                                                data-bs-toggle="modal" data-bs-target="#updateServiceRolesModel">
+                                            Add/Update User
+                                        </button>
+                                    </div>
+                                </li>
+                                <li class="list-group-item d-flex justify-content-between"
+                                    th:each="serviceAdmin : ${serviceUsers.get('ADMIN')}">
+
+                                    <p class="mb-0" th:text="'ADMIN: ' + ${serviceAdmin.getEmail()}"></p>
+
+                                    <div class="justify-content-end"
+                                         th:if="${#authorization.expression('hasAuthority(''ASSIGN_ROLES'') || hasAuthority(''SERVICE_' + service.getId() + '_CAN_ASSIGN_ROLES'')') && !serviceAdmin.getId().equals(user.getId())}">
+                                        <button type="button" class="btn btn-danger"
+                                                th:data-userId="${serviceAdmin.getId()}"
+                                                th:data-userEmail="${serviceAdmin.getEmail()}"
+                                                onclick="deleteServiceRole(this.getAttribute('data-userId'),this.getAttribute('data-userEmail'))"
+                                        >
+                                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16"
+                                                 fill="currentColor" class="bi bi-trash" viewBox="0 0 16 16">
+                                                <path d="M5.5 5.5A.5.5 0 0 1 6 6v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm2.5 0a.5.5 0 0 1 .5.5v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm3 .5a.5.5 0 0 0-1 0v6a.5.5 0 0 0 1 0V6z"></path>
+                                                <path fill-rule="evenodd"
+                                                      d="M14.5 3a1 1 0 0 1-1 1H13v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V4h-.5a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1H6a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1h3.5a1 1 0 0 1 1 1v1zM4.118 4 4 4.059V13a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V4.059L11.882 4H4.118zM2.5 3V2h11v1h-11z"></path>
+                                            </svg>
+                                        </button>
+                                    </div>
+                                </li>
+                                <li class="list-group-item d-flex justify-content-between"
+                                    th:each="serviceUser : ${serviceUsers.get('STANDARD')}"
+                                >
+                                    <p class="mb-0" th:text="${serviceUser.getEmail()}"></p>
+
+                                    <div class="justify-content-end"
+                                         th:if="${#authorization.expression('hasAuthority(''ASSIGN_ROLES'') || hasAuthority(''SERVICE_' + service.getId() + '_CAN_ASSIGN_ROLES'')')}">
+                                        <button type="button" class="btn btn-danger"
+                                                th:data-userId="${serviceUser.getId()}"
+                                                th:data-userEmail="${serviceUser.getEmail()}"
+                                                onclick="deleteServiceRole(this.getAttribute('data-userId'),this.getAttribute('data-userEmail'))"
+                                        >
+                                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16"
+                                                 fill="currentColor" class="bi bi-trash" viewBox="0 0 16 16">
+                                                <path d="M5.5 5.5A.5.5 0 0 1 6 6v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm2.5 0a.5.5 0 0 1 .5.5v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm3 .5a.5.5 0 0 0-1 0v6a.5.5 0 0 0 1 0V6z"></path>
+                                                <path fill-rule="evenodd"
+                                                      d="M14.5 3a1 1 0 0 1-1 1H13v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V4h-.5a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1H6a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1h3.5a1 1 0 0 1 1 1v1zM4.118 4 4 4.059V13a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V4.059L11.882 4H4.118zM2.5 3V2h11v1h-11z"></path>
+                                            </svg>
+                                        </button>
                                     </div>
                                 </li>
                             </ul>
@@ -171,6 +235,10 @@
                 th:include="fragments/monitor/selectMonitorTypeModal :: selectMonitorTypeModal(${service},${monitors},selectMonitorTypeModal)"
                 th:if="${#authorization.expression('hasAuthority(''CREATE_MONITORS'') || hasAuthority(''SERVICE_' + service.getId() + '_CAN_CREATE_ALERTS'')')}"/>
 
+        <th:block
+                th:include="fragments/auth/serviceRoleAssignmentModal :: serviceRoleAssignmentModal('updateServiceRolesModel')"
+                th:if="${#authorization.expression('hasAuthority(''ASSIGN_ROLES'') || hasAuthority(''SERVICE_' + service.getId() + '_CAN_ASSIGN_ROLES'')')}"
+        />
     </section>
 
 
@@ -189,5 +257,33 @@
 
     <script
             th:src="@{/web/js/monitor/enableDisableMonitor.js}">
+    </script>
+
+    <script th:if="${#authorization.expression('hasAuthority(''ASSIGN_ROLES'') || hasAuthority(''SERVICE_' + service.getId() + '_CAN_ASSIGN_ROLES'')')}">
+        const serviceId = "[[${service.getId()}]]";
+
+        function deleteServiceRole(userId, email) {
+            if (!confirmationPrompt("User Deletion", "Are you sure you want remove user  " + email + " from this service?"))
+                return;
+
+            const url = "/web/service/" + serviceId + "/users/" + userId;
+            const token = $("meta[name='_csrf']").attr("content");
+            const header = $("meta[name='_csrf_header']").attr("content");
+            $.ajax({
+                type: 'DELETE',
+                url: url,
+                beforeSend: function (request) {
+                    request.setRequestHeader(header, token);
+                },
+                complete: function (xhr, textStatus) {
+                    console.log(xhr.status);
+                    if (xhr.status === 200) {
+                        refreshPage();
+                    } else {
+                        showAlertError("Failed to remove user. Please consult an administrator");
+                    }
+                }
+            });
+        }
     </script>
 </div>

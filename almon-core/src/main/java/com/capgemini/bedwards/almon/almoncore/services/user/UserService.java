@@ -15,11 +15,11 @@ public interface UserService {
     Page<User> findApprovalsPaginated(int pageNo, int pageSize);
 
 
-    void enableAccount(@NotNull User authorizer, @NotNull UUID userId);
+    void enableAccount(@NotNull User authorizer, @NotNull User user);
 
     User getUser(@NotNull UUID userId);
 
-    void disableAccount(@NotNull User authorizer, @NotNull UUID userId);
+    void disableAccount(@NotNull User authorizer, @NotNull User user);
 
     User getUserById(UUID userId);
 

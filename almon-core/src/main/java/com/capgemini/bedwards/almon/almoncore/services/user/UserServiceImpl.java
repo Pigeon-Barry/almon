@@ -45,15 +45,14 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public void enableAccount(@NotNull User authorizer, @NotNull UUID userId) {
-        updateEnabledStatus(authorizer, userId, true);
+    public void enableAccount(@NotNull User authorizer, @NotNull User user) {
+        updateEnabledStatus(authorizer, user, true);
     }
 
-    private void updateEnabledStatus(@NotNull User authoriser, @NotNull UUID userId, boolean enabled) {
-        if (authoriser != null && authoriser.getId().equals(userId))
+    private void updateEnabledStatus(@NotNull User authoriser, @NotNull User user, boolean enabled) {
+        if (authoriser != null && authoriser.getId().equals(user.getId()))
             throw new InvalidPermissionException("Can not disable/enable your own account");
-        log.info((enabled ? "Enabling" : "Disabling") + " user account: " + userId);
-        User user = getUser(userId);
+        log.info((enabled ? "Enabling" : "Disabling") + " user account: " + user.getId());
         user.setEnabled(enabled);
         user.setApprovedBy(authoriser);
         save(user);
@@ -68,8 +67,8 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public void disableAccount(@NotNull User authorizer, UUID userId) {
-        updateEnabledStatus(authorizer, userId, false);
+    public void disableAccount(@NotNull User authorizer, User user) {
+        updateEnabledStatus(authorizer, user, false);
     }
 
     @Override

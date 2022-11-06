@@ -1,6 +1,5 @@
 package com.capgemini.bedwards.almon.almoncore.services.user;
 
-import com.capgemini.bedwards.almon.almoncore.exceptions.NotFoundException;
 import com.capgemini.bedwards.almon.almondatastore.models.auth.Authority;
 import com.capgemini.bedwards.almon.almondatastore.models.auth.Role;
 import com.capgemini.bedwards.almon.almondatastore.models.auth.UpdateType;
@@ -27,23 +26,13 @@ public class RoleServiceImpl implements RoleService {
         this.USER_SERVICE = userService;
     }
 
-    @SuppressWarnings("SuspiciousMethodCalls")
     @Override
-    public void removeRole(UUID userId, String roleName) {
-        Optional<User> userOptional = USER_SERVICE.findById(userId);
-        if (!userOptional.isPresent())
-            throw new NotFoundException("User with ID: " + userId + " could not be located");
-        User user = userOptional.get();
-        log.info("CLS: " + user.getRoles().getClass());
-
-
-        Optional<Role> roleToDeleteOptional = user.getRoles().stream().filter(role -> role.getName().equals(roleName)).findFirst();
-        if (roleToDeleteOptional.isPresent()) {
-            user.getRoles().remove(roleToDeleteOptional.get());
+    public boolean removeRole(User user, Role role) {
+        if (user.getRoles().remove(role)) {
             USER_SERVICE.save(user);
-        } else {
-            throw new NotFoundException("User does not have role " + roleName);
+            return true;
         }
+        return false;
     }
 
     @Override
@@ -84,7 +73,6 @@ public class RoleServiceImpl implements RoleService {
     }
 
 
-
     @Override
     public Role createRole(String name, String description, Set<Authority> authorities) {
         log.info("Creating new Role with name: " + name + " description: " + description);
@@ -109,5 +97,10 @@ public class RoleServiceImpl implements RoleService {
     @Override
     public void deleteServiceRoles(com.capgemini.bedwards.almon.almondatastore.models.service.Service service) {
         ROLE_REPOSITORY.deleteServiceRoles(service);
+    }
+
+    @Override
+    public Set<User> getUsersByRole(Role role) {
+        return role.getUsers();
     }
 }

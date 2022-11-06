@@ -1,8 +1,10 @@
 package com.capgemini.bedwards.almon.almonweb.controller.services;
 
 
+import com.capgemini.bedwards.almon.almoncore.exceptions.NotFoundException;
 import com.capgemini.bedwards.almon.almoncore.intergrations.web.WebController;
 import com.capgemini.bedwards.almon.almoncore.services.service.ServiceService;
+import com.capgemini.bedwards.almon.almondatastore.models.auth.User;
 import com.capgemini.bedwards.almon.almondatastore.models.service.Service;
 import com.capgemini.bedwards.almon.almonmonitoringcore.Monitors;
 import com.capgemini.bedwards.almon.almonweb.model.services.ServiceUpdateRequestBody;
@@ -46,8 +48,23 @@ public class ServiceWebController extends WebController {
         model.addAttribute("service", service);
         model.addAttribute("monitors", MONITORS);
         model.addAttribute("notificationHelper", NOTIFICATION_SERVICE.getNotificationHelper());
+        ;
+        model.addAttribute("serviceUsers", SERVICE_SERVICE.getUsersByServiceRole(service));
         return "services/service";
     }
+
+
+    @DeleteMapping("/users/{userId}")
+    @PreAuthorize("hasAuthority('ASSIGN_ROLES') || hasAuthority('SERVICE_' + #service.id + '_CAN_ASSIGN_ROLES')")
+    public ResponseEntity<Void> removeUserFromService(
+            @PathVariable(name = "serviceId") Service service,
+            @PathVariable(name = "userId") User user,
+            Model model) {
+        if (SERVICE_SERVICE.removeUser(service, user))
+            return new ResponseEntity<>(HttpStatus.OK);
+        throw new NotFoundException("User does not have service roles for " + service.getId());
+    }
+
 
     @DeleteMapping()
     @PreAuthorize("hasAuthority('DELETE_SERVICES') || hasAuthority('SERVICE_' + #service.id + '_CAN_DELETE')")
@@ -77,7 +94,7 @@ public class ServiceWebController extends WebController {
             @PathVariable(name = "serviceId") Service service,
             ServiceUpdateRequestBody serviceUpdateRequestBody,
             Model model) {
-        model.addAttribute("service",service);
+        model.addAttribute("service", service);
         serviceUpdateRequestBody.populate(service);
 
         return "/services/updateService";
@@ -89,7 +106,7 @@ public class ServiceWebController extends WebController {
             @PathVariable(name = "serviceId") Service service,
             @Valid ServiceUpdateRequestBody serviceUpdateRequestBody,
             Errors errors, Model model) {
-        model.addAttribute("service",service);
+        model.addAttribute("service", service);
         if (errors.hasErrors()) {
             return "/services/updateService";
         }
@@ -97,4 +114,6 @@ public class ServiceWebController extends WebController {
 
         return "redirect:/web/service/" + service.getId();
     }
+
+
 }
