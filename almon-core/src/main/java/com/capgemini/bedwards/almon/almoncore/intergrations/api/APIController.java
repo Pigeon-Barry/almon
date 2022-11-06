@@ -7,6 +7,8 @@ import com.capgemini.bedwards.almon.almoncore.exceptions.ValidationException;
 import com.capgemini.bedwards.almon.almoncore.intergrations.api.error.BadRequestResponse;
 import com.capgemini.bedwards.almon.almoncore.intergrations.api.error.ErrorCode;
 import com.capgemini.bedwards.almon.almoncore.intergrations.api.error.ErrorResponse;
+import io.swagger.v3.oas.annotations.OpenAPIDefinition;
+import io.swagger.v3.oas.annotations.info.Info;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.access.AccessDeniedException;
@@ -24,6 +26,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Slf4j
+@OpenAPIDefinition(
+        info = @Info(title = "ALMON - API",
+                version = "1.0.0")
+)
 public abstract class APIController {
     @ExceptionHandler(value = {NotFoundException.class})
     @ResponseStatus(value = HttpStatus.NOT_FOUND)
@@ -60,6 +66,7 @@ public abstract class APIController {
     public ErrorResponse invalidPermissionException(InvalidPermissionException exception, WebRequest request) {
         return new ErrorResponse(ErrorCode.UNAUTHORISED_API, exception.getMessage());
     }
+
 
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     @ExceptionHandler(MethodArgumentNotValidException.class)

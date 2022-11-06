@@ -1,5 +1,6 @@
 package com.capgemini.bedwards.almon.almondatastore.models.alert;
 
+import com.capgemini.bedwards.almon.almondatastore.models.schedule.ScheduledMonitor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -14,6 +15,6 @@ import javax.persistence.Entity;
 @NoArgsConstructor
 @SuperBuilder
 @Entity
-public abstract class ScheduledAlert extends Alert {
+public abstract class ScheduledAlert<M extends ScheduledMonitor> extends Alert<M> {
 
 }

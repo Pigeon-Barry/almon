@@ -5,8 +5,10 @@ import com.capgemini.bedwards.almon.almoncore.intergrations.web.WebController;
 import com.capgemini.bedwards.almon.almondatastore.models.alert.Alert;
 import com.capgemini.bedwards.almon.almondatastore.models.alert.AlertFilterOptions;
 import com.capgemini.bedwards.almon.almondatastore.models.monitor.Monitor;
+import com.capgemini.bedwards.almon.almondatastore.models.schedule.ScheduledMonitor;
 import com.capgemini.bedwards.almon.almondatastore.models.service.Service;
 import com.capgemini.bedwards.almon.almonmonitoringcore.Monitors;
+import com.capgemini.bedwards.almon.almonmonitoringcore.contracts.ScheduledMonitorAdapter;
 import com.capgemini.bedwards.almon.almonmonitoringcore.resolver.ConvertUpdateMonitorRequest;
 import com.capgemini.bedwards.almon.notificationcore.service.NotificationService;
 import lombok.extern.slf4j.Slf4j;
@@ -86,14 +88,14 @@ public class MonitorWebController extends WebController {
     @PreAuthorize("hasAuthority('RUN_MONITORS') || hasAuthority('SERVICE_' + #service.id + '_MONITOR_' + #monitor.id + '_CAN_RUN')")
     public ResponseEntity<Alert> run(
             @Valid @PathVariable(name = "serviceId") Service service,
-            @Valid @PathVariable(name = "monitorId") Monitor monitor) {
-        Alert alert = MONITORS.getMonitorAdapterFromMonitor(monitor).execute(monitor);
+            @Valid @PathVariable(name = "monitorId") ScheduledMonitor monitor) {
+        Alert alert = ((ScheduledMonitorAdapter<ScheduledMonitor, ?>) MONITORS.getMonitorAdapterFromMonitor(monitor)).execute(monitor);
         return ResponseEntity.ok(alert);
     }
 
 
     @GetMapping("/update")
-    @PreAuthorize("hasAuthority('RUN_MONITORS') || hasAuthority('SERVICE_' + #service.id + '_MONITOR_' + #monitor.id + '_CAN_UPDATE')")
+    @PreAuthorize("hasAuthority('UPDATE_MONITORS') || hasAuthority('SERVICE_' + #service.id + '_MONITOR_' + #monitor.id + '_CAN_UPDATE')")
     public ModelAndView updateMonitor(
             @Valid @PathVariable(name = "serviceId") Service service,
             @Valid @PathVariable(name = "monitorId") Monitor monitor,
@@ -102,7 +104,7 @@ public class MonitorWebController extends WebController {
     }
 
     @PostMapping(value = "/update")
-    @PreAuthorize("hasAuthority('RUN_MONITORS') || hasAuthority('SERVICE_' + #service.id + '_MONITOR_' + #monitor.id + '_CAN_UPDATE')")
+    @PreAuthorize("hasAuthority('UPDATE_MONITORS') || hasAuthority('SERVICE_' + #service.id + '_MONITOR_' + #monitor.id + '_CAN_UPDATE')")
     public ModelAndView updateMonitor(
             @Valid @PathVariable(name = "serviceId") Service service,
             @Valid @PathVariable(name = "monitorId") Monitor monitor,

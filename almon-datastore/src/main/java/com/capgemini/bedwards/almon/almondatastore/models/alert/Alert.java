@@ -20,7 +20,7 @@ import java.util.UUID;
 @Entity
 @Inheritance(strategy = InheritanceType.JOINED)
 @DiscriminatorColumn(discriminatorType = DiscriminatorType.STRING, name = "type")
-public abstract class Alert {
+public abstract class Alert<M extends Monitor> {
 
     @Id
     @GeneratedValue(generator = "uuid")
@@ -35,7 +35,7 @@ public abstract class Alert {
             @JoinColumn(name = "id.id")
     })
     @JsonIgnore
-    protected Monitor monitor;
+    protected M monitor;
 
     @NotNull
     @Builder.Default
@@ -47,6 +47,10 @@ public abstract class Alert {
     protected String message;
 
     public abstract String getLongMessage();
-    public abstract String getShortMessage();
+
+    public String getShortMessage() {
+        return this.getMessage();
+    }
+
     public abstract String getHTMLMessage();
 }

@@ -22,7 +22,6 @@ import java.util.Set;
 @Entity
 @Inheritance(strategy = InheritanceType.JOINED)
 @DiscriminatorColumn(discriminatorType = DiscriminatorType.STRING, name = "type")
-@Table(name = "monitoring_type")
 public abstract class Monitor {
     @EmbeddedId
     protected MonitorId id;
@@ -40,6 +39,7 @@ public abstract class Monitor {
 
 
     public abstract String getMonitorType();
+
     @Data
     @Embeddable
     @AllArgsConstructor
@@ -49,7 +49,7 @@ public abstract class Monitor {
         @Length(max = Constants.MONITOR_ID_MAX_LENGTH)
         @Column(length = Constants.MONITOR_ID_MAX_LENGTH)
         protected String id;
-        @ManyToOne
+        @ManyToOne(fetch = FetchType.EAGER)
         @JoinColumn(name = "service_id")
         protected Service service;
 

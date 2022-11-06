@@ -20,7 +20,10 @@ public class Monitors {
     public Monitors(List<MonitorAdapter> monitorAdapterList, List<MonitorService<?>> monitorServices) {
         MONITOR_ADAPTERS = new HashMap<>();
         MONITOR_SERVICE = new HashMap<>();
-        monitorAdapterList.forEach(monitorAdapter -> MONITOR_ADAPTERS.put(monitorAdapter.getId(), monitorAdapter));
+        monitorAdapterList.forEach(monitorAdapter -> {
+            log.info("Monitor Adapter Identified: " + monitorAdapter.getId() + ": " + monitorAdapter.getClass());
+            MONITOR_ADAPTERS.put(monitorAdapter.getId(), monitorAdapter);
+        });
         monitorServices.forEach(monitorService -> MONITOR_SERVICE.put(monitorService.getSupportedMonitorType(), monitorService));
     }
 

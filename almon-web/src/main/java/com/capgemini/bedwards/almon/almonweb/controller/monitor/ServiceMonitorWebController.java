@@ -41,7 +41,7 @@ public class ServiceMonitorWebController extends WebController {
             Service service,
             @Valid @PathVariable(name = "monitorAdapterId")
             @MonitorAdapterExists
-            MonitorAdapter monitorAdapter,
+            MonitorAdapter<?,?> monitorAdapter,
             Model model) {
         return monitorAdapter.getCreatePageWeb(service, model);
     }
@@ -53,7 +53,7 @@ public class ServiceMonitorWebController extends WebController {
             Service service,
             @Valid @PathVariable(name = "monitorAdapterId")
             @MonitorAdapterExists
-            MonitorAdapter monitorAdapter,
+            MonitorAdapter<?,?> monitorAdapter,
             @Valid @ConvertCreateMonitorRequest Object formData,
             Model model) {
         return monitorAdapter.createMonitorWeb(service, formData, model);

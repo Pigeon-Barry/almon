@@ -1,0 +1,80 @@
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org" lang="en"
+>
+<th:block th:fragment="viewNotifications(notificationHelper)">
+    <div class="card mb-4 mb-lg-0"
+         th:with="hasOverridenServiceSubscription=${notificationHelper.isUserOverridingServiceSubscriptionForMonitor(user,monitor)}">
+        <div class="card-body p-0">
+            <ul class="list-group list-group-flush rounded-3">
+                <li class="list-group-item d-flex justify-content-between align-items-center"
+                    id="notificationSubscriptionHeader">
+
+                    <th:block th:if="${!hasOverridenServiceSubscription}">
+                        <p class="mb-0"><strong>Notification Subscriptions</strong><br>Inherited
+                            from
+                            Service</p>
+                        <button type="button" class="btn btn-primary"
+                                onclick="notificationSubscriptionOverride()"
+                                data-bs-toggle="tooltip" data-bs-placement="right"
+                                data-bs-title="Overrides inherited subscriptions (from the service) with your monitor specific subscriptions"
+                                data-bs-custom-class="primary-tooltip"
+                        >
+                            Override
+                        </button>
+                    </th:block>
+                    <th:block th:if="${hasOverridenServiceSubscription}">
+                        <p class="mb-0"><strong>Notification Subscriptions</strong></p>
+                        <button type="button" class="btn btn-danger"
+                                data-bs-toggle="tooltip" data-bs-placement="right"
+                                data-bs-title="Overrides your monitor specific subscriptions with inherited values from the service"
+                                data-bs-custom-class="primary-tooltip"
+                                th:data-monitorId="${monitor.getId()}"
+                                onclick="clearMonitorSubscriptions(this.getAttribute('data-monitorId'))">
+                            Inherit
+                        </button>
+                    </th:block>
+                </li>
+                <li class="list-group-item d-flex justify-content-between"
+                    th:each="notification : ${notificationHelper.getNotifications()}"
+                >
+
+                    <p data-bs-toggle="tooltip" data-bs-placement="top"
+                       th:data-bs-title="${notification.getHelpText()}"
+                       data-bs-custom-class="primary-tooltip"
+                       class="mb-0" th:text="${notification.getDisplayName()}"></p>
+                    <div class="justify-content-end">
+                        <div class="form-check form-switch">
+                            <input class="form-check-input subscriptionInput" type="checkbox"
+                                   th:disabled="${!hasOverridenServiceSubscription}"
+                                   th:data-notificationId="${notification.getId()}"
+                                   th:data-monitorId="${monitor.getId()}"
+                                   th:checked="${notificationHelper.isUserSubscribedToNotification(user,notification,monitor)}"
+                                   onclick="updateMonitorNotificationStatus(this.getAttribute('data-notificationId'),this.getAttribute('data-monitorId'),this)"
+                            >
+                        </div>
+                    </div>
+                </li>
+            </ul>
+        </div>
+    </div>
+    <script th:src="@{/web/js/notification/subscribe.js}">
+    </script>
+    <script type="text/javascript">
+        function notificationSubscriptionOverride() {
+            $("input.subscriptionInput").attr("disabled", false);
+            $("#notificationSubscriptionHeader > [data-bs-toggle=\"tooltip\"]").tooltip('dispose');
+            $("#notificationSubscriptionHeader").html("<p class=\"mb-0\"><strong>Notification Subscriptions</strong></p>\n" +
+                "            <button type=\"button\" class=\"btn btn-danger\"" +
+                "                    data-monitorId=\"[[${monitor.getId()}]]\"\n" +
+                "                    data-bs-toggle=\"tooltip\" data-bs-placement=\"right\"\n" +
+                "                    data-bs-title=\"Overrides your monitor specific subscriptions with inherited values from the service\"\n" +
+                "                    data-bs-custom-class=\"primary-tooltip\"" +
+                "                    onclick=\"clearMonitorSubscriptions(this.getAttribute('data-monitorId'))\">\n" +
+                "                Inherit\n" +
+                "            </button>");
+            $("#notificationSubscriptionHeader > [data-bs-toggle=\"tooltip\"]").tooltip({
+                trigger: 'hover'
+            });
+        }
+    </script>
+</th:block>

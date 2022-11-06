@@ -37,20 +37,31 @@ public class ApiKeyAuthenticationFilter implements Filter {
                 if (apiKey != null) {
                     log.info("API Key: " + apiKey);
                     Set<GrantedAuthority> authorities = new HashSet<>();
-                    if (apiKey.getAuthorities() != null)
-                        authorities.addAll(apiKey.getAuthorities());
+                    if (apiKey.isEnabled()) {
+                        if (apiKey.getAuthorities() != null)
+                            authorities.addAll(apiKey.getAuthorities());
+                        if (apiKey.getRoles() != null)
+                            apiKey.getRoles().forEach(role -> authorities.addAll(role.getAuthorities()));
 
-                    ApiKeyAuthenticationToken apiToken = new ApiKeyAuthenticationToken(apiKey, authorities);
-                    SecurityContextHolder.getContext().setAuthentication(apiToken);
+                        ApiKeyAuthenticationToken apiToken = new ApiKeyAuthenticationToken(apiKey, authorities);
+                        SecurityContextHolder.getContext().setAuthentication(apiToken);
+                    } else {
+                        writeError(response, "API Key is disabled");
+                        return;
+                    }
                 } else {
-                    HttpServletResponse httpResponse = (HttpServletResponse) response;
-                    httpResponse.setStatus(401);
-                    httpResponse.getWriter().write("Invalid API Key");
+                    writeError(response, "Invalid API Key");
                     return;
                 }
             }
         }
         chain.doFilter(request, response);
+    }
+
+    private void writeError(ServletResponse response, String message) throws IOException {
+        HttpServletResponse httpResponse = (HttpServletResponse) response;
+        httpResponse.setStatus(401);
+        httpResponse.getWriter().write(message);
     }
 
     private String getApiKeyFromRequest(HttpServletRequest httpRequest) {

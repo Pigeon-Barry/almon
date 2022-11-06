@@ -12,7 +12,6 @@ import java.util.Set;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-@ToString
 public class APIKey {
 
     @Id
@@ -21,7 +20,22 @@ public class APIKey {
     @NotNull
     private User owner;
 
+    private boolean enabled = true;
+
     @ManyToMany(mappedBy = "apiKeys", cascade = CascadeType.REMOVE, fetch = FetchType.EAGER)
     private Set<Authority> authorities;
 
+    @ManyToMany(mappedBy = "apiKeys", cascade = CascadeType.REMOVE, fetch = FetchType.EAGER)
+    private Set<Role> roles;
+
+    @Override
+    public String toString() {
+        return "APIKey{" +
+                "apiKey='" + apiKey + '\'' +
+                ", owner=" + owner +
+                ", enabled=" + enabled +
+                ", authorities=" + authorities +
+                ", roles=" + roles +
+                '}';
+    }
 }

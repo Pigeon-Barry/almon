@@ -8,9 +8,7 @@ import com.capgemini.bedwards.almon.almoncore.intergrations.api.error.ErrorRespo
 import com.capgemini.bedwards.almon.almoncore.intergrations.api.error.InternalServerErrorResponse;
 import com.capgemini.bedwards.almon.almoncore.services.service.ServiceService;
 import com.capgemini.bedwards.almon.almondatastore.models.service.Service;
-import io.swagger.v3.oas.annotations.OpenAPIDefinition;
 import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.info.Info;
 import io.swagger.v3.oas.annotations.media.ArraySchema;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -28,10 +26,6 @@ import org.springframework.web.bind.annotation.RestController;
 
 import javax.validation.Valid;
 
-@OpenAPIDefinition(
-        info = @Info(title = "ALMON - Services",
-                version = "1.0.0")
-)
 @RestController
 @RequestMapping("/api/services")
 @Slf4j

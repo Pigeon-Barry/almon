@@ -40,11 +40,11 @@ public interface MonitorAdapter<T extends Monitor, A extends Alert> {
     default ModelAndView getViewPageWeb(Service service, Monitor monitor, Model model, AlertFilterOptions alertFilterOptions, int alertPageNumber, int alertPageSize) {
         ModelAndView modelAndView = new ModelAndView(getViewMonitorPageWebView());
         modelAndView.addAllObjects(model.asMap());
+        System.out.println("HERE: " + ToStringBuilder.reflectionToString(monitor));
         modelAndView.addObject("monitor", monitor);
         model.addAttribute("service", service);
         alertFilterOptions.setMonitors(new Monitor[]{monitor});
 
-        System.out.println("1FILTER: " + ToStringBuilder.reflectionToString(alertFilterOptions));
         AlertSpecification<A> alertSpecification = new AlertSpecification<A>(alertFilterOptions);
 
         Page<? extends Alert> page = getAlertService().getAlertsPaginated(alertSpecification, alertPageNumber, alertPageSize);
@@ -87,7 +87,5 @@ public interface MonitorAdapter<T extends Monitor, A extends Alert> {
     Object getUpdateMonitorRequestBody(ObjectNode jsonRes);
 
     Class<T> getMonitorClass();
-
-    A execute(T monitor);
 
 }

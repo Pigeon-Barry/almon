@@ -31,6 +31,9 @@ public class NotificationServiceImpl implements NotificationService {
     @Autowired
     public NotificationServiceImpl(List<Notification> notifications, ServiceSubscriptionRepository serviceSubscriptionRepository, MonitorSubscriptionRepository monitorSubscriptionRepository) {
         this.NOTIFICATIONS = notifications;
+        if (log.isInfoEnabled())
+            for (Notification notification : notifications)
+                log.info("Notification Identified: " + notification.getId());
         this.SERVICE_SUBSCRIPTION_REPOSITORY = serviceSubscriptionRepository;
         this.MONITOR_SUBSCRIPTION_REPOSITORY = monitorSubscriptionRepository;
         this.NOTIFICATION_HELPER = new NotificationHelper(this.NOTIFICATIONS);

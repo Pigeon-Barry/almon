@@ -2,9 +2,11 @@
       xmlns:th="http://www.thymeleaf.org"
       lang="en">
 <th:block th:fragment="createMonitorHeader">
+    <!--/*@thymesVar id="monitorAdapter" type="com.capgemini.bedwards.almon.almonmonitoringcore.contracts.MonitorAdapter"*/-->
+    <!--/*@thymesVar id="service" type="com.capgemini.bedwards.almon.almondatastore.models.service.Service"*/-->
     <h4 class="text-center">Standard Monitor Values</h4>
     <hr>
-    <input type="hidden" name="MONITOR_TYPE" th:value="${monitor.getId()}">
+    <input type="hidden" name="MONITOR_TYPE" th:value="${monitorAdapter.getId()}">
     <div class="form-group required">
         <label for="key" class="control-label">Key:</label>
         <div class="input-group mb-3">

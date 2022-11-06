@@ -40,7 +40,7 @@ public class CreateMonitorRequestResolver implements HandlerMethodArgumentResolv
 
         ObjectNode jsonRes = FormUtil.getObjectNodeFromRequest(webRequest.getParameterMap());
 
-        MonitorAdapter monitorAdapter = MONITORS.getMonitorAdapterFromId(Objects.requireNonNull(webRequest.getParameterValues("MONITOR_TYPE"))[0]);
+        MonitorAdapter<?, ?> monitorAdapter = MONITORS.getMonitorAdapterFromId(Objects.requireNonNull(webRequest.getParameterValues("MONITOR_TYPE"))[0]);
         return monitorAdapter.getCreateMonitorRequestBody(jsonRes);
     }
 }

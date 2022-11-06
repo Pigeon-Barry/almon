@@ -1,0 +1,22 @@
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org" lang="en"
+>
+<th:block th:fragment="info">
+    <hr>
+    <div class="row"
+
+         data-bs-toggle="tooltip" data-bs-placement="right"
+         data-bs-title="Click link for Alert specification"
+         data-bs-custom-class="primary-tooltip"
+    >
+        <div class="col-sm-3">
+            <p class="mb-0">Monitor URL: </p>
+        </div>
+        <div class="col-sm-9">
+            <p class="text-muted mb-0"
+            ><a href="/swagger-ui/index.html#/passive-api-monitor-controller/triggerAlert"
+                th:text="@{/api/service/{serviceId}/monitor/{monitorId}/alert(serviceId=${service.getId()},monitorId=${monitor.getId()})}"></a>
+            </p>
+        </div>
+    </div>
+</th:block>

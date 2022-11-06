@@ -18,7 +18,12 @@
         <!-- Almon Dependencies Start -->
         <dependency>
             <groupId>com.capgemini.bedwards.almon</groupId>
-            <artifactId>almon-monitoring-api</artifactId>
+            <artifactId>almon-monitoring-active-api</artifactId>
+            <version>1.0.0</version>
+        </dependency>
+        <dependency>
+            <groupId>com.capgemini.bedwards.almon</groupId>
+            <artifactId>almon-monitoring-passive-api</artifactId>
             <version>1.0.0</version>
         </dependency>
         <dependency>

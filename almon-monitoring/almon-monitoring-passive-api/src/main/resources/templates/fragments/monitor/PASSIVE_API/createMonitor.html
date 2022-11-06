@@ -1,0 +1,30 @@
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org"
+      lang="en">
+<!--/*@thymesVar id="serviceRequestBody" type="com.capgemini.bedwards.almon.almonmonitoringactiveapi.models.CreateAPIMonitorRequestBody"*/-->
+<!--/*@thymesVar id="service" type="com.capgemini.bedwards.almon.almondatastore.models.service.Service"*/-->
+<!--/*@thymesVar id="monitorAdapter" type="com.capgemini.bedwards.almon.almonmonitoringpassiveapi.PassiveAPIMonitorAdapter"*/-->
+<!--/*@thymesVar id="formData" type="com.capgemini.bedwards.almon.almonmonitoringpassiveapi.models.CreatePassiveAPIMonitorRequestBody"*/-->
+<div class="container" th:fragment="create">
+    <div class="row justify-content-center">
+        <div class="col-12 col-md-8">
+            <div class="card">
+                <h3 class="card-header">Create Passive API Monitor</h3>
+                <div class="card-body">
+                    <form
+                            id="monitorForm"
+                            th:object="${formData}"
+                            th:action="@{/web/service/{serviceId}/monitor/{monitor}/create(serviceId=${service.getId()},monitor=${monitorAdapter.getId()})}"
+                            method="post">
+
+                        <th:block th:include="fragments/monitor/createMonitorFragment :: createMonitorHeader"/>
+
+                        <div class="form-group">
+                            <button type="submit" class="form-control btn-block btn btn-primary">Create Monitor</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

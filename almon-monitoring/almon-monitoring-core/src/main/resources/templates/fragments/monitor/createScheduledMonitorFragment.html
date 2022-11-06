@@ -3,6 +3,7 @@
       lang="en">
 <th:block th:fragment="createScheduledMonitorHeader">
 
+    <!--/*@thymesVar id="monitorAdapter" type="com.capgemini.bedwards.almon.almonmonitoringcore.contracts.ScheduledMonitorAdapter"*/-->
     <th:block th:include="fragments/monitor/createMonitorFragment :: createMonitorHeader"/>
     <div class="form-group required">
         <label for="cronExpression" class="control-label">Cron Expression:</label>

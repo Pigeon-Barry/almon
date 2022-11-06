@@ -1,0 +1,119 @@
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org" lang="en"
+>
+<th:block th:fragment="alertsFilter(alertFilterOptions,currentPage,pageSize)">
+
+
+    <div class="card mb-4 mb-lg-0">
+        <!--/*@thymesVar id="alertFilterOptions" type="com.capgemini.bedwards.almon.almondatastore.models.alert.AlertFilterOptions"*/-->
+        <div class="card-body p-0">
+            <form th:object="${alertFilterOptions}" method="get" id="alertFilterForm">
+                <input class="form-control" type="hidden" name="alertPageNumber"
+                       th:value="${currentPage}"/>
+                <input class="form-control" type="hidden" name="alertPageSize" th:value="${pageSize}"/>
+                <ul class="list-group list-group-flush rounded-3">
+                    <li class="list-group-item d-flex justify-content-between align-items-center">
+                        <p class="mb-0"><strong>Filter</strong></p>
+                    </li>
+                    <li class="list-group-item">
+                        <label>Date Range:</label><br>
+                        <textarea class="form-control" id="alertRangePicker" type="text"
+                                  placeholder="DD/MM/YYYY hh:mm:ss AM - DD/MM/YYYY hh:mm:ss PM"
+                                  style="resize: none;"
+                                  readonly="readonly"></textarea>
+                        <input class="form-control" id="alertRangeTo" name="to" type="hidden"/>
+                        <input class="form-control" id="alertRangeFrom" name="from" type="hidden"/>
+                    </li>
+                    <li class="list-group-item">
+                        <label>Status</label>
+                        <ul th:each="statusEnum : ${T(com.capgemini.bedwards.almon.almondatastore.models.alert.Status).values()}">
+                            <div class="form-check">
+                                <input type="checkbox" class="form-check-input"
+                                       name="status"
+                                       th:value="${statusEnum}"
+                                       th:field="*{status}"
+                                       th:id="'filter' + ${statusEnum}">
+                                <label class="form-check-label" th:for="'filter' + ${statusEnum}"
+                                       th:text="${statusEnum}"></label>
+                            </div>
+                        </ul>
+                    </li>
+
+                    <li class="list-group-item  d-flex justify-content-between">
+                        <button onclick="resetAlertFilter()" type="button" class="btn btn-danger">
+                            Reset Filter
+                        </button>
+                        <button type="submit" class="btn btn-primary">
+                            Apply Filter
+                        </button>
+                    </li>
+                </ul>
+            </form>
+        </div>
+    </div>
+    <script>
+        function resetAlertFilter() {
+            if (!confirmationPrompt("Reset Filter", "Are you sure you want to reset this filter?"))
+                return;
+            deleteQueryParam(['status', 'from', 'to']);
+        }
+
+        const PICKER_DATE_FORMAT = 'DD/MM/YYYY h:mm:ss A';
+        const SUBMIT_DATE_FORMAT = 'YYYY-MM-DD HH:mm:ss';
+
+        function updateDateRange(startDate, endDate) {
+            if (startDate.isValid())
+                $('#alertRangeFrom').val(startDate.format(SUBMIT_DATE_FORMAT));
+            if (endDate.isValid())
+                $('#alertRangeTo').val(endDate.format(SUBMIT_DATE_FORMAT));
+
+            if (!startDate.isValid() || !endDate.isValid())
+                return;
+            $('#alertRangePicker').val(startDate.format(PICKER_DATE_FORMAT) + ' - ' + endDate.format(PICKER_DATE_FORMAT));
+        }
+
+        $(function () {
+            const picker = $('#alertRangePicker').daterangepicker({
+                timePicker: true,
+                autoUpdateInput: false,
+                alwaysShowCalendars: true,
+                timePickerSeconds: true,
+                locale: {
+                    format: PICKER_DATE_FORMAT
+                },
+                ranges: {
+                    'Today': [moment().startOf('day'), moment().endOf('day')],
+                    'Yesterday': [moment().subtract(1, 'days').startOf('day'), moment().subtract(1, 'days').endOf('day')],
+                    'Last 7 Days': [moment().subtract(6, 'days').startOf('day'), moment().endOf('day')],
+                    'Last 30 Days': [moment().subtract(29, 'days').startOf('day'), moment().endOf('day')],
+                    'This Month': [moment().startOf('month').startOf('day'), moment().endOf('month').endOf('day')],
+                    'Last Month': [moment().subtract(1, 'month').startOf('month'), moment().subtract(1, 'month').endOf('month').endOf('day')]
+                },
+                maxDate: moment().endOf('day')
+            });
+
+            const from = '[[${param.from}]]';
+            const to = '[[${param.to}]]';
+            const fromDate = moment(from, SUBMIT_DATE_FORMAT);
+            const toDate = moment(to, SUBMIT_DATE_FORMAT);
+
+
+            if (fromDate.isValid()) {
+                $('#alertRangePicker').data('daterangepicker').setStartDate(fromDate.format(PICKER_DATE_FORMAT));
+            }
+            if (toDate.isValid()) {
+                $('#alertRangePicker').data('daterangepicker').setEndDate(toDate.format(PICKER_DATE_FORMAT));
+            }
+            updateDateRange(fromDate, toDate);
+        });
+        $('#alertRangePicker').on('apply.daterangepicker', function (ev, picker) {
+            updateDateRange(picker.startDate, picker.endDate);
+        });
+
+        $('#alertRangePicker').on('cancel.daterangepicker', function (ev, picker) {
+            $(this).val('');
+            $('#alertRangeTo').val('');
+            $('#alertRangeFrom').val('');
+        });
+    </script>
+</th:block>
