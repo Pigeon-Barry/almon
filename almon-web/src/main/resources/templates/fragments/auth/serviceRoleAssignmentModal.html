@@ -13,32 +13,51 @@
                 </div>
                 <div class="modal-body">
                     <h2>Role Assignment</h2>
-                    <input class="form-control" th:id="${modelId} + 'SearchBox'" type="text" placeholder="Search...">
+
+
+                    <div class="form-group input-group">
+                        <input class="form-control" type="email" required th:id="${modelId} + 'EmailBox'"
+                               placeholder="Email...">
+                        <select class="input-group-text" th:id="${modelId} + 'RoleType'">
+                            <option value="STANDARD">Standard</option>
+                            <option value="ADMIN">Admin</option>
+                        </select>
+                        <button type="button" class="btn btn-primary" onclick="addServiceRoleAccountToModal()">Add
+                            Account
+                        </button>
+                    </div>
                     <br>
                     <table class="table table-bordered table-striped" th:id="${modelId} + 'SearchTable'">
                         <thead>
                         <tr>
+                            <th>Email</th>
                             <th>Role</th>
-                            <th>Description</th>
-                            <th>Granted</th>
+                            <th>Delete</th>
                         </tr>
                         </thead>
-                        <tbody>
-<!--                        <tr th:each="role : ${roles}">-->
-<!--                            <td th:text="${role.getName()}"></td>-->
-<!--                            <td th:text="${role.getDescription()}"></td>-->
-<!--                            <td>-->
-<!--                                <div class="form-check form-switch">-->
-<!--                                    <input-->
-<!--                                            th:data-original="${user.getRoles().contains(role)}"-->
-<!--                                            class="form-check-input" type="checkbox"-->
-<!--                                            th:checked="${user.getRoles().contains(role)}" th:name="${role.getName()}"-->
-<!--                                            th:id="'ROLE_INPUT_' + ${role.getName()}">-->
-<!--                                    <label class="form-check-label"-->
-<!--                                           th:for="'ROLE_INPUT_' + ${role.getName()}">Granted</label>-->
-<!--                                </div>-->
-<!--                            </td>-->
-<!--                        </tr>-->
+                        <tbody th:id="${modelId} + 'AccountContainer'">
+                        <tr>
+                            <td>
+                                <input class="form-control" type="email" disabled="disabled"
+                                       value="ben.edwards@capgemini.com">
+                            </td>
+                            <td><select class="input-group-text">
+                                <option value="STANDARD">Standard</option>
+                                <option value="ADMIN">Admin</option>
+                            </select>
+                            </td>
+                            <td>
+                                <button type="button" class="btn btn-danger"
+                                        onclick="removeRowFromServiceRoleModal(this)">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16"
+                                         fill="currentColor" class="bi bi-trash" viewBox="0 0 16 16">
+                                        <path d="M5.5 5.5A.5.5 0 0 1 6 6v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm2.5 0a.5.5 0 0 1 .5.5v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm3 .5a.5.5 0 0 0-1 0v6a.5.5 0 0 0 1 0V6z"></path>
+                                        <path fill-rule="evenodd"
+                                              d="M14.5 3a1 1 0 0 1-1 1H13v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V4h-.5a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1H6a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1h3.5a1 1 0 0 1 1 1v1zM4.118 4 4 4.059V13a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V4.059L11.882 4H4.118zM2.5 3V2h11v1h-11z"></path>
+                                    </svg>
+                                </button>
+                            </td>
+                        </tr>
                         </tbody>
                     </table>
                 </div>
@@ -51,64 +70,58 @@
     </div>
 
 
-<!--    <script>-->
-<!--        const inputBoxId = "[[${modelId}]]SearchBox";-->
-<!--        const inputSearchTableId = "[[${modelId}]]SearchTable";-->
-<!--        const modalId = "[[${modelId}]]";-->
-<!--        $(document).ready(function () {-->
-<!--            $("#" + inputBoxId).on("keyup", function () {-->
-<!--                const value = $(this).val().toLowerCase();-->
-<!--                $("#" + inputSearchTableId + " tr").filter(function () {-->
-<!--                    $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)-->
-<!--                });-->
-<!--            });-->
-<!--        });-->
+    <script>
+        const emailBoxElement = $('#[[${modelId}]]EmailBox');
+        const roleTypeElement = $('#[[${modelId}]]RoleType');
+        const serviceAccountContainerElement = $('#[[${modelId}]]AccountContainer');
+        const serviceAccountContainerEmails = new Set();
 
-<!--        function saveRoles() {-->
-<!--            const formDataMap = new Map();-->
-<!--            $("#" + inputSearchTableId + " input").each(function () {-->
-<!--                const inputField = $(this);-->
-<!--                if ($(this).is(":checked") !== inputField.data("original")) {-->
-<!--                    let updateType;-->
-<!--                    if ($(this).is(":checked"))-->
-<!--                        updateType = "GRANT";-->
-<!--                    else-->
-<!--                        updateType = "REMOVE";-->
-<!--                    formDataMap.set(inputField.attr("name"), updateType);-->
-<!--                }-->
-<!--            });-->
-<!--            if (formDataMap.size === 0) {-->
-<!--                showAlertInfo("No roles were detected as being changed.");-->
-<!--                $("#" + modalId).modal('toggle');-->
-<!--                return;-->
-<!--            }-->
-<!--            if (!confirmationPrompt("Role Amendment", "Are you sure you want to update the roles of  user [[${user.getEmail()}]]?"))-->
-<!--                return;-->
-<!--            console.log(formDataMap);-->
+        function addServiceRoleAccountToModal() {
+            const email = emailBoxElement.val();
+            const roleType = roleTypeElement.val();
+            if (!document.getElementById('[[${modelId}]]EmailBox').checkValidity()) {
+                console.log("NOT VALID");//TODO
+                return;
+            }
+            if (serviceAccountContainerEmails.has(email)) {
+                console.log("Already has");//TODO
+                return;
+            }
 
-<!--            const url = "/web/user/" + userId + "/roles";-->
-<!--            const token = $("meta[name='_csrf']").attr("content");-->
-<!--            const header = $("meta[name='_csrf_header']").attr("content");-->
+            serviceAccountContainerEmails.add(email);
+            emailBoxElement.val("");
+            let appendText = " <tr>\n" +
+                "                            <td>\n" +
+                "                                <input class=\"form-control\" type=\"email\" disabled=\"disabled\"\n" +
+                "                                       value=\"" + email + "\">\n" +
+                "                            </td>\n" +
+                "                            <td><select class=\"input-group-text\">\n" +
+                "                                <option value=\"STANDARD\" " + (roleType === "STANDARD" ? "selected=\"selected\"" : "") + ">Standard</option>\n" +
+                "                                <option value=\"ADMIN\" " + (roleType === "ADMIN" ? "selected=\"selected\"" : "") + ">Admin</option>\n" +
+                "                            </select>\n" +
+                "                            </td>\n" +
+                "                            <td>\n" +
+                "                                <button type=\"button\" class=\"btn btn-danger\"\n" +
+                "                                        onclick=\"removeRowFromServiceRoleModal(this)\">\n" +
+                "                                    <svg xmlns=\"http://www.w3.org/2000/svg\" width=\"16\" height=\"16\"\n" +
+                "                                         fill=\"currentColor\" class=\"bi bi-trash\" viewBox=\"0 0 16 16\">\n" +
+                "                                        <path d=\"M5.5 5.5A.5.5 0 0 1 6 6v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm2.5 0a.5.5 0 0 1 .5.5v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm3 .5a.5.5 0 0 0-1 0v6a.5.5 0 0 0 1 0V6z\"></path>\n" +
+                "                                        <path fill-rule=\"evenodd\"\n" +
+                "                                              d=\"M14.5 3a1 1 0 0 1-1 1H13v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V4h-.5a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1H6a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1h3.5a1 1 0 0 1 1 1v1zM4.118 4 4 4.059V13a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V4.059L11.882 4H4.118zM2.5 3V2h11v1h-11z\"></path>\n" +
+                "                                    </svg>\n" +
+                "                                </button>\n" +
+                "                            </td>\n" +
+                "                        </tr>";
+            serviceAccountContainerElement.append(appendText);
+        }
 
-<!--            console.log(JSON.stringify(Object.fromEntries(formDataMap)));-->
-<!--            $.ajax({-->
-<!--                type: 'PUT',-->
-<!--                url: url,-->
-<!--                contentType: 'application/json',-->
-<!--                data: JSON.stringify(Object.fromEntries(formDataMap)),-->
-<!--                beforeSend: function (request) {-->
-<!--                    request.setRequestHeader(header, token);-->
-<!--                },-->
-<!--                complete: function (xhr, textStatus) {-->
-<!--                    if (xhr.status === 202) {-->
-<!--                        refreshPage();-->
-<!--                    } else {-->
-<!--                        showAlertError("Failed to Update roles. Please consult an administrator");-->
-<!--                    }-->
-<!--                }-->
-<!--            });-->
-<!--        }-->
-<!--    </script>-->
+        function removeRowFromServiceRoleModal(element) {
+            const parent = $(element).closest("tr");
+            const email = parent.find("input[type=email]").val();
+            serviceAccountContainerEmails.delete(email);
+            parent.remove();
+        }
+    </script>
 
 
 </th:block>
