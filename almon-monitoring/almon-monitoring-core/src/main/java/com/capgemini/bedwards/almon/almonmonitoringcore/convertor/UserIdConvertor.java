@@ -10,12 +10,12 @@ import java.util.UUID;
 
 @Component
 @Slf4j
-public class UserConvertor implements Converter<UUID, User> {
+public class UserIdConvertor implements Converter<UUID, User> {
 
 
     public final UserService USER_SERVICE;
 
-    public UserConvertor(UserService userService) {
+    public UserIdConvertor(UserService userService) {
         this.USER_SERVICE = userService;
     }
 

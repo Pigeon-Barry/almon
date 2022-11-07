@@ -15,10 +15,12 @@ public interface RoleService {
     boolean removeRole(User user, Role role);
 
     List<Role> getAllRoles();
+
     void updateRoles(User user, Map<String, UpdateType> roles);
 
 
     void assignRole(User owner, String... roles);
+
     void assignRole(User owner, Role... roles);
 
     Role createRole(String name, String description, Set<Authority> authorities);
@@ -34,4 +36,6 @@ public interface RoleService {
     void deleteServiceRoles(Service service);
 
     Set<User> getUsersByRole(Role role);
+
+    void assignRoleToUsers(Role role, Set<User> users);
 }

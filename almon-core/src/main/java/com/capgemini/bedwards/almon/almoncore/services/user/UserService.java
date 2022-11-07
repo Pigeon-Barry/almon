@@ -5,6 +5,7 @@ import org.springframework.data.domain.Page;
 
 import javax.validation.constraints.NotNull;
 import java.util.Optional;
+import java.util.Set;
 import java.util.UUID;
 
 public interface UserService {
@@ -21,10 +22,14 @@ public interface UserService {
 
     void disableAccount(@NotNull User authorizer, @NotNull User user);
 
-    User getUserById(UUID userId);
+    User getUserById(@NotNull UUID userId);
 
 
-    User save(User user);
+    User save(@NotNull User user);
 
-    Optional<User> findById(UUID userId);
+    Optional<User> findById(@NotNull UUID userId);
+
+    User getUserByEmail(@NotNull String source);
+
+    Set<User> convertEmailsToUsers(Set<String> admin);
 }

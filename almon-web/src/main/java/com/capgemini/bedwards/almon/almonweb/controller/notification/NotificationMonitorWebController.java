@@ -1,11 +1,11 @@
 package com.capgemini.bedwards.almon.almonweb.controller.notification;
 
-import com.capgemini.bedwards.almon.almoncore.exceptions.NotFoundException;
 import com.capgemini.bedwards.almon.almoncore.intergrations.api.error.ErrorCode;
 import com.capgemini.bedwards.almon.almoncore.intergrations.api.error.ErrorResponse;
 import com.capgemini.bedwards.almon.almoncore.util.SecurityUtil;
 import com.capgemini.bedwards.almon.almondatastore.models.contract.Notification;
 import com.capgemini.bedwards.almon.almondatastore.models.monitor.Monitor;
+import com.capgemini.bedwards.almon.almonweb.controller.WebAPIController;
 import com.capgemini.bedwards.almon.notificationcore.service.NotificationService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,8 +14,10 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.*;
-import org.springframework.web.context.request.WebRequest;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
 
 import javax.validation.Valid;
 
@@ -24,7 +26,7 @@ import javax.validation.Valid;
 @RequestMapping("/web/notification/monitor/{monitorId}")
 @Slf4j
 @PreAuthorize("isAuthenticated()")
-public class NotificationMonitorWebController {
+public class NotificationMonitorWebController extends WebAPIController {
 
     public final NotificationService NOTIFICATION_SERVICE;
 
@@ -70,11 +72,5 @@ public class NotificationMonitorWebController {
             Model model) {
         this.NOTIFICATION_SERVICE.clearSubscriptions(SecurityUtil.getAuthenticatedUser(), monitor);
         return new ResponseEntity<>(null, HttpStatus.OK);
-    }
-
-    @ExceptionHandler(NotFoundException.class)
-    @ResponseStatus(value = HttpStatus.NOT_FOUND)
-    public ResponseEntity<?> notFoundException(NotFoundException exception, WebRequest request) {
-        return new ResponseEntity<>(exception.getMessage(), HttpStatus.NOT_FOUND);
     }
 }

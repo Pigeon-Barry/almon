@@ -236,7 +236,7 @@
                 th:if="${#authorization.expression('hasAuthority(''CREATE_MONITORS'') || hasAuthority(''SERVICE_' + service.getId() + '_CAN_CREATE_ALERTS'')')}"/>
 
         <th:block
-                th:include="fragments/auth/serviceRoleAssignmentModal :: serviceRoleAssignmentModal('updateServiceRolesModel')"
+                th:include="fragments/auth/serviceRoleAssignmentModal :: serviceRoleAssignmentModal('updateServiceRolesModel',${service})"
                 th:if="${#authorization.expression('hasAuthority(''ASSIGN_ROLES'') || hasAuthority(''SERVICE_' + service.getId() + '_CAN_ASSIGN_ROLES'')')}"
         />
     </section>

@@ -14,6 +14,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.HashSet;
+import java.util.Optional;
 import java.util.Set;
 
 @Service
@@ -35,9 +36,9 @@ public class AuthServiceImpl implements AuthService {
 
     @Override
     public User getAuthenticatedUser(String email, String password) {
-        User user = userRepository.findUserByEmail(email);
-        if (user != null && passwordEncoder.matches(password, user.getPassword()))
-            return user;
+        Optional<User> userOptional = userRepository.findUserByEmail(email);
+        if (userOptional.isPresent() && passwordEncoder.matches(password, userOptional.get().getPassword()))
+            return userOptional.get();
         return null;
     }
 

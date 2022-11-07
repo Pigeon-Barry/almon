@@ -72,6 +72,12 @@ public class RoleServiceImpl implements RoleService {
         USER_SERVICE.save(user);
     }
 
+    @Override
+    public void assignRoleToUsers(Role role, Set<User> users) {
+        for (User user : users) {
+            assignRole(user, role);
+        }
+    }
 
     @Override
     public Role createRole(String name, String description, Set<Authority> authorities) {
@@ -103,4 +109,6 @@ public class RoleServiceImpl implements RoleService {
     public Set<User> getUsersByRole(Role role) {
         return role.getUsers();
     }
+
+
 }

@@ -17,6 +17,10 @@ public interface ServiceService {
 
     boolean checkKeyExists(String value);
 
+    void assignAdminRole(Service service, Set<User> users);
+
+    void assignUserRole(Service service, Set<User> users);
+
     Service createService(String id, String name, String description);
 
     Service createService(User owner, String id, String name, String description);
@@ -44,4 +48,6 @@ public interface ServiceService {
     Map<String, Set<User>> getUsersByServiceRole(Service service);
 
     boolean removeUser(Service service, User user);
+
+
 }

@@ -55,7 +55,7 @@ public class MonitorWebConfig implements WebMvcConfigurer {
     @Override
     public void addFormatters(FormatterRegistry registry) {
         registry.addConverter(new MonitorConvertor(MONITOR_SERVICE));
-        registry.addConverter(new UserConvertor(USER_SERVICE));
+        registry.addConverter(new UserIdConvertor(USER_SERVICE));
         registry.addConverter(new ScheduledMonitorConvertor(SCHEDULED_MONITOR_SERVICE));
         registry.addConverter(new MonitorAdapterConvertor(MONITORS));
         registry.addConverter(new ServiceConvertor(SERVICE_SERVICE));

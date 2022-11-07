@@ -126,6 +126,21 @@ public class ServiceServiceImpl implements ServiceService {
     }
 
     @Override
+    public void assignAdminRole(Service service, Set<User> users) {
+        assignUsersRole(users, getOrCreateAdminRole(service));
+        assignUserRole(service, users);
+    }
+
+    @Override
+    public void assignUserRole(Service service, Set<User> users) {
+        assignUsersRole(users, getOrCreateUserRole(service));
+    }
+
+    private void assignUsersRole(Set<User> users, Role role) {
+        ROLE_SERVICE.assignRoleToUsers(role, users);
+    }
+
+    @Override
     public Service createService(String id, String name, String description) {
         log.info("Creating new service with id: " + id + " name: " + name + " description: " + description);
         Service service = SERVICE_REPOSITORY.saveAndFlush(Service.builder()

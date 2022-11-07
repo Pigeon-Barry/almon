@@ -2,7 +2,8 @@
       xmlns:th="http://www.thymeleaf.org" lang="en"
 >
 
-<th:block th:fragment="serviceRoleAssignmentModal(modelId)">
+<th:block th:fragment="serviceRoleAssignmentModal(modelId,service)">
+    <!--/*@thymesVar id="service" type="com.capgemini.bedwards.almon.almondatastore.models.service.Service"*/-->
     <div class="modal fade" th:id="${modelId}" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
          aria-labelledby="staticBackdropLabel" aria-hidden="true">
         <div class="modal-dialog modal-lg modal-dialog-centered modal-dialog-scrollable">
@@ -24,7 +25,7 @@
                             <option value="ADMIN">Admin</option>
                         </select>
                         <button type="button" class="btn btn-primary" onclick="addServiceRoleAccountToModal()"
-                            >Add Account
+                        >Add Account
                         </button>
                     </div>
                     <br>
@@ -36,13 +37,16 @@
                             <th>Delete</th>
                         </tr>
                         </thead>
-                        <tbody th:id="${modelId} + 'AccountContainer'">
-                        </tbody>
+                        <form th:id="${modelId} + 'UpdateServiceRolesForm'">
+                            <tbody th:id="${modelId} + 'AccountContainer'">
+                            </tbody>
+                        </form>
                     </table>
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Cancel</button>
-                    <button type="button" class="btn btn-primary" onclick="saveRoles()">Save</button>
+                    <button type="submit" class="btn btn-primary" th:form="${modelId} + 'UpdateServiceRolesForm'">Save
+                    </button>
                 </div>
             </div>
         </div>
@@ -50,6 +54,7 @@
 
 
     <script>
+        const updateServiceRolesFormElement = $('#[[${modelId}]]UpdateServiceRolesForm');
         const emailBoxElement = $('#[[${modelId}]]EmailBox');
         const emailBoxDomElement = document.getElementById('[[${modelId}]]EmailBox');
         const roleTypeElement = $('#[[${modelId}]]RoleType');
@@ -71,12 +76,12 @@
 
             serviceAccountContainerEmails.add(email);
             emailBoxElement.val("");
-            let appendText = " <tr>\n" +
+            let appendText = " <tr class='item'>\n" +
                 "                            <td>\n" +
-                "                                <input class=\"form-control\" type=\"email\" disabled=\"disabled\"\n" +
+                "                                <input class=\"form-control email\" type=\"email\" disabled=\"disabled\"\n" +
                 "                                       value=\"" + email + "\">\n" +
                 "                            </td>\n" +
-                "                            <td><select class=\"input-group-text\">\n" +
+                "                            <td><select class=\"input-group-text role\">\n" +
                 "                                <option value=\"STANDARD\" " + (roleType === "STANDARD" ? "selected=\"selected\"" : "") + ">Standard</option>\n" +
                 "                                <option value=\"ADMIN\" " + (roleType === "ADMIN" ? "selected=\"selected\"" : "") + ">Admin</option>\n" +
                 "                            </select>\n" +
@@ -102,6 +107,63 @@
             serviceAccountContainerEmails.delete(email);
             parent.remove();
         }
+
+
+        updateServiceRolesFormElement.submit(function (event) {
+                event.preventDefault();
+                if (serviceAccountContainerElement.children().length === 0) {
+                    showPopup("Error", "At least one email must be present");
+                    return;
+                }
+                if (!confirmationPrompt("Service role assignment", "Are you sure you want to update the roles on this service?"))
+                    return;
+
+                const standardUsers = new Set();
+                const adminUsers = new Set();
+
+                serviceAccountContainerElement.find(".item").each(function (i, item) {
+                    console.log(item);
+                    const email = $(item).find('.email').first().val();
+                    const role = $(item).find('.role').first().val();
+
+                    if (role === 'STANDARD')
+                        standardUsers.add(email);
+                    if (role === 'ADMIN')
+                        adminUsers.add(email);
+                });
+
+                const json = {};
+
+                if (adminUsers.size > 0)
+                    json.admin = Array.from(adminUsers);
+                if (standardUsers.size > 0)
+                    json.standard = Array.from(standardUsers);
+
+
+                const url = "/web/service/[[${service.getId()}]]/users";
+                const token = $("meta[name='_csrf']").attr("content");
+                const header = $("meta[name='_csrf_header']").attr("content");
+                $.ajax({
+                    type: 'PUT',
+                    url: url,
+                    contentType: 'application/json',
+                    data: JSON.stringify(json),
+                    beforeSend: function (request) {
+                        request.setRequestHeader(header, token);
+                    },
+                    complete: function (xhr, textStatus) {
+                        if (xhr.status === 200) {
+                            showPopup("Role Update", "Successfully added roles to users");
+                            refreshPage();
+                        } else if (xhr.status === 404) {
+                            showPopup("Error - Not Found", $.parseJSON(xhr.responseText).description);
+                        } else {
+                            showAlertError("Failed to assign user roles. Please consult an administrator");
+                        }
+                    }
+                });
+            }
+        );
     </script>
 
 

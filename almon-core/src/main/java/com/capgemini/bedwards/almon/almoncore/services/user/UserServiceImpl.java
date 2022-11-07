@@ -11,7 +11,9 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import javax.validation.constraints.NotNull;
+import java.util.HashSet;
 import java.util.Optional;
+import java.util.Set;
 import java.util.UUID;
 
 @Service
@@ -80,6 +82,22 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    public User getUserByEmail(String email) {
+        Optional<User> userOptional = USER_REPOSITORY.findUserByEmail(email);
+        if (userOptional.isPresent())
+            return userOptional.get();
+        throw new NotFoundException("User with Email: " + email + " not found");
+    }
+
+    @Override
+    public Set<User> convertEmailsToUsers(Set<String> emails) {
+        Set<User> users = new HashSet<>();
+        for (String email : emails)
+            users.add(getUserByEmail(email));
+        return users;
+    }
+
+    @Override
     public Optional<User> findById(UUID userId) {
         return USER_REPOSITORY.findById(userId);
     }
@@ -89,9 +107,6 @@ public class UserServiceImpl implements UserService {
     public User save(User user) {
         return USER_REPOSITORY.saveAndFlush(user);
     }
-
-
-
 
 
 }
