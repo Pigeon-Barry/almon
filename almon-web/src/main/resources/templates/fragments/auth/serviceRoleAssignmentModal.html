@@ -17,13 +17,14 @@
 
                     <div class="form-group input-group">
                         <input class="form-control" type="email" required th:id="${modelId} + 'EmailBox'"
-                               placeholder="Email...">
+                               placeholder="Email..."
+                               onkeydown="this.setCustomValidity('');">
                         <select class="input-group-text" th:id="${modelId} + 'RoleType'">
                             <option value="STANDARD">Standard</option>
                             <option value="ADMIN">Admin</option>
                         </select>
-                        <button type="button" class="btn btn-primary" onclick="addServiceRoleAccountToModal()">Add
-                            Account
+                        <button type="button" class="btn btn-primary" onclick="addServiceRoleAccountToModal()"
+                            >Add Account
                         </button>
                     </div>
                     <br>
@@ -36,28 +37,6 @@
                         </tr>
                         </thead>
                         <tbody th:id="${modelId} + 'AccountContainer'">
-                        <tr>
-                            <td>
-                                <input class="form-control" type="email" disabled="disabled"
-                                       value="ben.edwards@capgemini.com">
-                            </td>
-                            <td><select class="input-group-text">
-                                <option value="STANDARD">Standard</option>
-                                <option value="ADMIN">Admin</option>
-                            </select>
-                            </td>
-                            <td>
-                                <button type="button" class="btn btn-danger"
-                                        onclick="removeRowFromServiceRoleModal(this)">
-                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16"
-                                         fill="currentColor" class="bi bi-trash" viewBox="0 0 16 16">
-                                        <path d="M5.5 5.5A.5.5 0 0 1 6 6v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm2.5 0a.5.5 0 0 1 .5.5v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm3 .5a.5.5 0 0 0-1 0v6a.5.5 0 0 0 1 0V6z"></path>
-                                        <path fill-rule="evenodd"
-                                              d="M14.5 3a1 1 0 0 1-1 1H13v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V4h-.5a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1H6a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1h3.5a1 1 0 0 1 1 1v1zM4.118 4 4 4.059V13a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V4.059L11.882 4H4.118zM2.5 3V2h11v1h-11z"></path>
-                                    </svg>
-                                </button>
-                            </td>
-                        </tr>
                         </tbody>
                     </table>
                 </div>
@@ -72,6 +51,7 @@
 
     <script>
         const emailBoxElement = $('#[[${modelId}]]EmailBox');
+        const emailBoxDomElement = document.getElementById('[[${modelId}]]EmailBox');
         const roleTypeElement = $('#[[${modelId}]]RoleType');
         const serviceAccountContainerElement = $('#[[${modelId}]]AccountContainer');
         const serviceAccountContainerEmails = new Set();
@@ -79,12 +59,13 @@
         function addServiceRoleAccountToModal() {
             const email = emailBoxElement.val();
             const roleType = roleTypeElement.val();
-            if (!document.getElementById('[[${modelId}]]EmailBox').checkValidity()) {
-                console.log("NOT VALID");//TODO
+            if (!emailBoxDomElement.checkValidity()) {
+                emailBoxDomElement.reportValidity();
                 return;
             }
             if (serviceAccountContainerEmails.has(email)) {
-                console.log("Already has");//TODO
+                emailBoxDomElement.setCustomValidity('This email is already in ths list');
+                emailBoxDomElement.reportValidity();
                 return;
             }
 
