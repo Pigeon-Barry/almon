@@ -22,17 +22,15 @@
                                 <button type="button" class="btn btn-primary">Placeholder</button>
                                 <button type="button" class="btn btn-outline-primary ms-1">Placeholder</button>
                             </div>
-                            <div>
-                                <th:block sec:authorize="hasAuthority('ENABLE_DISABLE_ACCOUNTS')">
+                            <div th:if="${!#authentication.principal.getId().equals(pageUser.getId())}">
+                                <th:block sec:authorize="hasAuthority('ENABLE_DISABLE_ACCOUNTS')" >
                                     <button th:if="${pageUser.isEnabled()}" href="#" class="btn btn-danger mx-2"
                                             th:data-userId="${pageUser.getId()}"
-                                            th:disabled="${#authentication.principal.getId().equals(pageUser.getId())}"
                                             onclick="disableAccount(this.getAttribute('data-userId'),this)"
                                     >Disable Account
                                     </button>
                                     <button th:if="${!pageUser.isEnabled()}" href="#" class="btn btn-success mx-2"
                                             th:data-userId="${pageUser.getId()}"
-                                            th:disabled="${#authentication.principal.getId().equals(pageUser.getId())}"
                                             onclick="enableAccount(this.getAttribute('data-userId'),this)"
                                     >Enable Account
                                     </button>
@@ -144,12 +142,12 @@
         </div>
     </section>
 
-    <th:block th:include="fragments/users/updateRolesModal :: updateRolesModel(${user},${roles},updateRolesModel)"
+    <th:block th:include="fragments/users/updateRolesModal :: updateRolesModel(${pageUser},${roles},updateRolesModel)"
               sec:authorize="hasAuthority('ASSIGN_ROLES')"/>
 
 
     <th:block
-            th:include="fragments/users/updateAuthorityModal :: updateAuthorityModel(${user},${authorities},updateAuthorityModel)"
+            th:include="fragments/users/updateAuthorityModal :: updateAuthorityModel(${pageUser},${authorities},updateAuthorityModel)"
             sec:authorize="hasAuthority('ASSIGN_PERMISSIONS')"/>
 
     <script sec:authorize="hasAuthority('ASSIGN_ROLES')">
