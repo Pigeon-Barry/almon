@@ -1,12 +1,23 @@
 package com.capgemini.bedwards.almon.almondatastore.models.auth;
 
-import lombok.*;
-import org.springframework.lang.Nullable;
-import org.springframework.security.core.GrantedAuthority;
-
-import javax.persistence.*;
 import java.io.Serializable;
 import java.util.Set;
+import javax.persistence.CascadeType;
+import javax.persistence.Embeddable;
+import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToMany;
+import javax.persistence.ManyToOne;
+import javax.persistence.Table;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+import lombok.ToString;
+import org.springframework.lang.Nullable;
+import org.springframework.security.core.GrantedAuthority;
 
 @Entity
 @Data
@@ -19,13 +30,13 @@ public class Authority implements GrantedAuthority {
     private String authority;
     @Nullable
     private String description;
-    @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.REMOVE)
+    @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     private Set<User> users;
 
-    @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.REMOVE)
+    @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     private Set<APIKey> apiKeys;
 
-    @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.REMOVE)
+    @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     private Set<Role> roles;
 
     public Authority() {
