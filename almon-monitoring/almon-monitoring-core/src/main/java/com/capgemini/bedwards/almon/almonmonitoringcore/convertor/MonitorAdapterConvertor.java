@@ -8,17 +8,17 @@ import org.springframework.stereotype.Component;
 
 @Component
 @Slf4j
-public class MonitorAdapterConvertor implements Converter<String, MonitorAdapter> {
+public class MonitorAdapterConvertor implements Converter<String, MonitorAdapter<?, ?>> {
 
 
-    public final Monitors MONITORS;
+  public final Monitors MONITORS;
 
-    public MonitorAdapterConvertor(Monitors monitors) {
-        this.MONITORS = monitors;
-    }
+  public MonitorAdapterConvertor(Monitors monitors) {
+    this.MONITORS = monitors;
+  }
 
-    @Override
-    public MonitorAdapter convert(String source) {
-        return MONITORS.getMonitorAdapterFromId(source);
-    }
+  @Override
+  public MonitorAdapter<?, ?> convert(String source) {
+    return MONITORS.getMonitorAdapterFromId(source);
+  }
 }

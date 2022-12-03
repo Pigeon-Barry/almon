@@ -7,13 +7,13 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 
 @Slf4j
-public abstract class ScheduledAlertServiceImpl<T extends ScheduledAlert>
-        extends AlertServiceImpl<T>
-        implements ScheduledAlertService<T> {
+public abstract class ScheduledAlertServiceBase<T extends ScheduledAlert<?>>
+    extends AlertServiceBase<T>
+    implements ScheduledAlertService<T> {
 
 
     @Autowired
-    public ScheduledAlertServiceImpl(NotificationService notificationService) {
+    public ScheduledAlertServiceBase(NotificationService notificationService) {
         super(notificationService);
     }
 

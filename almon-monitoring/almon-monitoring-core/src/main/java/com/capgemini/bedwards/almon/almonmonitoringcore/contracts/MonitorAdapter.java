@@ -8,14 +8,14 @@ import com.capgemini.bedwards.almon.almondatastore.models.service.Service;
 import com.capgemini.bedwards.almon.almonmonitoringcore.service.alert.AlertService;
 import com.capgemini.bedwards.almon.almonmonitoringcore.service.monitor.MonitorService;
 import com.fasterxml.jackson.databind.node.ObjectNode;
+import java.util.List;
 import org.springframework.data.domain.Page;
 import org.springframework.ui.Model;
 import org.springframework.web.servlet.ModelAndView;
 
-import java.util.List;
 
+public interface MonitorAdapter<T extends Monitor, A extends Alert<?>> {
 
-public interface MonitorAdapter<T extends Monitor, A extends Alert> {
     default String getName() {
         return getId();
     }
@@ -45,8 +45,9 @@ public interface MonitorAdapter<T extends Monitor, A extends Alert> {
 
         AlertSpecification<A> alertSpecification = new AlertSpecification<A>(alertFilterOptions);
 
-        Page<? extends Alert> page = getAlertService().getAlertsPaginated(alertSpecification, alertPageNumber, alertPageSize);
-        List<? extends Alert> listAlerts = page.getContent();
+        Page<? extends Alert<?>> page = getAlertService().getAlertsPaginated(alertSpecification,
+            alertPageNumber, alertPageSize);
+        List<? extends Alert<?>> listAlerts = page.getContent();
         model.addAttribute("currentPage", alertPageNumber);
         model.addAttribute("totalPages", page.getTotalPages());
         model.addAttribute("totalItems", page.getTotalElements());

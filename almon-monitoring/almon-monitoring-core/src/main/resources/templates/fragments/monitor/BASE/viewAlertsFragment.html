@@ -27,7 +27,12 @@
                         <td th:text="${alert.getCreatedAt()}"></td>
                         <td th:text="${alert.getStatus()}"></td>
                         <td class="d-flex justify-content-end">
-                            <a href="#" class="btn btn-primary mx-2">View Details</a>
+                            <a href="#" class="btn btn-primary mx-2"
+                               th:data-serviceId="${service.getId()}"
+                               th:data-monitorId="${monitor.getId()}"
+                               th:data-alertId="${alert.getId().toString()}"
+                               onclick="showAlertDetails(this.getAttribute('data-serviceId'),this.getAttribute('data-monitorId'),this.getAttribute('data-alertId'))"
+                            >View Details</a>
                         </td>
                     </tr>
                     </tbody>
@@ -37,4 +42,40 @@
             </div>
         </div>
     </div>
+
+    <div class="modal fade" id="alertHtmlModal" data-bs-backdrop="static" data-bs-keyboard="false"
+         tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg modal-dialog-centered modal-dialog-scrollable">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="staticBackdropLabel">Monitor Selection</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"
+                            aria-label="Close"></button>
+                </div>
+                <div class="modal-body" id="alertHtmlModalBody">
+                    <p>Placeholder</p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Close
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function showAlertDetails(serviceId, monitorId, alertId) {
+            const url = "/web/service/" + serviceId + "/monitor/" + monitorId + "/alert/" + alertId
+                + "/html"
+
+            fetch(url).then(response => {
+                return response.text();
+            }).then(html => {
+                console.log(html);
+                $('#alertHtmlModalBody').html(html);
+                $('#alertHtmlModal').modal('show');
+            });
+        }
+
+    </script>
 </div>
