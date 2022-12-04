@@ -3,17 +3,21 @@ package com.capgemini.bedwards.almon.notificationstmp;
 import com.capgemini.bedwards.almon.almondatastore.models.alert.Alert;
 import com.capgemini.bedwards.almon.almondatastore.models.auth.User;
 import com.capgemini.bedwards.almon.almondatastore.models.contract.Notification;
-import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
-
-import javax.mail.*;
+import java.util.Properties;
+import java.util.Set;
+import javax.mail.Authenticator;
+import javax.mail.Message;
+import javax.mail.Multipart;
+import javax.mail.PasswordAuthentication;
+import javax.mail.Session;
+import javax.mail.Transport;
 import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeBodyPart;
 import javax.mail.internet.MimeMessage;
 import javax.mail.internet.MimeMultipart;
-import java.util.Properties;
-import java.util.Set;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
 @Slf4j
 @Component
@@ -42,9 +46,12 @@ public class StmpNotification implements Notification {
     }
 
     @Override
-    public void sendNotification(Set<User> subscribedUsers, Alert alert) {
-        for (User user : subscribedUsers)
-            sendEmail(user.getEmail(), alert.getStatus() + " - " + alert.getMonitor().getId() + " - " + alert.getMonitor().getName(), alert.getHTMLMessage());
+    public void sendNotification(Set<User> subscribedUsers, Alert<?> alert) {
+        for (User user : subscribedUsers) {
+            sendEmail(user.getEmail(),
+                alert.getStatus() + " - " + alert.getMonitor().getId() + " - " + alert.getMonitor()
+                    .getName(), alert.getHTMLMessage());
+        }
     }
 
     @Override
