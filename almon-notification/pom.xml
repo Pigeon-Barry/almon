@@ -17,10 +17,12 @@
     <properties>
         <almon-notification-core.version>1.0.0</almon-notification-core.version>
         <almon-notification-stmp.version>1.0.0</almon-notification-stmp.version>
+        <almon-notification-web.version>1.0.0</almon-notification-web.version>
     </properties>
     <modules>
         <module>almon-notification-core</module>
         <module>almon-notification-stmp</module>
+        <module>almon-notification-web</module>
     </modules>
 
     <build>

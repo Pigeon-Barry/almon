@@ -13,6 +13,8 @@ public class Constants {
 
   public static final int MONITOR_ID_MAX_LENGTH = 16;
   public static final int SERVICE_ID_MAX_LENGTH = 16;
+  public static final int ALERT_SHORT_MAX_LENGTH = 1000;
+  public static final int ALERT_LONG_MAX_LENGTH = 3000;
   public static String API_KEY_HEADER = "x-api-key";
 
 }

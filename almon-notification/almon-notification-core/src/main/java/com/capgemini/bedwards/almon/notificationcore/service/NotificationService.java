@@ -18,7 +18,7 @@ public interface NotificationService {
 
     NotificationHelper getNotificationHelper();
 
-    <T extends Alert> void send(T alert);
+    <T extends Alert<?>> void send(T alert);
 
     Notification getNotificationFromId(String source);
 

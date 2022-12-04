@@ -1,6 +1,7 @@
 package com.capgemini.bedwards.almon.almondatastore.models.alert;
 
 import com.capgemini.bedwards.almon.almondatastore.models.monitor.Monitor;
+import com.capgemini.bedwards.almon.almondatastore.util.Constants;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import java.time.LocalDateTime;
 import java.util.UUID;
@@ -24,6 +25,7 @@ import lombok.ToString;
 import lombok.experimental.SuperBuilder;
 import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.Type;
+import org.hibernate.validator.constraints.Length;
 
 @Getter
 @Setter
@@ -60,8 +62,10 @@ public abstract class Alert<M extends Monitor> {
 
     protected String message;
 
+    @Length(max = Constants.ALERT_LONG_MAX_LENGTH)
     public abstract String getLongMessage();
 
+    @Length(max = Constants.ALERT_SHORT_MAX_LENGTH)
     public String getShortMessage() {
         return this.getMessage();
     }

@@ -1,6 +1,7 @@
 package com.capgemini.bedwards.almon.almondatastore.models.notification;
 
 import com.capgemini.bedwards.almon.almondatastore.models.auth.User;
+import com.capgemini.bedwards.almon.almondatastore.util.Constants;
 import java.time.LocalDateTime;
 import java.util.Map;
 import java.util.UUID;
@@ -40,8 +41,10 @@ public class WebNotification {
   protected LocalDateTime createdAt = LocalDateTime.now();
 
   @NotNull
+  @Column(length = Constants.ALERT_SHORT_MAX_LENGTH)
   protected String title;
   @NotNull
+  @Column(length = Constants.ALERT_LONG_MAX_LENGTH)
   protected String message;
 
   @ElementCollection
