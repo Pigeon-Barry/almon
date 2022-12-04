@@ -2,12 +2,15 @@ package com.capgemini.bedwards.almon.almonweb.controller.user;
 
 import com.capgemini.bedwards.almon.almoncore.intergrations.web.WebController;
 import com.capgemini.bedwards.almon.almoncore.services.auth.AuthorityService;
+import com.capgemini.bedwards.almon.almoncore.services.notification.WebNotificationService;
 import com.capgemini.bedwards.almon.almoncore.services.user.RoleService;
 import com.capgemini.bedwards.almon.almoncore.services.user.UserService;
 import com.capgemini.bedwards.almon.almoncore.util.SecurityUtil;
 import com.capgemini.bedwards.almon.almondatastore.models.auth.Authority;
 import com.capgemini.bedwards.almon.almondatastore.models.auth.Role;
 import com.capgemini.bedwards.almon.almondatastore.models.auth.User;
+import java.util.List;
+import javax.servlet.http.HttpServletRequest;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -20,20 +23,20 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
-import javax.servlet.http.HttpServletRequest;
-import java.util.List;
-
 @Controller
 @RequestMapping("/web/user/{userId}")
 @Slf4j
 @PreAuthorize("isAuthenticated()")
-public class UserWebController  extends WebController {
+public class UserWebController extends WebController {
+
     @Autowired
     UserService userService;
     @Autowired
     AuthorityService authorityService;
     @Autowired
     RoleService roleService;
+    @Autowired
+    WebNotificationService webNotificationService;
 
     @GetMapping()
 
@@ -44,6 +47,7 @@ public class UserWebController  extends WebController {
         model.addAttribute("roles", roles);
         model.addAttribute("pageUser", user);
         model.addAttribute("authorities", authorities);
+        model.addAttribute("webNotifications", webNotificationService.getNotifications(user));
         return "users/user";
     }
 

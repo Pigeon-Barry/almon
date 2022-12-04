@@ -39,3 +39,7 @@
 .primary-tooltip {
     --bs-tooltip-bg: var(--bs-primary);
 }
+
+.start-90 {
+    left: 90% !important
+}

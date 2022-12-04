@@ -5,6 +5,8 @@
 <div th:fragment="user">
     <!--/*@thymesVar id="pageUser" type="com.capgemini.bedwards.almon.almondatastore.models.auth.User"*/-->
     <!--/*@thymesVar id="authority" type="com.capgemini.bedwards.almon.almondatastore.models.auth.Authority"*/-->
+    <!--/*@thymesVar id="webNotifications" type="java.util.List"*/-->
+    <!--/*@thymesVar id="webNotification" type="com.capgemini.bedwards.almon.almondatastore.models.notification.WebNotification"*/-->
     <!--/*@thymesVar id="roles" type="java.util.List"*/-->
     <section style="background-color: #eee;">
         <div class="container py-5">
@@ -126,12 +128,23 @@
                                 <div class="card-body">
                                     <ul class="list-group list-group-flush rounded-3">
                                         <li class="list-group-item d-flex justify-content-start align-items-center p-3">
-                                            <p class="mb-0"><strong>Alert Subscriptions</strong></p>
+                                            <p class="mb-0"><strong>Notifications</strong></p>
                                         </li>
-                                        <!--                                    <li class="list-group-item d-flex justify-content-start p-3" th:each="role : ${user.getRoles()}">-->
-                                        <!--                                        <i class="fab fa-github fa-lg" style="color: #333333;"></i>-->
-                                        <!--                                        <p class="mb-0" th:text="${role.getName()}"></p>-->
-                                        <!--                                    </li>-->
+                                        <li th:each="webNotification : ${webNotifications}"
+                                            class="list-group-item p-3">
+                                            <div class="card">
+                                                <div class="card-body">
+                                                    <h5 class="card-title"
+                                                        th:text="${webNotification.getTitle()}"></h5>
+                                                    <p class="card-text"
+                                                       th:text="${webNotification.getMessage()}"></p>
+                                                    <p class="card-text"><small class="text-muted"
+                                                                                th:text="${#temporals.format(webNotification.getCreatedAt(), 'yyyy-MM-dd : hh:mm:ss a')}"></small>
+                                                    </p>
+
+                                                </div>
+                                        </li>
+
                                     </ul>
                                 </div>
                             </div>

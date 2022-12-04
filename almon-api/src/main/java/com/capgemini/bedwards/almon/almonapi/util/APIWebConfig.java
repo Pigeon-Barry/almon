@@ -5,11 +5,13 @@ import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 @Configuration
-public class WebConfig implements WebMvcConfigurer {
+public class APIWebConfig implements WebMvcConfigurer {
 
     @Override
     public void addInterceptors(final InterceptorRegistry registry) {
-        registry.addInterceptor(new CorrelationIdInterceptor());
+        registry.addInterceptor(new CorrelationIdInterceptor())
+            .addPathPatterns("/api/**");
+        ;
     }
 
 }
