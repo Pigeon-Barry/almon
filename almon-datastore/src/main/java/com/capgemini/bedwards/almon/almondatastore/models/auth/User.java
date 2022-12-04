@@ -87,4 +87,21 @@ public class User {
   public boolean isAuthorityFromRole(Authority authority) {
     return getRoles().stream().anyMatch(role -> role.getAuthorities().contains(authority));
   }
+
+  @Override
+  public boolean equals(Object o) {
+    if (this == o) {
+      return true;
+    }
+    if (o == null || getClass() != o.getClass()) {
+      return false;
+    }
+    User user = (User) o;
+    return id.equals(user.id);
+  }
+
+  @Override
+  public int hashCode() {
+    return id.hashCode();
+  }
 }

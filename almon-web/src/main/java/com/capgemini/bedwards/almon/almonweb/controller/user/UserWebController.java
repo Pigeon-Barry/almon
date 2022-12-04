@@ -9,10 +9,12 @@ import com.capgemini.bedwards.almon.almoncore.util.SecurityUtil;
 import com.capgemini.bedwards.almon.almondatastore.models.auth.Authority;
 import com.capgemini.bedwards.almon.almondatastore.models.auth.Role;
 import com.capgemini.bedwards.almon.almondatastore.models.auth.User;
+import com.capgemini.bedwards.almon.almondatastore.models.notification.WebNotification;
 import java.util.List;
 import javax.servlet.http.HttpServletRequest;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -22,6 +24,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
 @Controller
 @RequestMapping("/web/user/{userId}")
@@ -41,13 +44,24 @@ public class UserWebController extends WebController {
     @GetMapping()
 
     @PreAuthorize("hasAuthority('VIEW_ALL_USERS') || #user.id == authentication.principal.id")
-    public String getUserList(@PathVariable(name = "userId") User user, Model model) {
+    public String getUserList(@PathVariable(name = "userId") User user,
+        @RequestParam(defaultValue = "1") int notificationPageNumber,
+        @RequestParam(defaultValue = "25") int notificationPageSize,
+        Model model) {
         List<Role> roles = roleService.getAllRoles();
         List<Authority> authorities = authorityService.getAllAuthorities();
         model.addAttribute("roles", roles);
         model.addAttribute("pageUser", user);
         model.addAttribute("authorities", authorities);
-        model.addAttribute("webNotifications", webNotificationService.getNotifications(user));
+
+        Page<WebNotification> page = webNotificationService.getNotifications(user,
+            notificationPageNumber, notificationPageSize);
+
+        model.addAttribute("currentPage", notificationPageNumber);
+        model.addAttribute("totalPages", page.getTotalPages());
+        model.addAttribute("totalItems", page.getTotalElements());
+        model.addAttribute("webNotifications", page.getContent());
+        model.addAttribute("pageSize", notificationPageSize);
         return "users/user";
     }
 

@@ -3,235 +3,291 @@
       xmlns:th="http://www.thymeleaf.org" lang="en"
       xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 <div th:fragment="user">
-    <!--/*@thymesVar id="pageUser" type="com.capgemini.bedwards.almon.almondatastore.models.auth.User"*/-->
-    <!--/*@thymesVar id="authority" type="com.capgemini.bedwards.almon.almondatastore.models.auth.Authority"*/-->
-    <!--/*@thymesVar id="webNotifications" type="java.util.List"*/-->
-    <!--/*@thymesVar id="webNotification" type="com.capgemini.bedwards.almon.almondatastore.models.notification.WebNotification"*/-->
-    <!--/*@thymesVar id="roles" type="java.util.List"*/-->
-    <section style="background-color: #eee;">
-        <div class="container py-5">
-            <div class="row">
-                <div class="col-lg-4">
-                    <div class="card mb-4">
-                        <div class="card-body text-center">
-                            <img th:src="${pageUser.getProfilePicture()}"
-                                 alt="avatar"
-                                 class="rounded-circle img-fluid" style="width: 150px;">
-                            <h5 class="my-3" th:text="${pageUser.getFullName()}"></h5>
-                            <!--                        <p class="text-muted mb-1">Placeholder</p>-->
-                            <!--                        <p class="text-muted mb-4">Placeholder</p>-->
-                            <div class="d-flex justify-content-center mb-2">
-                                <button type="button" class="btn btn-primary">Placeholder</button>
-                                <button type="button" class="btn btn-outline-primary ms-1">Placeholder</button>
-                            </div>
-                            <div th:if="${!#authentication.principal.getId().equals(pageUser.getId())}">
-                                <th:block sec:authorize="hasAuthority('ENABLE_DISABLE_ACCOUNTS')" >
-                                    <button th:if="${pageUser.isEnabled()}" href="#" class="btn btn-danger mx-2"
-                                            th:data-userId="${pageUser.getId()}"
-                                            onclick="disableAccount(this.getAttribute('data-userId'),this)"
-                                    >Disable Account
-                                    </button>
-                                    <button th:if="${!pageUser.isEnabled()}" href="#" class="btn btn-success mx-2"
-                                            th:data-userId="${pageUser.getId()}"
-                                            onclick="enableAccount(this.getAttribute('data-userId'),this)"
-                                    >Enable Account
-                                    </button>
-                                </th:block>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="card mb-4 mb-lg-0">
-                        <div class="card-body p-0">
-                            <ul class="list-group list-group-flush rounded-3">
-                                <li class="list-group-item d-flex justify-content-between align-items-center">
-                                    <p class="mb-0"><strong>Roles</strong></p>
-                                    <div class="justify-content-end" sec:authorize="hasAuthority('ASSIGN_ROLES')">
-                                        <button class="btn btn-primary" type="button"
-                                                data-bs-toggle="modal" data-bs-target="#updateRolesModel">Add Role
-                                        </button>
-                                    </div>
-                                </li>
-                                <li class="list-group-item d-flex justify-content-between"
-                                    th:each="role : ${pageUser.getRoles()}"
-                                    th:id="'roleContainer_' + ${role.getName()}">
-                                    <p class="mb-0" th:text="${role.getName()}"></p>
-                                    <div class="justify-content-end" sec:authorize="hasAuthority('ASSIGN_ROLES')">
-                                        <button type="button" class="btn btn-danger"
-                                                th:data-role="${role.getName()}"
-                                                onclick="deleteRole(this.getAttribute('data-role'))">
-                                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16"
-                                                 fill="currentColor" class="bi bi-trash" viewBox="0 0 16 16">
-                                                <path d="M5.5 5.5A.5.5 0 0 1 6 6v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm2.5 0a.5.5 0 0 1 .5.5v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm3 .5a.5.5 0 0 0-1 0v6a.5.5 0 0 0 1 0V6z"></path>
-                                                <path fill-rule="evenodd"
-                                                      d="M14.5 3a1 1 0 0 1-1 1H13v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V4h-.5a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1H6a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1h3.5a1 1 0 0 1 1 1v1zM4.118 4 4 4.059V13a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V4.059L11.882 4H4.118zM2.5 3V2h11v1h-11z"></path>
-                                            </svg>
-                                        </button>
-                                    </div>
-                                </li>
-                            </ul>
-                        </div>
-                    </div>
-                    <br>
-                    <div class="card mb-4 mb-lg-0" sec:authorize="hasAuthority('ASSIGN_PERMISSIONS')">
-                        <div class="card-body p-0">
-                            <ul class="list-group list-group-flush rounded-3">
-                                <li class="list-group-item d-flex justify-content-between align-items-center">
-                                    <p class="mb-0"><strong>Permissions</strong></p>
-                                    <div class="justify-content-end">
-                                        <button class="btn btn-primary" type="button"
-                                                data-bs-toggle="modal" data-bs-target="#updateAuthorityModel">View
-                                            Permission
-                                        </button>
-                                    </div>
-                                </li>
-                                <li class="list-group-item"   th:each="authority : ${pageUser.getAuthorities()}">
-                                    <p class="mb-0" th:text="${authority.getAuthority()}"></p>
-                                </li>
-                            </ul>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-lg-8">
-                    <div class="card mb-4">
-                        <div class="card-body">
-                            <div class="row">
-                                <div class="col-sm-3">
-                                    <p class="mb-0">Full Name</p>
-                                </div>
-                                <div class="col-sm-9">
-                                    <p class="text-muted mb-0" th:text="${pageUser.getFullName()}"></p>
-                                </div>
-                            </div>
-                            <hr>
-                            <div class="row">
-                                <div class="col-sm-3">
-                                    <p class="mb-0">Email</p>
-                                </div>
-                                <div class="col-sm-9">
-                                    <p class="text-muted mb-0" th:text="${pageUser.email}"></p>
-                                </div>
-                            </div>
-                            <hr>
-                            <div class="row">
-                                <div class="col-sm-3">
-                                    <p class="mb-0">Phone</p>
-                                </div>
-                                <div class="col-sm-9">
-                                    <p class="text-muted mb-0" th:text="${pageUser.phoneNumber ?: 'N.A'}"></p>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="col-md-12">
-                            <div class="card mb-4 mb-md-0">
-                                <div class="card-body">
-                                    <ul class="list-group list-group-flush rounded-3">
-                                        <li class="list-group-item d-flex justify-content-start align-items-center p-3">
-                                            <p class="mb-0"><strong>Notifications</strong></p>
-                                        </li>
-                                        <li th:each="webNotification : ${webNotifications}"
-                                            class="list-group-item p-3">
-                                            <div class="card">
-                                                <div class="card-body">
-                                                    <h5 class="card-title"
-                                                        th:text="${webNotification.getTitle()}"></h5>
-                                                    <p class="card-text"
-                                                       th:text="${webNotification.getMessage()}"></p>
-                                                    <p class="card-text"><small class="text-muted"
-                                                                                th:text="${#temporals.format(webNotification.getCreatedAt(), 'yyyy-MM-dd : hh:mm:ss a')}"></small>
-                                                    </p>
-
-                                                </div>
-                                        </li>
-
-                                    </ul>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
+  <!--/*@thymesVar id="pageUser" type="com.capgemini.bedwards.almon.almondatastore.models.auth.User"*/-->
+  <!--/*@thymesVar id="authority" type="com.capgemini.bedwards.almon.almondatastore.models.auth.Authority"*/-->
+  <!--/*@thymesVar id="webNotifications" type="java.util.List"*/-->
+  <!--/*@thymesVar id="webNotification" type="com.capgemini.bedwards.almon.almondatastore.models.notification.WebNotification"*/-->
+  <!--/*@thymesVar id="roles" type="java.util.List"*/-->
+  <section style="background-color: #eee;">
+    <div class="container py-5">
+      <div class="row">
+        <div class="col-lg-4">
+          <div class="card mb-4">
+            <div class="card-body text-center">
+              <img th:src="${pageUser.getProfilePicture()}"
+                   alt="avatar"
+                   class="rounded-circle img-fluid" style="width: 150px;">
+              <h5 class="my-3" th:text="${pageUser.getFullName()}"></h5>
+              <!--                        <p class="text-muted mb-1">Placeholder</p>-->
+              <!--                        <p class="text-muted mb-4">Placeholder</p>-->
+              <div class="d-flex justify-content-center mb-2">
+                <button type="button" class="btn btn-primary">Placeholder</button>
+                <button type="button" class="btn btn-outline-primary ms-1">Placeholder</button>
+              </div>
+              <div th:if="${!#authentication.principal.getId().equals(pageUser.getId())}">
+                <th:block sec:authorize="hasAuthority('ENABLE_DISABLE_ACCOUNTS')">
+                  <button th:if="${pageUser.isEnabled()}" href="#" class="btn btn-danger mx-2"
+                          th:data-userId="${pageUser.getId()}"
+                          onclick="disableAccount(this.getAttribute('data-userId'),this)"
+                  >Disable Account
+                  </button>
+                  <button th:if="${!pageUser.isEnabled()}" href="#" class="btn btn-success mx-2"
+                          th:data-userId="${pageUser.getId()}"
+                          onclick="enableAccount(this.getAttribute('data-userId'),this)"
+                  >Enable Account
+                  </button>
+                </th:block>
+              </div>
             </div>
+          </div>
+          <div class="card mb-4 mb-lg-0">
+            <div class="card-body p-0">
+              <ul class="list-group list-group-flush rounded-3">
+                <li class="list-group-item d-flex justify-content-between align-items-center">
+                  <p class="mb-0"><strong>Roles</strong></p>
+                  <div class="justify-content-end" sec:authorize="hasAuthority('ASSIGN_ROLES')">
+                    <button class="btn btn-primary" type="button"
+                            data-bs-toggle="modal" data-bs-target="#updateRolesModel">Add Role
+                    </button>
+                  </div>
+                </li>
+                <li class="list-group-item d-flex justify-content-between"
+                    th:each="role : ${pageUser.getRoles()}"
+                    th:id="'roleContainer_' + ${role.getName()}">
+                  <p class="mb-0" th:text="${role.getName()}"></p>
+                  <div class="justify-content-end" sec:authorize="hasAuthority('ASSIGN_ROLES')">
+                    <button type="button" class="btn btn-danger"
+                            th:data-role="${role.getName()}"
+                            onclick="deleteRole(this.getAttribute('data-role'))">
+                      <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16"
+                           fill="currentColor" class="bi bi-trash" viewBox="0 0 16 16">
+                        <path
+                            d="M5.5 5.5A.5.5 0 0 1 6 6v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm2.5 0a.5.5 0 0 1 .5.5v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm3 .5a.5.5 0 0 0-1 0v6a.5.5 0 0 0 1 0V6z"></path>
+                        <path fill-rule="evenodd"
+                              d="M14.5 3a1 1 0 0 1-1 1H13v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V4h-.5a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1H6a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1h3.5a1 1 0 0 1 1 1v1zM4.118 4 4 4.059V13a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V4.059L11.882 4H4.118zM2.5 3V2h11v1h-11z"></path>
+                      </svg>
+                    </button>
+                  </div>
+                </li>
+              </ul>
+            </div>
+          </div>
+          <br>
+          <div class="card mb-4 mb-lg-0" sec:authorize="hasAuthority('ASSIGN_PERMISSIONS')">
+            <div class="card-body p-0">
+              <ul class="list-group list-group-flush rounded-3">
+                <li class="list-group-item d-flex justify-content-between align-items-center">
+                  <p class="mb-0"><strong>Permissions</strong></p>
+                  <div class="justify-content-end">
+                    <button class="btn btn-primary" type="button"
+                            data-bs-toggle="modal" data-bs-target="#updateAuthorityModel">View
+                      Permission
+                    </button>
+                  </div>
+                </li>
+                <li class="list-group-item" th:each="authority : ${pageUser.getAuthorities()}">
+                  <p class="mb-0" th:text="${authority.getAuthority()}"></p>
+                </li>
+              </ul>
+            </div>
+          </div>
         </div>
-    </section>
+        <div class="col-lg-8">
+          <div class="card mb-4">
+            <div class="card-body">
+              <div class="row">
+                <div class="col-sm-3">
+                  <p class="mb-0">Full Name</p>
+                </div>
+                <div class="col-sm-9">
+                  <p class="text-muted mb-0" th:text="${pageUser.getFullName()}"></p>
+                </div>
+              </div>
+              <hr>
+              <div class="row">
+                <div class="col-sm-3">
+                  <p class="mb-0">Email</p>
+                </div>
+                <div class="col-sm-9">
+                  <p class="text-muted mb-0" th:text="${pageUser.email}"></p>
+                </div>
+              </div>
+              <hr>
+              <div class="row">
+                <div class="col-sm-3">
+                  <p class="mb-0">Phone</p>
+                </div>
+                <div class="col-sm-9">
+                  <p class="text-muted mb-0" th:text="${pageUser.phoneNumber ?: 'N.A'}"></p>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="row" th:if="${#authentication.principal.getId().equals(pageUser.getId())}">
+            <div class="col-md-12">
+              <div class="card mb-4 mb-md-0">
+                <div class="card-body">
+                  <ul class="list-group list-group-flush rounded-3">
+                    <li class="list-group-item d-flex justify-content-start align-items-center p-3">
+                      <p class="mb-0"><strong>Notifications</strong></p>
+                    </li>
+                    <li class="list-group-item p-3">
+                      <div class="accordion" id="accordionNotifications">
+                        <div class="accordion-item" th:each="webNotification : ${webNotifications}"
+                             th:id="${'notification-' + webNotification.getId()}">
+                          <h2 class="accordion-header"
+                              th:id="${'notification-header-' + webNotification.getId()}">
+                            <button
+                                th:id="${'notification-header-btn-' + webNotification.getId()}"
+                                th:class="${'accordion-button collapsed ' + (webNotification.getSentTO().get(pageUser) ? '' :'bg-info')}"
+                                type="button"
+                                data-bs-toggle="collapse"
+                                th:data-bs-target="${'#notification-collapse-' + webNotification.getId()}"
+                                th:data-notificationId="${webNotification.getSentTO().get(pageUser) ? null :webNotification.getId()}"
+                                onclick="readNotification(this.getAttribute('data-notificationId'))"
+                                th:text="${webNotification.getTitle()}"/>
+                          </h2>
+                          <div th:id="${'notification-collapse-' + webNotification.getId()}"
+                               class="accordion-collapse collapse">
+                            <div class="accordion-body">
+                              <p th:text="${webNotification.getMessage()}"/>
+                              <small class="text-muted"
+                                     th:text="${#temporals.format(webNotification.getCreatedAt(), 'yyyy-MM-dd : hh:mm:ss a')}"></small>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </li>
+                    <th:block
+                        th:insert="fragments/util/pagintation :: standard('Notifications','notification')"/>
+                  </ul>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
 
-    <th:block th:include="fragments/users/updateRolesModal :: updateRolesModel(${pageUser},${roles},updateRolesModel)"
-              sec:authorize="hasAuthority('ASSIGN_ROLES')"/>
+  <th:block
+      th:include="fragments/users/updateRolesModal :: updateRolesModel(${pageUser},${roles},updateRolesModel)"
+      sec:authorize="hasAuthority('ASSIGN_ROLES')"/>
 
 
-    <th:block
-            th:include="fragments/users/updateAuthorityModal :: updateAuthorityModel(${pageUser},${authorities},updateAuthorityModel)"
-            sec:authorize="hasAuthority('ASSIGN_PERMISSIONS')"/>
+  <th:block
+      th:include="fragments/users/updateAuthorityModal :: updateAuthorityModel(${pageUser},${authorities},updateAuthorityModel)"
+      sec:authorize="hasAuthority('ASSIGN_PERMISSIONS')"/>
 
-    <script sec:authorize="hasAuthority('ASSIGN_ROLES')">
-        const userId = "[[${pageUser.getId()}]]";
 
-        function deleteRole(role) {
-            if (!confirmationPrompt("Role Deletion", "Are you sure you want remove role " + role + " form user [[${user.getEmail()}]]"))
-                return;
+  <script>
 
-            const url = "/web/user/" + userId + "/roles/" + role;
-            const token = $("meta[name='_csrf']").attr("content");
-            const header = $("meta[name='_csrf_header']").attr("content");
-            $.ajax({
-                type: 'DELETE',
-                url: url,
-                beforeSend: function (request) {
-                    request.setRequestHeader(header, token);
-                },
-                complete: function (xhr, textStatus) {
-                    console.log(xhr.status);
-                    if (xhr.status === 202) {
-                        refreshPage();
-                    } else {
-                        showAlertError("Failed to remove role. Please consult an administrator");
-                    }
-                }
-            });
+    function readNotification(notificationId) {
+      if (notificationId == null) {
+        return;
+      }
+      console.log("Read: " + notificationId);
+
+      const url = "/web/notification/" + notificationId + "/read";
+      const token = $("meta[name='_csrf']").attr("content");
+      const header = $("meta[name='_csrf_header']").attr("content");
+
+      $.ajax({
+        type: 'PUT',
+        url: url,
+        xhrFields: {
+          withCredentials: true
+        },
+        beforeSend: function (request) {
+          request.setRequestHeader(header, token);
+        },
+        complete: function (xhr, textStatus) {
+          if (xhr.status === 200) {
+            const btn = $("#notification-header-btn-" + notificationId);
+            btn.removeAttr("data-notificationId");
+            btn.removeClass("bg-info");
+          } else {
+            showAlertError("Failed to mark notification as read. Please consult an administrator");
+          }
         }
-    </script>
-    <script sec:authorize="hasAuthority('ENABLE_DISABLE_ACCOUNTS')">
-        function disableAccount(userId, domElement) {
-            updateEnableStatus(domElement, userId, false);
+      });
+    }
+
+  </script>
+
+  <script sec:authorize="hasAuthority('ASSIGN_ROLES')">
+    const userId = "[[${pageUser.getId()}]]";
+
+    function deleteRole(role) {
+      if (!confirmationPrompt("Role Deletion",
+          "Are you sure you want remove role " + role + " form user [[${user.getEmail()}]]")) {
+        return;
+      }
+
+      const url = "/web/user/" + userId + "/roles/" + role;
+      const token = $("meta[name='_csrf']").attr("content");
+      const header = $("meta[name='_csrf_header']").attr("content");
+      $.ajax({
+        type: 'DELETE',
+        url: url,
+        beforeSend: function (request) {
+          request.setRequestHeader(header, token);
+        },
+        complete: function (xhr, textStatus) {
+          console.log(xhr.status);
+          if (xhr.status === 202) {
+            refreshPage();
+          } else {
+            showAlertError("Failed to remove role. Please consult an administrator");
+          }
         }
+      });
+    }
+  </script>
+  <script sec:authorize="hasAuthority('ENABLE_DISABLE_ACCOUNTS')">
+    function disableAccount(userId, domElement) {
+      updateEnableStatus(domElement, userId, false);
+    }
 
-        function enableAccount(userId, domElement) {
-            updateEnableStatus(domElement, userId, true);
+    function enableAccount(userId, domElement) {
+      updateEnableStatus(domElement, userId, true);
+    }
+
+    function updateEnableStatus(domElement, userId, enabled) {
+      const suffix = enabled ? "enable" : "disable";
+
+      if (!confirmationPrompt(suffix + " - Account",
+          "Are you sure you want to " + suffix + " this account?")) {
+        return;
+      }
+
+      const url = "/web/user/" + userId + "/" + suffix;
+      const token = $("meta[name='_csrf']").attr("content");
+      const header = $("meta[name='_csrf_header']").attr("content");
+      $.ajax({
+        type: 'PUT',
+        url: url,
+        beforeSend: function (request) {
+          request.setRequestHeader(header, token);
+        },
+        complete: function (xhr, textStatus) {
+          if (xhr.status === 202) {
+            showAlertSuccess("Account Successfully " + suffix + "d.");
+            const dom = $(domElement);
+            if (enabled) {
+              dom.removeClass("btn-success").addClass("btn-danger");
+              dom.attr("onclick", "disableAccount(this.getAttribute('data-userId'),this)");
+              dom.text("Disable Account")
+            } else {
+              dom.removeClass("btn-danger").addClass("btn-success");
+              dom.attr("onclick", "enableAccount(this.getAttribute('data-userId'),this)");
+              dom.text("Enable Account")
+            }
+          } else {
+            showAlertError("Failed to " + suffix + " account. Please consult an administrator");
+          }
         }
-
-        function updateEnableStatus(domElement, userId, enabled) {
-            const suffix = enabled ? "enable" : "disable";
-
-            if (!confirmationPrompt(suffix + " - Account", "Are you sure you want to " + suffix + " this account?"))
-                return;
-
-            const url = "/web/user/" + userId + "/" + suffix;
-            const token = $("meta[name='_csrf']").attr("content");
-            const header = $("meta[name='_csrf_header']").attr("content");
-            $.ajax({
-                type: 'PUT',
-                url: url,
-                beforeSend: function (request) {
-                    request.setRequestHeader(header, token);
-                },
-                complete: function (xhr, textStatus) {
-                    if (xhr.status === 202) {
-                        showAlertSuccess("Account Successfully " + suffix + "d.");
-                        const dom = $(domElement);
-                        if (enabled) {
-                            dom.removeClass("btn-success").addClass("btn-danger");
-                            dom.attr("onclick", "disableAccount(this.getAttribute('data-userId'),this)");
-                            dom.text("Disable Account")
-                        } else {
-                            dom.removeClass("btn-danger").addClass("btn-success");
-                            dom.attr("onclick", "enableAccount(this.getAttribute('data-userId'),this)");
-                            dom.text("Enable Account")
-                        }
-                    } else {
-                        showAlertError("Failed to " + suffix + " account. Please consult an administrator");
-                    }
-                }
-            });
-        }
-    </script>
+      });
+    }
+  </script>
 </div>

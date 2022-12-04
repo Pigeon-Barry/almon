@@ -4,6 +4,8 @@ import com.capgemini.bedwards.almon.almondatastore.models.auth.User;
 import com.capgemini.bedwards.almon.almondatastore.models.notification.WebNotification;
 import java.util.List;
 import java.util.UUID;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
@@ -13,4 +15,7 @@ public interface WebNotificationRepository extends JpaRepository<WebNotification
 
   @Query("select wn from WebNotification wn where ?1 in (KEY(wn.sentTO)) ORDER BY wn.createdAt DESC")
   List<WebNotification> findAllByUser(User user);
+
+  @Query("select wn from WebNotification wn where ?1 in (KEY(wn.sentTO)) ORDER BY wn.createdAt DESC")
+  Page<WebNotification> findAllByUser(User user, Pageable pageable);
 }

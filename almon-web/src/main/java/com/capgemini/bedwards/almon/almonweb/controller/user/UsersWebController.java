@@ -3,6 +3,7 @@ package com.capgemini.bedwards.almon.almonweb.controller.user;
 import com.capgemini.bedwards.almon.almoncore.intergrations.web.WebController;
 import com.capgemini.bedwards.almon.almoncore.services.user.UserService;
 import com.capgemini.bedwards.almon.almondatastore.models.auth.User;
+import java.util.List;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -12,8 +13,6 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
-
-import java.util.List;
 
 @Controller
 @RequestMapping("/web/users")
@@ -29,11 +28,7 @@ public class UsersWebController  extends WebController {
                               @RequestParam(defaultValue = "25") int userPageSize,
                               @RequestParam(required = false) String enabled,
                               Model model) {
-        log.info("enabled: " + enabled);
-
         Boolean enabledVal = enabled == null || enabled.equalsIgnoreCase("false") == enabled.equalsIgnoreCase("true") ? null : Boolean.parseBoolean(enabled);
-
-
         Page<User> page = userService.findPaginatedWithFilter(userPageNumber, userPageSize, enabledVal);
         List<User> listUsers = page.getContent();
 
