@@ -11,6 +11,6 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface WebNotificationRepository extends JpaRepository<WebNotification, UUID> {
 
-  @Query("select wn from WebNotification wn where ?1 in (KEY(wn.sentTO))")
+  @Query("select wn from WebNotification wn where ?1 in (KEY(wn.sentTO)) ORDER BY wn.createdAt DESC")
   List<WebNotification> findAllByUser(User user);
 }
