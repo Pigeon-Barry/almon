@@ -83,13 +83,21 @@
                     <div class="card mb-4">
                         <div class="card-body">
                             <th:block
-                                    th:include="fragments/monitor/BASE/viewScheduledMonitorDetailFragmentTop :: viewDetails(${service},${monitor})"/>
+                                th:include="fragments/monitor/BASE/viewScheduledMonitorDetailFragmentTop :: viewDetails(${service},${monitor})"/>
                             <th:block th:if="${monitorInfoContentFragment}!=null">
                                 <th:block th:insert="__${monitorInfoContentFragment}__"/>
                             </th:block>
                         </div>
                     </div>
-                    <th:block th:include="fragments/monitor/BASE/viewAlertsFragment :: viewAlerts(${listAlerts})"/>
+                    <th:block
+                        th:include="fragments/monitor/BASE/viewAlertsFragment :: viewAlerts(${listAlerts})"/>
+                </div>
+            </div>
+            <br>
+            <div class="row">
+                <div class="col-12">
+                    <th:block
+                        th:include="fragments/monitor/BASE/viewMonitorChartsFragment :: viewCharts(${chartData})"/>
                 </div>
             </div>
         </div>

@@ -5,11 +5,10 @@ import com.capgemini.bedwards.almon.almoncore.services.service.ServiceService;
 import com.capgemini.bedwards.almon.almondatastore.models.schedule.ScheduledMonitor;
 import com.capgemini.bedwards.almon.almondatastore.models.schedule.Scheduler;
 import com.capgemini.bedwards.almon.almonmonitoringcore.repository.monitor.ScheduledMonitorTypeRepository;
+import javax.validation.constraints.NotNull;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
-
-import javax.validation.constraints.NotNull;
 
 ;
 
@@ -24,12 +23,20 @@ public abstract class ScheduledMonitorServiceBase<T extends ScheduledMonitor>
 
     @Autowired
     public ScheduledMonitorServiceBase(
-            AuthorityService authorityService,
-            ServiceService serviceService) {
+        AuthorityService authorityService,
+        ServiceService serviceService) {
         super(authorityService, serviceService);
     }
 
     protected abstract ScheduledMonitorTypeRepository<T> getRepository();
+
+
+    @Override
+    public T save(T monitorType) {
+        T response = getRepository().save(monitorType);
+        SCHEDULER.refreshTask(response.getScheduledTask());
+        return response;
+    }
 
     @Override
     public void enable(T monitor) {

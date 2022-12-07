@@ -1,0 +1,79 @@
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org" lang="en"
+>
+<div class="row" th:fragment="viewCharts(chartData)">
+  <!--/*@thymesVar id="alerts" type="java.util.List"*/-->
+  <!--/*@thymesVar id="alert" type="com.capgemini.bedwards.almon.almondatastore.models.alert.Alert"*/-->
+  <div class="col-md-12">
+    <div class="card mb-4 mb-md-0">
+      <div class="card-title">
+        <ul class="list-group list-group-flush rounded-3">
+          <li class="list-group-item d-flex justify-content-between align-items-center p-3">
+            <p class="mb-0"><strong>Charts</strong></p>
+          </li>
+        </ul>
+      </div>
+      <div class="card-body row col-12" style="height: auto">
+        <h2>Alert Status Over time</h2>
+        <canvas id="chart-status-over-time"></canvas>
+      </div>
+    </div>
+  </div>
+
+
+  <script th:inline="javascript">
+    /*<![CDATA[*/
+
+    const ctx = document.getElementById('chart-status-over-time');
+
+    new Chart(ctx, {
+      type: 'bar',
+      data: {
+        labels: [
+          /*[# th:each="item : ${chartData}"]*/
+          [[${item.createdAt}]],
+          /*[/]*/
+        ],
+        datasets: [{
+          label: 'Status Over time over time',
+          data: [
+            /*[# th:each="item : ${chartData}"]*/
+            {
+              x: [[${item.getCreatedAtInMilliseconds}]],
+              y: [[${item.status.shouldSendAlert ? -1 : 1}]]
+            },
+            /*[/]*/
+          ],
+          backgroundColor: [
+            /*[# th:each="item : ${chartData}"]*/
+            [[${item.status.name.equals('PASS') ? 'rgb(0, 0, 255)' : 'rgb(255, 0, 0)'}]],
+            /*[/]*/
+          ]
+        }]
+      },
+      options: {
+        plugins: {
+          legend: {
+            display: false
+          }
+        },
+        responsive: false,
+        scales: {
+          y: {
+            ticks: {
+              callback: function (value, index, ticks) {
+                return value >= 0 ? 'PASS' : 'FAIL';
+              }
+            }
+          },
+          x: {
+            ticks: {
+              display: false
+            }
+          }
+        }
+      }
+    });
+    /*]]>*/
+  </script>
+</div>

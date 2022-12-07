@@ -54,6 +54,8 @@ public interface MonitorAdapter<T extends Monitor, A extends Alert<?>> {
         model.addAttribute("listAlerts", listAlerts);
         model.addAttribute("pageSize", alertPageSize);
 
+        model.addAttribute("chartData", getAlertService().getAlerts(alertSpecification));
+
         return modelAndView;
     }
 

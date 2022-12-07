@@ -4,6 +4,7 @@ import com.capgemini.bedwards.almon.almondatastore.models.monitor.Monitor;
 import com.capgemini.bedwards.almon.almondatastore.util.Constants;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.util.UUID;
 import javax.persistence.Column;
 import javax.persistence.DiscriminatorColumn;
@@ -71,4 +72,8 @@ public abstract class Alert<M extends Monitor> {
     }
 
     public abstract String getHTMLMessage();
+
+    public long getCreatedAtInMilliseconds() {
+        return this.getCreatedAt().atZone(ZoneId.systemDefault()).toInstant().toEpochMilli();
+    }
 }

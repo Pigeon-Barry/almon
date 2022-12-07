@@ -6,12 +6,13 @@ import com.capgemini.bedwards.almon.almonmonitoringactiveapi.models.ActiveAPIMon
 import com.capgemini.bedwards.almon.almonmonitoringactiveapi.models.ActiveAPIMonitoringTask;
 import com.capgemini.bedwards.almon.almonmonitoringactiveapi.repositorty.ActiveAPIMonitorRepository;
 import com.capgemini.bedwards.almon.almonmonitoringcore.service.monitor.ScheduledMonitorServiceBase;
+import java.util.List;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
-
 @Service
+@Slf4j
 public class ActiveAPIMonitorServiceImpl extends ScheduledMonitorServiceBase<ActiveAPIMonitor> implements ActiveAPIMonitorService {
 
     private final ActiveAPIMonitorRepository API_MONITORING_TYPE_REPOSITORY;
@@ -41,8 +42,9 @@ public class ActiveAPIMonitorServiceImpl extends ScheduledMonitorServiceBase<Act
 
     @Override
     public ActiveAPIMonitoringTask getScheduledTask(ActiveAPIMonitor monitor) {
-        if (monitor.getId().getService().isEnabled())
+        if (monitor.getId().getService().isEnabled()) {
             return new ActiveAPIMonitoringTask(API_ALERT_SERVICE, monitor);
+        }
         return null;
     }
 }

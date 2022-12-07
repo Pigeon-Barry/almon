@@ -24,4 +24,5 @@ public class AlertServiceImpl extends AlertServiceBase<Alert<?>> {
     protected AlertRepository<Alert<?>> getRepository() {
         return ALERT_REPOSITORY;
     }
+
 }
