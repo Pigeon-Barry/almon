@@ -1,0 +1,82 @@
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org" lang="en">
+<!--/*@thymesVar id="login" type="com.capgemini.bedwards.almon.almonaccessweb.model.auth.Login"*/-->
+<div class="container" th:fragment="loginForm">
+
+
+    <div class="row justify-content-center">
+        <div class="col-12 col-md-8">
+            <div class="card">
+                <h3 class="card-header">Login</h3>
+                <div class="card-body">
+                    <form th:action="@{/web/auth/login}" th:object="${login}" method="post" id="loginForm">
+                        <div class="form-group required">
+                            <label for="email" class="control-label">Email:</label>
+                            <input th:class="(${#fields.hasErrors('email')}? 'is-invalid ' : '') + 'form-control'"
+                                   type="text" id="email" placeholder="Enter Email" autocomplete="on"
+                                   name="email" th:field="*{email}"/>
+                            <span th:if="${#fields.hasErrors('email')}" class="invalid-feedback" role="alert">
+                                    <strong th:errors="*{email}"></strong>
+                                </span>
+                        </div>
+                        <div class="form-group required">
+                            <label for="password" class="control-label">Password:</label>
+                            <div class="input-group mb-3">
+                                <input th:class="(${#fields.hasErrors('password')}? 'is-invalid ' : '') + 'form-control'"
+                                       type="password" id="password" placeholder="Enter Password"
+                                       name="password" th:field="*{password}"/>
+                                <button type="button" class="btn btn-primary"
+                                        data-bs-toggle="popover"
+                                        title="Password validation"
+                                        th:with="passwordInfoBoxText=${T(com.capgemini.bedwards.almon.almondatastore.util.Constants).PASSWORD_INVALID_MESSAGE}"
+                                        th:data-bs-content="${passwordInfoBoxText}"
+                                        data-bs-trigger="hover">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+                                         class="bi bi-info-circle-fill" viewBox="0 0 16 16">
+                                        <path d="M8 16A8 8 0 1 0 8 0a8 8 0 0 0 0 16zm.93-9.412-1 4.705c-.07.34.029.533.304.533.194 0 .487-.07.686-.246l-.088.416c-.287.346-.92.598-1.465.598-.703 0-1.002-.422-.808-1.319l.738-3.468c.064-.293.006-.399-.287-.47l-.451-.081.082-.381 2.29-.287zM8 5.5a1 1 0 1 1 0-2 1 1 0 0 1 0 2z"></path>
+                                    </svg>
+                                    Info
+                                </button>
+                            </div>
+                            <span th:if="${#fields.hasErrors('password')}" class="invalid-feedback" role="alert">
+                                    <strong th:errors="*{password}"></strong>
+                                </span>
+                        </div>
+                        <a class="btn btn-link" href="">Forgot Your Password?</a>
+                        <div class="form-group">
+                            <button type="submit" class="form-control btn-block btn btn-primary">Login</button>
+                        </div>
+                        <span th:if="${#fields.hasErrors('email')}" class="invalid-feedback" role="alert">
+                                    <strong th:errors="*{email}"></strong>
+                                </span>
+                    </form>
+
+                    <div class="row">
+                        <div class="col-6">
+                            <button onclick="loginAsUser('ben.edwards2000@live.co.uk2','Password404.')"
+                                    class="form-control btn-block btn btn-primary">Login as User
+                            </button>
+                        </div>
+                        <div class="col-6">
+
+                            <button onclick="loginAsUser('ben.edwards2000@live.co.uk','Password404.')"
+                                    class="form-control btn-block btn btn-primary">Login as Admin
+                            </button>
+                        </div>
+                        <script>
+                            function loginAsUser(email, password) {
+                                document.getElementById("email").setAttribute("value", email);
+                                document.getElementById("password").setAttribute("value", password);
+                                document.getElementById("loginForm").submit();
+                            }
+                        </script>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script th:if="${param.invalid}">
+        showAlertError("Invalid Credentials.");
+    </script>
+</div>

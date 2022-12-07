@@ -21,8 +21,8 @@
         <almon-core.version>1.0.0</almon-core.version>
         <almon-datastore.version>1.0.0</almon-datastore.version>
         <almon-monitoring.version>1.0.0</almon-monitoring.version>
-        <almon-web.version>1.0.0</almon-web.version>
-        <almon-api.version>1.0.0</almon-api.version>
+        <almon-access-web.version>1.0.0</almon-access-web.version>
+        <almon-access-api.version>1.0.0</almon-access-api.version>
     </properties>
 
     <modules>
@@ -31,8 +31,8 @@
         <module>almon-datastore</module>
         <module>almon-framework</module>
         <module>almon-monitoring</module>
-        <module>almon-web</module>
-        <module>almon-api</module>
+        <module>almon-access-web</module>
+        <module>almon-access-api</module>
     </modules>
 
     <dependencies>

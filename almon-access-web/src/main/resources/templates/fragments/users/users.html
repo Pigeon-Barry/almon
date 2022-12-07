@@ -1,0 +1,131 @@
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org" lang="en"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+
+<!--/*@thymesVar id="login" type="com.capgemini.bedwards.almon.almonaccessweb.model.auth.Login"*/-->
+<!--/*@thymesVar id="listUsers" type="java.util.List"*/-->
+<!--/*@thymesVar id="user" type="com.capgemini.bedwards.almon.almondatastore.models.auth.User"*/-->
+<!--/*@thymesVar id="currentPage" type="java.lang.Integer"*/-->
+<!--/*@thymesVar id="totalItems" type="java.lang.Integer"*/-->
+<!--/*@thymesVar id="totalPages" type="java.lang.Integer"*/-->
+<div class="container" th:fragment="users">
+    <h1>User List</h1>
+
+    <th:block sec:authorize="hasAuthority('ENABLE_DISABLE_ACCOUNTS')">
+        <button data-bs-toggle="collapse" data-bs-target="#filterCollapsable" class="btn btn-primary" type="button" onclick="toggleQueryParam('showFilter')">
+            Show/Hide
+            Filter
+        </button>
+
+        <div id="filterCollapsable" th:class="${'collapse ' + (param.showFilter != null ? 'show' : '')}">
+            <div class="form-check">
+                <input class="form-check-input" type="radio" id="ignoreEnabled" name="enabledStatus"
+                       onclick="deleteQueryParam('enabled')"
+                       th:checked="${param.get('enabled') == null || (param.enabled.get(0).equalsIgnoreCase('true') == param.enabled.get(0).equalsIgnoreCase('false'))}">
+                <label class="form-check-label" for="ignoreEnabled">
+                    Show All
+                </label>
+            </div>
+            <div class="form-check">
+                <input class="form-check-input" type="radio" id="enabledOnly" name="enabledStatus"
+                       onclick="updateQueryParam('enabled',true)"
+                       th:checked="${param.enabled != null && param.enabled.get(0).equalsIgnoreCase('true')}">
+                <label class="form-check-label" for="enabledOnly">
+                    Enabled Only
+                </label>
+            </div>
+            <div class="form-check">
+                <input class="form-check-input" type="radio" id="disabledOnly" name="enabledStatus"
+                       onclick="updateQueryParam('enabled',false)"
+                       th:checked="${param.enabled != null  && param.enabled.get(0).equalsIgnoreCase('false')}">
+                <label class="form-check-label" for="disabledOnly">
+                    Disabled Only
+                </label>
+            </div>
+        </div>
+    </th:block>
+    <div class="row col-12">
+        <table class="table table-striped table-responsive-md">
+            <thead>
+            <tr>
+                <th>Email</th>
+                <th>First Name</th>
+                <th>Last Name</th>
+                <th class="d-flex justify-content-end">Actions</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="user : ${listUsers}">
+                <td th:text="${user.email}"></td>
+                <td th:text="${user.firstName}"></td>
+                <td th:text="${user.lastName}"></td>
+                <td class="d-flex justify-content-end">
+                    <a th:href="'/web/user/' + ${user.id}" class="btn btn-primary mx-2">View Details</a>
+                    <th:block sec:authorize="hasAuthority('ENABLE_DISABLE_ACCOUNTS')">
+                        <button th:if="${user.isEnabled()}" href="#" class="btn btn-danger mx-2"
+                                th:data-userId="${user.getId()}"
+                                th:disabled="${#authentication.principal.getId().equals(user.getId())}"
+                                onclick="disableAccount(this.getAttribute('data-userId'),this)"
+                        >Disable
+                        </button>
+                        <button th:if="${!user.isEnabled()}" href="#" class="btn btn-success mx-2"
+                                th:data-userId="${user.getId()}"
+                                th:disabled="${#authentication.principal.getId().equals(user.getId())}"
+                                onclick="enableAccount(this.getAttribute('data-userId'),this)"
+                        >Enable
+                        </button>
+                    </th:block>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+    <th:block th:insert="fragments/util/pagintation :: standard('Users','user')"/>
+
+    <script sec:authorize="hasAuthority('ENABLE_DISABLE_ACCOUNTS')">
+        function disableAccount(userId, domElement) {
+            updateEnableStatus(domElement, userId, false);
+        }
+
+        function enableAccount(userId, domElement) {
+            updateEnableStatus(domElement, userId, true);
+        }
+
+        function updateEnableStatus(domElement, userId, enabled) {
+            const suffix = enabled ? "enable" : "disable";
+
+            if (!confirmationPrompt(suffix + " - Account", "Are you sure you want to " + suffix + " this account?"))
+                return;
+
+            const url = "/web/user/" + userId + "/" + suffix;
+            const token = $("meta[name='_csrf']").attr("content");
+            const header = $("meta[name='_csrf_header']").attr("content");
+            $.ajax({
+                type: 'PUT',
+                url: url,
+                beforeSend: function (request) {
+                    request.setRequestHeader(header, token);
+                },
+                complete: function (xhr, textStatus) {
+                    if (xhr.status === 202) {
+                        showAlertSuccess("Account Successfully " + suffix + "d.");
+                        const dom = $(domElement);
+                        if (enabled) {
+                            dom.removeClass("btn-success").addClass("btn-danger");
+                            dom.attr("onclick", "disableAccount(this.getAttribute('data-userId'),this)");
+                            dom.text("Disable")
+                        } else {
+                            dom.removeClass("btn-danger").addClass("btn-success");
+                            dom.attr("onclick", "enableAccount(this.getAttribute('data-userId'),this)");
+                            dom.text("Enable")
+                        }
+                    } else {
+                        showAlertError("Failed to " + suffix + " account. Please consult an administrator");
+                    }
+                }
+            });
+        }
+
+    </script>
+</div>
+

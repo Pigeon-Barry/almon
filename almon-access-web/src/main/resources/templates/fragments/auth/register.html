@@ -1,0 +1,69 @@
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org" lang="en">
+<!--/*@thymesVar id="register" type="com.capgemini.bedwards.almon.almonaccessweb.model.auth.Register"*/-->
+<div class="container" th:fragment="registerForm">
+    <div class="row justify-content-center">
+        <div class="col-12 col-md-8">
+            <div class="card">
+                <h3 class="card-header">Register</h3>
+                <div class="card-body">
+                    <form th:action="@{/web/auth/register}" th:object="${register}" method="post">
+                        <div class="form-group">
+                            <label for="email">Email:</label>
+                            <input th:class="(${#fields.hasErrors('email')}? 'is-invalid ' : '') + 'form-control'"
+                                   type="text" id="email" placeholder="Enter Email"
+                                   name="email" th:field="*{email}" autocomplete="email"/>
+                            <span th:if="${#fields.hasErrors('email')}" class="invalid-feedback" role="alert">
+                                    <strong th:errors="*{email}"></strong>
+                                </span>
+                        </div>
+                        <div class="form-group">
+                            <label for="firstName">First Name:</label>
+                            <input th:class="(${#fields.hasErrors('firstName')}? 'is-invalid ' : '') + 'form-control'"
+                                   type="text" id="firstName" placeholder="Enter First Name"
+                                   name="firstName" th:field="*{firstName}" autocomplete="firstName"/>
+                            <span th:if="${#fields.hasErrors('firstName')}" class="invalid-feedback" role="alert">
+                                    <strong th:errors="*{firstName}"></strong>
+                                </span>
+                        </div>
+                        <div class="form-group">
+                            <label for="lastName">Last Name:</label>
+                            <input th:class="(${#fields.hasErrors('lastName')}? 'is-invalid ' : '') + 'form-control'"
+                                   type="text" id="lastName" placeholder="Enter Last Name"
+                                   name="lastName" th:field="*{lastName}" autocomplete="lastName"/>
+                            <span th:if="${#fields.hasErrors('lastName')}" class="invalid-feedback" role="alert">
+                                    <strong th:errors="*{lastName}"></strong>
+                                </span>
+                        </div>
+                        <div class="form-group">
+                            <label for="password">Password:</label>
+                            <input th:class="(${#fields.hasErrors('password')}? 'is-invalid ' : '') + 'form-control'"
+                                   type="password" id="password" placeholder="Enter Password"
+                                   name="password" th:field="*{password}"/>
+
+                            <span th:if="${#fields.hasErrors('password')}" class="invalid-feedback" role="alert">
+                                    <strong th:errors="*{password}"></strong>
+                                </span>
+                        </div>
+                        <div class="form-group">
+                            <label for="passwordConfirm">Confirm Password:</label>
+                            <input th:class="(${#fields.hasErrors('passwordConfirm')}? 'is-invalid ' : '') + 'form-control'"
+                                   type="password" id="passwordConfirm"
+                                   placeholder="Confirm Password"
+                                   name="passwordConfirm" th:field="*{passwordConfirm}"/>
+
+                            <span th:if="${#fields.hasErrors('passwordConfirm')}" class="invalid-feedback"
+                                  role="alert">
+                                   <strong th:errors="*{passwordConfirm}"></strong>
+                                </span>
+                        </div>
+                        <br/>
+                        <div class="form-group">
+                            <button type="submit" class="form-control btn-block btn btn-primary">Register</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
