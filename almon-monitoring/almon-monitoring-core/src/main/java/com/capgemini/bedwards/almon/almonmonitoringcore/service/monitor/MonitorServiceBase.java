@@ -5,15 +5,12 @@ import com.capgemini.bedwards.almon.almoncore.exceptions.NotFoundException;
 import com.capgemini.bedwards.almon.almoncore.services.auth.AuthorityService;
 import com.capgemini.bedwards.almon.almoncore.services.service.ServiceService;
 import com.capgemini.bedwards.almon.almondatastore.models.monitor.Monitor;
-import com.capgemini.bedwards.almon.almondatastore.models.schedule.ScheduledMonitor;
-import com.capgemini.bedwards.almon.almondatastore.models.schedule.Scheduler;
 import com.capgemini.bedwards.almon.almonmonitoringcore.repository.monitor.MonitorTypeRepository;
 import java.util.Collections;
 import java.util.Optional;
 import javax.validation.constraints.NotNull;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Lazy;
 
 ;
 
@@ -23,9 +20,7 @@ public abstract class MonitorServiceBase<T extends Monitor> implements MonitorSe
 
     protected final AuthorityService AUTHORITY_SERVICE;
     protected final ServiceService SERVICE_SERVICE;
-    @Autowired
-    @Lazy
-    protected Scheduler SCHEDULER;
+
 
     @Autowired
     public MonitorServiceBase(AuthorityService authorityService, ServiceService serviceService) {
@@ -38,16 +33,11 @@ public abstract class MonitorServiceBase<T extends Monitor> implements MonitorSe
     @Override
     public void enable(T monitor) {
         updateEnabledStatus(monitor, true);
-        if (monitor instanceof ScheduledMonitor)
-            SCHEDULER.scheduleTask(((ScheduledMonitor) monitor).getScheduledTask());
-
     }
 
     @Override
     public void disable(T monitor) {
         updateEnabledStatus(monitor, false);
-        if (monitor instanceof ScheduledMonitor)
-            SCHEDULER.removeScheduledTask(((ScheduledMonitor) monitor).getTaskId());
     }
 
 
