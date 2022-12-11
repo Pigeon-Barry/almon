@@ -6,7 +6,6 @@ import com.capgemini.bedwards.almon.almondatastore.models.auth.UpdateType;
 import com.capgemini.bedwards.almon.almondatastore.models.auth.User;
 import com.capgemini.bedwards.almon.almondatastore.models.monitor.Monitor;
 import com.capgemini.bedwards.almon.almondatastore.models.service.Service;
-
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -35,5 +34,9 @@ public interface AuthorityService {
     void deleteServiceAuthorities(Service service);
 
     void deleteMonitorAuthorities(Monitor monitor);
+
+    void refreshRole(Role role);
+
+    void refreshAuthority(Authority authority);
 
 }

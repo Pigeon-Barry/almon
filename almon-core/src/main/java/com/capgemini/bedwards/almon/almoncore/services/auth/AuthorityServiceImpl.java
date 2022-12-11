@@ -7,20 +7,30 @@ import com.capgemini.bedwards.almon.almondatastore.models.auth.UpdateType;
 import com.capgemini.bedwards.almon.almondatastore.models.auth.User;
 import com.capgemini.bedwards.almon.almondatastore.models.monitor.Monitor;
 import com.capgemini.bedwards.almon.almondatastore.repository.auth.AuthorityRepository;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
-import java.util.*;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @Slf4j
+@Transactional
 public class AuthorityServiceImpl implements AuthorityService {
 
 
     private final AuthorityRepository AUTHORITY_REPOSITORY;
 
     private final UserService USER_SERVICE;
+
+    @PersistenceContext
+    private EntityManager entityManager;
 
     @Autowired
     public AuthorityServiceImpl(AuthorityRepository authorityRepository, UserService userService) {
@@ -29,7 +39,8 @@ public class AuthorityServiceImpl implements AuthorityService {
     }
 
     @Override
-    public Authority createAuthority(String authority, String description, Set<User> defaultUsers, Set<Role> roles) {
+    public Authority createAuthority(String authority, String description, Set<User> defaultUsers,
+        Set<Role> roles) {
         log.info("Creating new authority with name: " + authority + " description: " + description);
         return save(Authority.builder()
                 .authority(authority)
@@ -102,12 +113,24 @@ public class AuthorityServiceImpl implements AuthorityService {
     }
 
     @Override
-    public void deleteServiceAuthorities(com.capgemini.bedwards.almon.almondatastore.models.service.Service service) {
+    public void deleteServiceAuthorities(
+        com.capgemini.bedwards.almon.almondatastore.models.service.Service service) {
         AUTHORITY_REPOSITORY.deleteServiceAuthorities(service);
     }
 
     @Override
     public void deleteMonitorAuthorities(Monitor monitor) {
         AUTHORITY_REPOSITORY.deleteMonitorAuthorities(monitor);
+    }
+
+    @Override
+    public void refreshRole(Role role) {
+        entityManager.refresh(role);
+
+    }
+
+    @Override
+    public void refreshAuthority(Authority authority) {
+        entityManager.refresh(authority);
     }
 }

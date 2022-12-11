@@ -8,13 +8,12 @@ import com.capgemini.bedwards.almon.almondatastore.models.monitor.Monitor;
 import com.capgemini.bedwards.almon.almondatastore.models.schedule.ScheduledMonitor;
 import com.capgemini.bedwards.almon.almondatastore.models.schedule.Scheduler;
 import com.capgemini.bedwards.almon.almonmonitoringcore.repository.monitor.MonitorTypeRepository;
+import java.util.Collections;
+import java.util.Optional;
+import javax.validation.constraints.NotNull;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
-
-import javax.validation.constraints.NotNull;
-import java.util.Collections;
-import java.util.Optional;
 
 ;
 
@@ -91,16 +90,23 @@ public abstract class MonitorServiceBase<T extends Monitor> implements MonitorSe
                         "SERVICE_" + monitorType.getId().getService().getId() + "_MONITOR_" + monitorType.getId() + "_CAN_DELETE",
                         "Grants the ability to Delete  this monitor"
                 ),
-                Collections.singleton(SERVICE_SERVICE.getOrCreateAdminRole(monitorType.getId().getService()))
+            Collections.singleton(
+                SERVICE_SERVICE.getOrCreateAdminRole(monitorType.getId().getService()))
         );
-        AUTHORITY_SERVICE.addRole(
-                AUTHORITY_SERVICE.createAuthority(
-                        "SERVICE_" + monitorType.getId().getService().getId() + "_MONITOR_" + monitorType.getId() + "_CAN_UPDATE",
-                        "Grants the ability to update  this monitor"
-                ),
-                Collections.singleton(SERVICE_SERVICE.getOrCreateAdminRole(monitorType.getId().getService()))
-        );
-        return monitorType;
+      AUTHORITY_SERVICE.addRole(
+          AUTHORITY_SERVICE.createAuthority(
+              "SERVICE_" + monitorType.getId().getService().getId() + "_MONITOR_"
+                  + monitorType.getId() + "_CAN_UPDATE",
+              "Grants the ability to update  this monitor"
+          ),
+          Collections.singleton(
+              SERVICE_SERVICE.getOrCreateAdminRole(monitorType.getId().getService()))
+      );
+      AUTHORITY_SERVICE.refreshRole(
+          SERVICE_SERVICE.getOrCreateUserRole(monitorType.getId().getService()));
+      AUTHORITY_SERVICE.refreshRole(
+          SERVICE_SERVICE.getOrCreateAdminRole(monitorType.getId().getService()));
+      return monitorType;
     }
 
     @Override
