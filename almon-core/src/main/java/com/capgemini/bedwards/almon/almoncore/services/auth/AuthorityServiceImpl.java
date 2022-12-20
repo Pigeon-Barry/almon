@@ -7,17 +7,14 @@ import com.capgemini.bedwards.almon.almondatastore.models.auth.UpdateType;
 import com.capgemini.bedwards.almon.almondatastore.models.auth.User;
 import com.capgemini.bedwards.almon.almondatastore.models.monitor.Monitor;
 import com.capgemini.bedwards.almon.almondatastore.repository.auth.AuthorityRepository;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
+import java.util.*;
 
 @Service
 @Slf4j
@@ -40,7 +37,10 @@ public class AuthorityServiceImpl implements AuthorityService {
 
     @Override
     public Authority createAuthority(String authority, String description, Set<User> defaultUsers,
-        Set<Role> roles) {
+                                     Set<Role> roles) {
+        if (authority == null) {
+            throw new IllegalArgumentException("Authority must not be null");
+        }
         log.info("Creating new authority with name: " + authority + " description: " + description);
         return save(Authority.builder()
                 .authority(authority)
@@ -70,13 +70,15 @@ public class AuthorityServiceImpl implements AuthorityService {
             if (updateType == null) {
                 //Do nothing
             } else if (updateType == UpdateType.REMOVE) {
-                authority.getUsers().remove(user);
+                authority.removeUser(user);
                 save(authority);
             } else if (updateType == UpdateType.GRANT) {
-                authority.getUsers().add(user);
-               save(authority);
-            } else
-                throw new RuntimeException("Update type " + updateType + " does not have any actions assigned to it");
+                authority.addUser(user);
+                save(authority);
+            } else {
+                throw new RuntimeException(
+                        "Update type " + updateType + " does not have any actions assigned to it");
+            }
         });
     }
 
@@ -100,8 +102,9 @@ public class AuthorityServiceImpl implements AuthorityService {
 
     @Override
     public void addRole(Authority authority, Set<Role> roles) {
-        if (authority.getRoles() == null)
+        if (authority.getRoles() == null) {
             authority.setRoles(new HashSet<>());
+        }
         authority.getRoles().addAll(roles);
         save(authority);
     }
@@ -114,7 +117,7 @@ public class AuthorityServiceImpl implements AuthorityService {
 
     @Override
     public void deleteServiceAuthorities(
-        com.capgemini.bedwards.almon.almondatastore.models.service.Service service) {
+            com.capgemini.bedwards.almon.almondatastore.models.service.Service service) {
         AUTHORITY_REPOSITORY.deleteServiceAuthorities(service);
     }
 

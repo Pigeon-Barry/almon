@@ -1,19 +1,15 @@
 package com.capgemini.bedwards.almon.almoncore.security;
 
 import com.capgemini.bedwards.almon.almoncore.services.APIKeyService;
-import com.capgemini.bedwards.almon.almoncore.util.SecurityUtil;
 import com.capgemini.bedwards.almon.almondatastore.models.auth.APIKey;
 import com.capgemini.bedwards.almon.almondatastore.util.Constants;
-import java.io.IOException;
-import javax.servlet.Filter;
-import javax.servlet.FilterChain;
-import javax.servlet.ServletException;
-import javax.servlet.ServletRequest;
-import javax.servlet.ServletResponse;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.context.SecurityContextHolder;
+
+import javax.servlet.*;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
 
 
 @Slf4j
@@ -38,9 +34,9 @@ public class ApiKeyAuthenticationFilter implements Filter {
         if (apiKey != null) {
           log.info("API Key: " + apiKey);
           if (apiKey.isEnabled()) {
-            ApiKeyAuthenticationToken apiToken = new ApiKeyAuthenticationToken(apiKey,
-                SecurityUtil.getAuthoritiesFromAPiKey(apiKey));
+            ApiKeyAuthenticationToken apiToken = new ApiKeyAuthenticationToken(apiKey);
             SecurityContextHolder.getContext().setAuthentication(apiToken);
+            return;//TODO check
           } else {
             writeError(response, "API Key is disabled");
             return;
@@ -68,6 +64,5 @@ public class ApiKeyAuthenticationFilter implements Filter {
     }
     return apiKey;
   }
-
 }
 

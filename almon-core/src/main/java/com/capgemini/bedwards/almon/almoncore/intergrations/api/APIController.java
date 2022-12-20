@@ -20,7 +20,6 @@ import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
-import org.springframework.web.context.request.WebRequest;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -34,21 +33,21 @@ public abstract class APIController {
     @ExceptionHandler(value = {NotFoundException.class})
     @ResponseStatus(value = HttpStatus.NOT_FOUND)
     @ResponseBody
-    public ErrorResponse resourceNotFoundException(NotFoundException exception, WebRequest request) {
+    public ErrorResponse resourceNotFoundException(NotFoundException exception) {
         return new ErrorResponse(ErrorCode.NOT_FOUND, exception.getMessage());
     }
 
     @ExceptionHandler(AccessDeniedException.class)
     @ResponseStatus(value = HttpStatus.UNAUTHORIZED)
     @ResponseBody
-    public ErrorResponse internalServerError(AccessDeniedException exception, WebRequest request) {
+    public ErrorResponse accessDeniedException(AccessDeniedException exception) {
         return new ErrorResponse(ErrorCode.UNAUTHORISED_API);
     }
 
     @ExceptionHandler(AuthenticationCredentialsNotFoundException.class)
     @ResponseStatus(value = HttpStatus.UNAUTHORIZED)
     @ResponseBody
-    public ErrorResponse authenticationCredentialsNotFoundException(AuthenticationCredentialsNotFoundException exception, WebRequest request) {
+    public ErrorResponse authenticationCredentialsNotFoundException(AuthenticationCredentialsNotFoundException exception) {
         return new ErrorResponse(ErrorCode.UNAUTHORISED_API);
     }
 
@@ -56,14 +55,14 @@ public abstract class APIController {
     @ExceptionHandler(HttpRequestMethodNotSupportedException.class)
     @ResponseStatus(value = HttpStatus.NOT_FOUND)
     @ResponseBody
-    public ErrorResponse httpRequestMethodNotSupportedException(HttpRequestMethodNotSupportedException exception, WebRequest request) {
+    public ErrorResponse httpRequestMethodNotSupportedException(HttpRequestMethodNotSupportedException exception) {
         return new ErrorResponse(ErrorCode.NOT_FOUND, "A request can not be found for this method at this url");
     }
 
     @ExceptionHandler(value = {InvalidPermissionException.class})
     @ResponseStatus(value = HttpStatus.UNAUTHORIZED)
     @ResponseBody
-    public ErrorResponse invalidPermissionException(InvalidPermissionException exception, WebRequest request) {
+    public ErrorResponse invalidPermissionException(InvalidPermissionException exception) {
         return new ErrorResponse(ErrorCode.UNAUTHORISED_API, exception.getMessage());
     }
 
@@ -95,7 +94,7 @@ public abstract class APIController {
     @ExceptionHandler(Throwable.class)
     @ResponseStatus(value = HttpStatus.INTERNAL_SERVER_ERROR)
     @ResponseBody
-    public ErrorResponse internalServerError(Throwable exception, WebRequest request) {
+    public ErrorResponse internalServerError(Throwable exception) {
         log.error("Unexpected error has occurred", exception);
         return new ErrorResponse(ErrorCode.INTERNAL_SERVER_ERROR);
     }

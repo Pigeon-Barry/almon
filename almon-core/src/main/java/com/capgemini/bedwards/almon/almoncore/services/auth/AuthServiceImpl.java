@@ -2,7 +2,6 @@ package com.capgemini.bedwards.almon.almoncore.services.auth;
 
 import com.capgemini.bedwards.almon.almondatastore.models.auth.Role;
 import com.capgemini.bedwards.almon.almondatastore.models.auth.User;
-import com.capgemini.bedwards.almon.almondatastore.repository.auth.AuthorityRepository;
 import com.capgemini.bedwards.almon.almondatastore.repository.auth.RoleRepository;
 import com.capgemini.bedwards.almon.almondatastore.repository.auth.UserRepository;
 import lombok.extern.slf4j.Slf4j;
@@ -21,22 +20,25 @@ import java.util.Set;
 @Slf4j
 public class AuthServiceImpl implements AuthService {
 
-    @Autowired
-    UserRepository userRepository;
-    @Autowired
-    AuthorityRepository authorityRepository;
-    @Autowired
-    RoleRepository roleRepository;
+    private final UserRepository USER_REPOSITORY;
+
+    private final RoleRepository ROLE_REPOSITORY;
+
     @Autowired
     @Lazy
     PasswordEncoder passwordEncoder;
+
+    public AuthServiceImpl(UserRepository userRepository, RoleRepository roleRepository) {
+        this.USER_REPOSITORY = userRepository;
+        this.ROLE_REPOSITORY = roleRepository;
+    }
 
     @Value("${almon.web.root-account}")
     private String rootAccount;
 
     @Override
     public User getAuthenticatedUser(String email, String password) {
-        Optional<User> userOptional = userRepository.findUserByEmail(email);
+        Optional<User> userOptional = USER_REPOSITORY.findUserByEmail(email);
         if (userOptional.isPresent() && passwordEncoder.matches(password, userOptional.get().getPassword()))
             return userOptional.get();
         return null;
@@ -46,13 +48,13 @@ public class AuthServiceImpl implements AuthService {
     public User register(String email, String firstname, String lastname, String password) {
         if (!checkUserExists(email)) {
             Set<Role> roles = new HashSet<>();
-            roles.add(roleRepository.findById("USER").orElse(null));
+            roles.add(ROLE_REPOSITORY.findById("USER").orElse(null));
             boolean enabled = false;
             if (email.equalsIgnoreCase(rootAccount)) {
-                roles.add(roleRepository.findById("ADMIN").orElse(null));
+                roles.add(ROLE_REPOSITORY.findById("ADMIN").orElse(null));
                 enabled = true;
             }
-            User user = userRepository.saveAndFlush(
+            User user = USER_REPOSITORY.saveAndFlush(
                     User.builder()
                             .email(email)
                             .enabled(enabled)
@@ -63,16 +65,16 @@ public class AuthServiceImpl implements AuthService {
                             .build());
             if (email.equalsIgnoreCase(rootAccount)) {
                 user.setApprovedBy(user);
-                user = userRepository.save(user);
+                user = USER_REPOSITORY.saveAndFlush(user);
             }
             return user;
         }
-        throw new BadCredentialsException("Invalid Credentials");
+        throw new BadCredentialsException("User already exists with this email");
     }
 
 
     @Override
     public boolean checkUserExists(String email) {
-        return userRepository.existsByEmail(email);
+        return USER_REPOSITORY.existsByEmail(email);
     }
 }
