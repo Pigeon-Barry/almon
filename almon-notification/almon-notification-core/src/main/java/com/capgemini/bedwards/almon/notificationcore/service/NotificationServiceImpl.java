@@ -10,13 +10,14 @@ import com.capgemini.bedwards.almon.almondatastore.models.subscription.ServiceSu
 import com.capgemini.bedwards.almon.almondatastore.repository.subscription.MonitorSubscriptionRepository;
 import com.capgemini.bedwards.almon.almondatastore.repository.subscription.ServiceSubscriptionRepository;
 import com.capgemini.bedwards.almon.notificationcore.NotificationHelper;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
-import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
 
 @Service
 @Slf4j
@@ -115,31 +116,32 @@ public class NotificationServiceImpl implements NotificationService {
     public <T extends Alert<?>> void send(T alert) {
         log.info("Sending Notifications for alert: " + alert);
         for (Notification notification : this.NOTIFICATIONS) {
-            notification.sendNotification(getSubscribedUsers(alert, notification), alert);
+            if (notification.isEnabled())
+                notification.sendNotification(getSubscribedUsers(alert, notification), alert);
         }
     }
 
     private <T extends Alert<?>> Set<User> getSubscribedUsers(T alert, Notification notification) {
         List<MonitorSubscription> monitorSubscriptionList = MONITOR_SUBSCRIPTION_REPOSITORY.getFromNotificationId(
-            notification.getId(), alert.getMonitor());
+                notification.getId(), alert.getMonitor());
         Set<User> monitorSubscriptionUsers = monitorSubscriptionList.stream()
-            .map(monitorSubscription -> monitorSubscription.getId().getUser())
-            .collect(Collectors.toSet());
+                .map(monitorSubscription -> monitorSubscription.getId().getUser())
+                .collect(Collectors.toSet());
 
         List<ServiceSubscription> serviceSubscriptionList;
         if (monitorSubscriptionUsers.size() > 0) {
             serviceSubscriptionList = SERVICE_SUBSCRIPTION_REPOSITORY.getFromNotificationIdWhereNotUser(
-                notification.getId(), monitorSubscriptionUsers);
+                    notification.getId(), monitorSubscriptionUsers);
         } else {
             serviceSubscriptionList = SERVICE_SUBSCRIPTION_REPOSITORY.getFromNotificationId(
-                notification.getId());
+                    notification.getId());
         }
         Set<User> users = monitorSubscriptionList.stream().filter(MonitorSubscription::isSubscribed)
-            .map(monitorSubscription -> monitorSubscription.getId().getUser())
-            .collect(Collectors.toSet());
+                .map(monitorSubscription -> monitorSubscription.getId().getUser())
+                .collect(Collectors.toSet());
         users.addAll(serviceSubscriptionList.stream().filter(ServiceSubscription::isSubscribed)
-            .map(serviceSubscription -> serviceSubscription.getId().getUser())
-            .collect(Collectors.toSet()));
+                .map(serviceSubscription -> serviceSubscription.getId().getUser())
+                .collect(Collectors.toSet()));
         return users;
     }
 

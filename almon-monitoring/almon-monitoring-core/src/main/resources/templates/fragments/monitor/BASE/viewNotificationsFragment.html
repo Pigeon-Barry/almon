@@ -44,7 +44,7 @@
           <div class="justify-content-end">
             <div class="form-check form-switch">
               <input class="form-check-input subscriptionInput" type="checkbox"
-                     th:disabled="${!hasOverridenServiceSubscription}"
+                     th:disabled="${!(hasOverridenServiceSubscription || notification.isEnabled())}"
                      th:data-notificationId="${notification.getId()}"
                      th:data-monitorId="${monitor.getId()}"
                      th:checked="${notificationHelper.isUserSubscribedToNotification(user,notification,monitor)}"

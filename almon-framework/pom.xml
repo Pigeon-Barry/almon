@@ -46,6 +46,11 @@
             <artifactId>almon-notification-web</artifactId>
             <version>1.0.0</version>
         </dependency>
+        <dependency>
+            <groupId>com.capgemini.bedwards.almon</groupId>
+            <artifactId>almon-notification-teams</artifactId>
+            <version>1.0.0</version>
+        </dependency>
         <!-- Almon Dependencies End -->
     </dependencies>
 

@@ -4,7 +4,7 @@
 <div th:fragment="service">
     <!--/*@thymesVar id="service" type="com.capgemini.bedwards.almon.almondatastore.models.service.Service"*/-->
     <!--/*@thymesVar id="authority" type="com.capgemini.bedwards.almon.almondatastore.models.auth.Authority"*/-->
-    <!--/*@thymesVar id="monitors" type="om.capgemini.bedwards.almon.almonmonitoringcore.Monitors"*/-->
+    <!--/*@thymesVar id="monitors" type="com.capgemini.bedwards.almon.almonmonitoringcore.Monitors"*/-->
     <!--/*@thymesVar id="notificationHelper" type="com.capgemini.bedwards.almon.notificationcore.NotificationHelper"*/-->
 
 
@@ -75,6 +75,7 @@
                                             <input class="form-check-input" type="checkbox"
                                                    th:data-notificationId="${notification.getId()}"
                                                    th:data-serviceId="${service.getId()}"
+                                                   th:disabled="${!notification.isEnabled()}"
                                                    th:checked="${notificationHelper.isUserSubscribedToNotificationAtServiceLevel(user,notification,service)}"
                                                    onclick="updateServiceNotificationStatus(this.getAttribute('data-notificationId'),this.getAttribute('data-serviceId'),this)"
                                             >

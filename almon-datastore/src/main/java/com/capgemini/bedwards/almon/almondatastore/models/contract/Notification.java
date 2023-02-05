@@ -2,6 +2,7 @@ package com.capgemini.bedwards.almon.almondatastore.models.contract;
 
 import com.capgemini.bedwards.almon.almondatastore.models.alert.Alert;
 import com.capgemini.bedwards.almon.almondatastore.models.auth.User;
+
 import java.util.Set;
 
 public interface Notification {
@@ -11,6 +12,10 @@ public interface Notification {
   String getDisplayName();
 
   String getHelpText();
+
+  default boolean isEnabled() {
+    return true;
+  }
 
   default String getId() {
     return getClass().getSimpleName();
