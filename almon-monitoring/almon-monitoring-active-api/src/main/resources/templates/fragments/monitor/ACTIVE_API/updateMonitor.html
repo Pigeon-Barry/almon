@@ -5,7 +5,7 @@
 <!--/*@thymesVar id="serviceRequestBody" type="com.capgemini.bedwards.almon.almonmonitoringactiveapi.models.CreateAPIMonitorRequestBody"*/-->
 <!--/*@thymesVar id="monitor" type="com.capgemini.bedwards.almon.almondatastore.models.monitor.Monitor"*/-->
 <!--/*@thymesVar id="monitorAdapter" type="com.capgemini.bedwards.almon.almonmonitoringactiveapi.monitoring.APIMonitorAdapter"*/-->
-<!--/*@thymesVar id="formData" type="com.capgemini.bedwards.almon.almonmonitoringactiveapi.models.CreateAPIMonitorRequestBody"*/-->
+<!--/*@thymesVar id="formData" type="com.capgemini.bedwards.almon.almonmonitoringactiveapi.models.CreateActiveAPIMonitorRequestBody"*/-->
 
 <div class="container" th:fragment="update">
     <div class="row justify-content-center">
@@ -70,6 +70,22 @@
                             <span th:if="${#fields.hasErrors('expectedStatusCode')}" class="invalid-feedback"
                                   role="alert">
                                         <strong th:errors="*{expectedStatusCode}"></strong>
+                                </span>
+                        </div>
+                        <br>
+                        <div class="form-group required">
+                            <label for="maxResponseTime" class="control-label">Maximum Allowed Response Time
+                                (ms):</label>
+                            <input
+                                    th:class="(${#fields.hasErrors('maxResponseTime')}? 'is-invalid ' : '') + 'form-control'"
+                                    type="number"
+                                    min="1"
+                                    max="2147483647"
+                                    id="maxResponseTime" placeholder="Enter Maximum Allowed Response Time (ms)"
+                                    name="maxResponseTime" th:field="*{maxResponseTime}"/>
+                            <span th:if="${#fields.hasErrors('maxResponseTime')}" class="invalid-feedback"
+                                  role="alert">
+                                        <strong th:errors="*{maxResponseTime}"></strong>
                                 </span>
                         </div>
                         <br>

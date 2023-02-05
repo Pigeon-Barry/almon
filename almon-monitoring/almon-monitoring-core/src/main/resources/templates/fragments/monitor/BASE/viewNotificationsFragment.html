@@ -43,8 +43,9 @@
              class="mb-0" th:text="${notification.getDisplayName()}"></p>
           <div class="justify-content-end">
             <div class="form-check form-switch">
-              <input class="form-check-input subscriptionInput" type="checkbox"
-                     th:disabled="${!(hasOverridenServiceSubscription || notification.isEnabled())}"
+              <input type="checkbox"
+                     th:class="'form-check-input ' + ${notification.isEnabled() ? 'subscriptionInput' : ''}"
+                     th:disabled="${(!hasOverridenServiceSubscription || !notification.isEnabled())}"
                      th:data-notificationId="${notification.getId()}"
                      th:data-monitorId="${monitor.getId()}"
                      th:checked="${notificationHelper.isUserSubscribedToNotification(user,notification,monitor)}"

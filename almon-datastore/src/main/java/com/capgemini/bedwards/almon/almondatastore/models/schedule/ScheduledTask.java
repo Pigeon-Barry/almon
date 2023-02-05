@@ -18,8 +18,10 @@ public abstract class ScheduledTask<T extends ScheduledAlert> implements Runnabl
         this.TASK_ID = ScheduledMonitor.getTaskId();
         this.cronExpression = ScheduledMonitor.getCronExpression();
     }
+
     @Override
     public void run() {
-        execute();
+        if (isEnabled())
+            execute();
     }
 }

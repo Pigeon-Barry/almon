@@ -5,10 +5,6 @@ import com.capgemini.bedwards.almon.almondatastore.models.alert.AlertSpecificati
 import com.capgemini.bedwards.almon.almondatastore.models.monitor.Monitor;
 import com.capgemini.bedwards.almon.almondatastore.repository.alert.AlertRepository;
 import com.capgemini.bedwards.almon.notificationcore.service.NotificationService;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
-import java.util.UUID;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -16,6 +12,11 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.domain.Sort.Direction;
+
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+import java.util.UUID;
 
 @Slf4j
 public abstract class AlertServiceBase<T extends Alert<?>> implements AlertService<T> {
@@ -36,6 +37,7 @@ public abstract class AlertServiceBase<T extends Alert<?>> implements AlertServi
   @Override
   public T create(T alert) {
     log.info("Saving alert: " + alert);
+    log.info("Saving alert: " + alert.getId());
     alert = getRepository().save(alert);
     if (alert.getStatus().shouldSendAlert()) {
       if (!SENT_ALERTS.contains(alert.getMonitor())) {

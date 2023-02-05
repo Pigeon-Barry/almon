@@ -43,13 +43,22 @@ public class ActiveAPIMonitoringTask extends ScheduledTask<ActiveAPIAlert> {
             final long START_TIME = System.currentTimeMillis();
             ResponseEntity<String> responseEntity = this.REST_TEMPLATE.getForEntity(this.API_MONITORING_TYPE.getUrl(), String.class);
             final long END_TIME = System.currentTimeMillis();
+            final long TOTAL_TIME = END_TIME - START_TIME;
             Status status = Status.PASS;
             String message = null;
 
             if (log.isDebugEnabled())
                 log.debug("Response: " + responseEntity);
+
             if (responseEntity.getStatusCode().equals(HttpStatus.valueOf(this.API_MONITORING_TYPE.expectedStatus))) {
-                if (this.API_MONITORING_TYPE.getJsonPathValidations() != null && this.API_MONITORING_TYPE.getJsonPathValidations().size() > 0) {
+                if (this.API_MONITORING_TYPE.getMaxResponseTime() > 0) {
+                    if (TOTAL_TIME > this.API_MONITORING_TYPE.getMaxResponseTime()) {
+                        message = "Maximum response time is " + this.API_MONITORING_TYPE.getMaxResponseTime() + "ms but actual response time was " + TOTAL_TIME + "ms";
+                        status = Status.FAIL;
+                    }
+                }
+
+                if (status == Status.PASS && this.API_MONITORING_TYPE.getJsonPathValidations() != null && this.API_MONITORING_TYPE.getJsonPathValidations().size() > 0) {
                     Object jsonBody = Configuration.defaultConfiguration().jsonProvider().parse(responseEntity.getBody());
 
                     for (Map.Entry<String, String> jsonPathEntry : this.API_MONITORING_TYPE.getJsonPathValidations().entrySet()) {
@@ -67,6 +76,7 @@ public class ActiveAPIMonitoringTask extends ScheduledTask<ActiveAPIAlert> {
                         break;
                     }
                 }
+
             } else {
                 status = Status.FAIL;
                 message = "Expected a status code of: " + this.API_MONITORING_TYPE.expectedStatus + " but got " + responseEntity.getStatusCodeValue();
@@ -77,7 +87,7 @@ public class ActiveAPIMonitoringTask extends ScheduledTask<ActiveAPIAlert> {
                     .message(message)
                     .responseEntity(responseEntity)
                     .responseStatusCode(responseEntity.getStatusCodeValue())
-                    .requestDurationMS(END_TIME - START_TIME)
+                    .requestDurationMS(TOTAL_TIME)
                     .build());
         } catch (Throwable e) {
             log.error("Failed to run task: " + this.getTASK_ID(), e);

@@ -71,6 +71,22 @@
                                 </span>
                         </div>
                         <br>
+                        <div class="form-group required">
+                            <label for="maxResponseTime" class="control-label">Maximum Allowed Response Time
+                                (ms):</label>
+                            <input
+                                    th:class="(${#fields.hasErrors('maxResponseTime')}? 'is-invalid ' : '') + 'form-control'"
+                                    type="number"
+                                    min="1"
+                                    max="2147483647"
+                                    id="maxResponseTime" placeholder="Enter Maximum Allowed Response Time (ms)"
+                                    name="maxResponseTime" th:field="*{maxResponseTime}"/>
+                            <span th:if="${#fields.hasErrors('maxResponseTime')}" class="invalid-feedback"
+                                  role="alert">
+                                        <strong th:errors="*{maxResponseTime}"></strong>
+                                </span>
+                        </div>
+                        <br>
                         <div class="col-12">
                             <h2 class="text-center">Headers</h2>
                             <table class="table table-bordered">

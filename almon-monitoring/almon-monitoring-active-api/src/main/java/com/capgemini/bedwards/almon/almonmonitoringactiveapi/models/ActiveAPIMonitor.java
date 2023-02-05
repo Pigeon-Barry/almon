@@ -28,11 +28,17 @@ import java.util.Map;
 public class ActiveAPIMonitor extends ScheduledMonitor {
     @NotNull
     private HttpMethod method;
+    @NotNull
     protected String url;
 
-    protected int expectedStatus;
+    @NotNull
+    protected Integer expectedStatus;
+
+    @NotNull
+    private Integer maxResponseTime;
 
     protected String body;
+
 
     @ElementCollection(fetch = FetchType.EAGER)
     protected Map<String, String> headers;

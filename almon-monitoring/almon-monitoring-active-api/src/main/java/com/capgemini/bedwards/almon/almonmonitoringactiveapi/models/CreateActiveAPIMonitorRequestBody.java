@@ -33,6 +33,10 @@ public class CreateActiveAPIMonitorRequestBody extends CreateScheduledMonitorReq
     @NotNull
     private Integer expectedStatusCode;
 
+    @Min(1)
+    @Max(Integer.MAX_VALUE)
+    @NotNull
+    private Integer maxResponseTime = 500;
     private Map<String, String> headers;
 
     private Map<String, @ValidJsonPath String> jsonPathValidations;
@@ -50,6 +54,7 @@ public class CreateActiveAPIMonitorRequestBody extends CreateScheduledMonitorReq
                 .headers(headers)
                 .jsonPathValidations(jsonPathValidations)
                 .expectedStatus(expectedStatusCode)
+                .maxResponseTime(maxResponseTime)
                 .build();
     }
 }

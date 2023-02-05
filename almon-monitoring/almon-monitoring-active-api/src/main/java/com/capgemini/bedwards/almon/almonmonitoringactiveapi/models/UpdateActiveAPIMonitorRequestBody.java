@@ -32,6 +32,11 @@ public class UpdateActiveAPIMonitorRequestBody extends UpdateScheduledMonitorReq
     @NotNull
     private Integer expectedStatusCode;
 
+    @Min(1)
+    @Max(Integer.MAX_VALUE)
+    @NotNull
+    private Integer maxResponseTime;
+
     private Map<String, String> headers;
 
     private Map<String, @ValidJsonPath String> jsonPathValidations;
@@ -55,6 +60,8 @@ public class UpdateActiveAPIMonitorRequestBody extends UpdateScheduledMonitorReq
             activeApiMonitor.setJsonPathValidations(this.getJsonPathValidations());
         if (this.getExpectedStatusCode() != null)
             activeApiMonitor.setExpectedStatus(this.getExpectedStatusCode());
+        if (this.getMaxResponseTime() != null)
+            activeApiMonitor.setMaxResponseTime(this.getMaxResponseTime());
         return activeApiMonitor;
     }
 
@@ -66,6 +73,7 @@ public class UpdateActiveAPIMonitorRequestBody extends UpdateScheduledMonitorReq
         this.setExpectedStatusCode(monitor.getExpectedStatus());
         this.setHeaders(monitor.getHeaders());
         this.setJsonPathValidations(monitor.getJsonPathValidations());
+        this.setMaxResponseTime(monitor.getMaxResponseTime());
         return this;
     }
 }

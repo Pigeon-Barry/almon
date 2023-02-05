@@ -24,48 +24,67 @@
         </div>
     </div>
     <hr>
-    <div class="row">
-        <div class="col-sm-3">
-            <p class="mb-0">Body</p>
+    <div th:if="${monitor.getMaxResponseTime() > 0}">
+        <div class="row">
+            <div class="col-sm-3">
+                <p class="mb-0">Maximum Response time (ms)</p>
+            </div>
+            <div class="col-sm-9">
+                <p class="text-muted mb-0" th:text="${monitor.getMaxResponseTime()}"></p>
+            </div>
         </div>
-        <div class="col-sm-9">
-            <p class="text-muted mb-0" th:text="${monitor.getBody()}"></p>
+        <hr>
+    </div>
+
+    <div th:if="${monitor.getBody().length() > 0}">
+        <div class="row">
+            <div class="col-sm-3">
+                <p class="mb-0">Body</p>
+            </div>
+            <div class="col-sm-9">
+                <p class="text-muted mb-0" th:text="${monitor.getBody()}"></p>
+            </div>
         </div>
+        <hr>
     </div>
-    <hr>
-    <div class="row">
-        <h4>Headers</h4>
-        <table class="table table-bordered">
-            <thead>
-            <tr>
-                <th class="col-6">Name</th>
-                <th class="col-6">Value</th>
-            </tr>
-            </thead>
-            <tbody>
-            <tr th:each="headerEntry : ${monitor.getHeaders().entrySet()}">
-                <td th:text="${headerEntry.getKey()}"></td>
-                <td th:text="${headerEntry.getValue()}"></td>
-            </tr>
-            </tbody>
-        </table>
+    <div th:if="${monitor.getHeaders().size() > 0}">
+        <div class="row">
+            <h4>Headers</h4>
+            <table class="table table-bordered">
+                <thead>
+                <tr>
+                    <th class="col-6">Name</th>
+                    <th class="col-6">Value</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:each="headerEntry : ${monitor.getHeaders().entrySet()}">
+                    <td th:text="${headerEntry.getKey()}"></td>
+                    <td th:text="${headerEntry.getValue()}"></td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+        <hr>
     </div>
-    <hr>
-    <div class="row">
-        <h4>Json Path Validations</h4>
-        <table class="table table-bordered">
-            <thead>
-            <tr>
-                <th class="col-6">Json Path</th>
-                <th class="col-6">Expected Value</th>
-            </tr>
-            </thead>
-            <tbody>
-            <tr th:each="jsonPathValidationEntry : ${monitor.getJsonPathValidations().entrySet()}">
-                <td th:text="${jsonPathValidationEntry.getKey()}"></td>
-                <td th:text="${jsonPathValidationEntry.getValue()}"></td>
-            </tr>
-            </tbody>
-        </table>
+    <div th:if="${monitor.getJsonPathValidations().size() > 0}">
+        <div class="row">
+            <h4>Json Path Validations</h4>
+            <table class="table table-bordered">
+                <thead>
+                <tr>
+                    <th class="col-6">Json Path</th>
+                    <th class="col-6">Expected Value</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:each="jsonPathValidationEntry : ${monitor.getJsonPathValidations().entrySet()}">
+                    <td th:text="${jsonPathValidationEntry.getKey()}"></td>
+                    <td th:text="${jsonPathValidationEntry.getValue()}"></td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+        <hr>
     </div>
 </th:block>
