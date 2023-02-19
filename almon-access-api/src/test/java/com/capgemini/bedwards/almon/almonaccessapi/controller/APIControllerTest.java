@@ -8,9 +8,11 @@ import com.capgemini.bedwards.almon.almoncore.security.AlmonAuthenticationProvid
 import com.capgemini.bedwards.almon.almoncore.security.SecurityConfig;
 import com.capgemini.bedwards.almon.almoncore.services.APIKeyService;
 import com.capgemini.bedwards.almon.almoncore.services.service.ServiceService;
+import com.capgemini.bedwards.almon.almoncore.services.user.UserServiceImpl;
 import com.capgemini.bedwards.almon.almondatastore.models.alert.Status;
 import com.capgemini.bedwards.almon.almondatastore.models.auth.APIKey;
 import com.capgemini.bedwards.almon.almondatastore.models.auth.Authority;
+import com.capgemini.bedwards.almon.almondatastore.models.auth.User;
 import com.capgemini.bedwards.almon.almondatastore.models.monitor.Monitor;
 import com.capgemini.bedwards.almon.almondatastore.models.service.Service;
 import com.capgemini.bedwards.almon.almonmonitoringcore.convertor.*;
@@ -73,6 +75,17 @@ public abstract class APIControllerTest {
 
     @MockBean
     protected AlertConvertor alertConvertor;
+    @MockBean
+    private UserServiceImpl userService;
+
+    @MockBean
+    protected UserIdConvertor userIdConvertor;
+    @MockBean
+    protected UserIdStringConvertor userIdStringConvertor;
+
+    @MockBean
+    protected MonitorAdapterConvertor monitorAdapterConvertor;
+
     @MockBean
     protected AlertStringConvertor alertStringConvertor;
     @MockBean
@@ -149,6 +162,7 @@ public abstract class APIControllerTest {
                 .id(id)
                 .name("Service Name")
                 .description("Service Description")
+                .monitors(new HashSet<>())
                 .enabled(true)
                 .build();
         return setupValidService(service);
@@ -158,6 +172,25 @@ public abstract class APIControllerTest {
         when(serviceConvertor.convert(eq(service.getId()))).thenReturn(service);
         when(serviceService.findServiceById(eq(service.getId()))).thenReturn(service);
         return service;
+    }
+
+    protected User setupValidUser(UUID userId) {
+        User user = User.builder()
+                .id(userId)
+                .email("test@email.com")
+                .firstName("First")
+                .lastName("Last")
+                .password("pass")
+                .enabled(true)
+                .build();
+        return setupValidUser(user);
+    }
+
+    protected User setupValidUser(User user) {
+        when(userIdConvertor.convert(eq(user.getId()))).thenReturn(user);
+        when(userIdStringConvertor.convert(eq(user.getId().toString()))).thenReturn(user);
+        when(userService.findById(eq(user.getId()))).thenReturn(Optional.of(user));
+        return user;
     }
 
     protected TestMonitor setupValidMonitor(Service service, String id) {

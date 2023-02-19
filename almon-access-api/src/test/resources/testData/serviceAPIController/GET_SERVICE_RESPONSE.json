@@ -1,0 +1,7 @@
+{
+  "id": "myServiceId",
+  "name": "Service Name",
+  "description": "Service Description",
+  "monitors": [],
+  "enabled": true
+}

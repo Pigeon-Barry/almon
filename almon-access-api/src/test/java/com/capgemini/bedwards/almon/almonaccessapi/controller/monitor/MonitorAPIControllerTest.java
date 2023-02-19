@@ -1,7 +1,9 @@
 package com.capgemini.bedwards.almon.almonaccessapi.controller.monitor;
 
 import com.capgemini.bedwards.almon.almonaccessapi.controller.APIControllerTest;
+import com.capgemini.bedwards.almon.almonaccessapi.models.TestAlert;
 import com.capgemini.bedwards.almon.almonaccessapi.models.TestMonitor;
+import com.capgemini.bedwards.almon.almonaccessapi.models.TestScheduledAlert;
 import com.capgemini.bedwards.almon.almonaccessapi.models.TestScheduledMonitor;
 import com.capgemini.bedwards.almon.almoncore.exceptions.NotFoundException;
 import com.capgemini.bedwards.almon.almondatastore.models.service.Service;
@@ -53,9 +55,9 @@ public class MonitorAPIControllerTest extends APIControllerTest {
     private Monitors monitors;
 
     @MockBean
-    private ScheduledMonitorAdapter<TestScheduledMonitor, ?> scheduledMonitorAdapter;
+    private ScheduledMonitorAdapter<TestScheduledMonitor, TestScheduledAlert> scheduledMonitorAdapter;
     @MockBean
-    private MonitorAdapter<TestMonitor, ?> monitorAdapter;
+    private MonitorAdapter<TestMonitor, TestAlert> monitorAdapter;
 
     @Override
     protected Stream<StandardTestsArguments> getStandardTestsArgumentProvider() {

@@ -1,0 +1,4 @@
+{
+  "code": "NOT_FOUND",
+  "description": "User does not have service roles for myServiceId"
+}
