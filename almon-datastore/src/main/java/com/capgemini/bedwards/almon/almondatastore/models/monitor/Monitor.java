@@ -3,6 +3,7 @@ package com.capgemini.bedwards.almon.almondatastore.models.monitor;
 import com.capgemini.bedwards.almon.almondatastore.models.alert.Alert;
 import com.capgemini.bedwards.almon.almondatastore.models.service.Service;
 import com.capgemini.bedwards.almon.almondatastore.util.Constants;
+import com.fasterxml.jackson.annotation.JsonValue;
 import lombok.*;
 import lombok.experimental.SuperBuilder;
 import org.hibernate.validator.constraints.Length;
@@ -53,6 +54,7 @@ public abstract class Monitor {
         @JoinColumn(name = "service_id")
         protected Service service;
 
+        @JsonValue
         public String toString() {
             return getService().getId() + "-" + getId();
         }

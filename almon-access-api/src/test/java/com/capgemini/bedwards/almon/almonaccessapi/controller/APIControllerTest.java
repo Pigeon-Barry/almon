@@ -2,6 +2,7 @@ package com.capgemini.bedwards.almon.almonaccessapi.controller;
 
 import com.capgemini.bedwards.almon.almonaccessapi.models.TestAlert;
 import com.capgemini.bedwards.almon.almonaccessapi.models.TestMonitor;
+import com.capgemini.bedwards.almon.almonaccessapi.models.TestScheduledMonitor;
 import com.capgemini.bedwards.almon.almonaccessapi.util.APIWebConfig;
 import com.capgemini.bedwards.almon.almoncore.security.AlmonAuthenticationProvider;
 import com.capgemini.bedwards.almon.almoncore.security.SecurityConfig;
@@ -12,12 +13,10 @@ import com.capgemini.bedwards.almon.almondatastore.models.auth.APIKey;
 import com.capgemini.bedwards.almon.almondatastore.models.auth.Authority;
 import com.capgemini.bedwards.almon.almondatastore.models.monitor.Monitor;
 import com.capgemini.bedwards.almon.almondatastore.models.service.Service;
-import com.capgemini.bedwards.almon.almonmonitoringcore.convertor.AlertConvertor;
-import com.capgemini.bedwards.almon.almonmonitoringcore.convertor.AlertStringConvertor;
-import com.capgemini.bedwards.almon.almonmonitoringcore.convertor.MonitorConvertor;
-import com.capgemini.bedwards.almon.almonmonitoringcore.convertor.ServiceConvertor;
+import com.capgemini.bedwards.almon.almonmonitoringcore.convertor.*;
 import com.capgemini.bedwards.almon.almonmonitoringcore.service.alert.AlertServiceImpl;
 import com.capgemini.bedwards.almon.almonmonitoringcore.service.monitor.MonitorServiceImpl;
+import com.capgemini.bedwards.almon.almonmonitoringcore.service.monitor.ScheduledMonitorServiceImpl;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.TestInstance;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -68,6 +67,10 @@ public abstract class APIControllerTest {
 
     @MockBean
     protected MonitorConvertor monitorConvertor;
+
+    @MockBean
+    protected ScheduledMonitorConvertor scheduledMonitorConvertor;
+
     @MockBean
     protected AlertConvertor alertConvertor;
     @MockBean
@@ -77,6 +80,9 @@ public abstract class APIControllerTest {
 
     @MockBean(name = "monitorServiceImpl")
     protected MonitorServiceImpl monitorServiceImpl;
+
+    @MockBean(name = "scheduledMonitorServiceImpl")
+    protected ScheduledMonitorServiceImpl scheduledMonitorServiceImpl;
 
     @MockBean(name = "alertServiceImpl")
     protected AlertServiceImpl alertServiceImpl;
@@ -96,6 +102,10 @@ public abstract class APIControllerTest {
     public void before() {
         this.TEST_AUTHORITIES.clear();
         updateAuthorities();
+    }
+
+    protected void addAuthorities(String... authorities) {
+        addAuthorities(Arrays.asList(authorities));
     }
 
     protected void addAuthorities(List<String> authorities) {
@@ -161,6 +171,25 @@ public abstract class APIControllerTest {
                 .enabled(true)
                 .build();
         return setupValidMonitor(monitor);
+    }
+
+    protected TestScheduledMonitor setupValidScheduledMonitor(TestScheduledMonitor monitor) {
+        when(scheduledMonitorConvertor.convert(eq(monitor.getId().toString()))).thenReturn(monitor);
+        when(scheduledMonitorServiceImpl.getMonitorFromCombinedId(eq(monitor.getId().toString()))).thenReturn(monitor);
+        return monitor;
+    }
+
+    protected TestScheduledMonitor setupValidScheduledMonitor(Service service, String id) {
+        TestScheduledMonitor monitor = TestScheduledMonitor.builder()
+                .id(Monitor.MonitorId.builder()
+                        .service(service)
+                        .id(id)
+                        .build())
+                .name("Monitor Name")
+                .description("Monitor Description")
+                .enabled(true)
+                .build();
+        return setupValidScheduledMonitor(monitor);
     }
 
     protected TestMonitor setupValidMonitor(TestMonitor monitor) {

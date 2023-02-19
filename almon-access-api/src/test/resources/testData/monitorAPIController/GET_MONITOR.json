@@ -1,0 +1,8 @@
+{
+  "id": "myServiceId-myMonitorId",
+  "name": "Monitor Name",
+  "description": "Monitor Description",
+  "enabled": true,
+  "alerts": null,
+  "monitorType": "TEST"
+}

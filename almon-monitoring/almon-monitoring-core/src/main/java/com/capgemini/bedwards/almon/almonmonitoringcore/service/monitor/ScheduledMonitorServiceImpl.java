@@ -9,7 +9,7 @@ import org.springframework.stereotype.Service;
 
 @Service
 @Slf4j
-public final class ScheduledMonitorServiceImpl extends ScheduledMonitorServiceBase<ScheduledMonitor> implements MonitorService<ScheduledMonitor> {
+public class ScheduledMonitorServiceImpl extends ScheduledMonitorServiceBase<ScheduledMonitor> implements MonitorService<ScheduledMonitor> {
 
     private final ScheduledMonitorTypeRepository<ScheduledMonitor> MONITORING_REPOSITORY;
 
