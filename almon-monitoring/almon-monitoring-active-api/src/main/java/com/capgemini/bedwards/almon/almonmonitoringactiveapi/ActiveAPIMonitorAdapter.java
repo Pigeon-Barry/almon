@@ -1,5 +1,6 @@
 package com.capgemini.bedwards.almon.almonmonitoringactiveapi;
 
+import com.capgemini.bedwards.almon.almoncore.exceptions.ValidationException;
 import com.capgemini.bedwards.almon.almoncore.util.ValidatorUtil;
 import com.capgemini.bedwards.almon.almondatastore.models.monitor.Monitor;
 import com.capgemini.bedwards.almon.almondatastore.models.schedule.ScheduledTask;
@@ -11,7 +12,6 @@ import com.capgemini.bedwards.almon.almonmonitoringactiveapi.models.CreateActive
 import com.capgemini.bedwards.almon.almonmonitoringactiveapi.models.UpdateActiveAPIMonitorRequestBody;
 import com.capgemini.bedwards.almon.almonmonitoringactiveapi.service.ActiveAPIAlertService;
 import com.capgemini.bedwards.almon.almonmonitoringactiveapi.service.ActiveAPIMonitorService;
-import com.capgemini.bedwards.almon.almonmonitoringcore.LinkUtil;
 import com.capgemini.bedwards.almon.almonmonitoringcore.contracts.ScheduledMonitorAdapter;
 import com.capgemini.bedwards.almon.almonmonitoringcore.service.alert.AlertService;
 import com.fasterxml.jackson.databind.node.ObjectNode;
@@ -78,38 +78,28 @@ public class ActiveAPIMonitorAdapter implements ScheduledMonitorAdapter<ActiveAP
     }
 
     @Override
-    public ModelAndView createMonitorWeb(Service service, Object formData, Model model) {
+    public ActiveAPIMonitor createMonitor(Service service, Object formData, Model model) {
         CreateActiveAPIMonitorRequestBody requestBody = (CreateActiveAPIMonitorRequestBody) formData;
         BeanPropertyBindingResult errors = ValidatorUtil.validate(requestBody, "formData");
         if (errors.hasErrors()) {
-            model.addAttribute("org.springframework.validation.BindingResult.formData", errors);
-            model.addAttribute("previousFormData", formData);
-            return getCreatePageWeb(service, model);
+            throw new ValidationException(errors);
         }
-        ActiveAPIMonitor activeApiMonitor = createAPIMonitorType(requestBody, service);
-
-        return new ModelAndView("redirect:" + LinkUtil.getMonitorWebViewLink(activeApiMonitor));
+        return createAPIMonitorType(requestBody, service);
     }
+
 
     @Override
-    public ModelAndView updateMonitorWeb(Monitor monitor, Object formData, Model model) {
+    public ActiveAPIMonitor updateMonitor(Monitor monitor, Object formData, Model model) {
         UpdateActiveAPIMonitorRequestBody requestBody = (UpdateActiveAPIMonitorRequestBody) formData;
         BeanPropertyBindingResult errors = ValidatorUtil.validate(requestBody, "formData");
-        model.addAttribute("formData", formData);
-
         if (errors.hasErrors()) {
-            model.addAttribute("org.springframework.validation.BindingResult.formData", errors);
-            return getUpdatePageWeb(monitor, model);
+            throw new ValidationException(errors);
         }
-
-        monitor = this.API_MONITOR_SERVICE.save(requestBody.updateAPIMonitor((ActiveAPIMonitor) monitor));
-
-        return new ModelAndView("redirect:" + LinkUtil.getMonitorWebViewLink(monitor));
+        return this.getMonitorService().save(requestBody.updateAPIMonitor((ActiveAPIMonitor) monitor));
     }
 
-
     private ActiveAPIMonitor createAPIMonitorType(CreateActiveAPIMonitorRequestBody requestBody, Service service) {
-        return API_MONITOR_SERVICE.create(requestBody.toAPIMonitor(service));
+        return getMonitorService().create(requestBody.toAPIMonitor(service));
     }
 
 

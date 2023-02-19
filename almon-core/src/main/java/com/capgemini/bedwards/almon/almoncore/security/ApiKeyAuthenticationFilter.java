@@ -36,7 +36,6 @@ public class ApiKeyAuthenticationFilter implements Filter {
           if (apiKey.isEnabled()) {
             ApiKeyAuthenticationToken apiToken = new ApiKeyAuthenticationToken(apiKey);
             SecurityContextHolder.getContext().setAuthentication(apiToken);
-            return;//TODO check
           } else {
             writeError(response, "API Key is disabled");
             return;

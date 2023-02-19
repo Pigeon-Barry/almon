@@ -2,6 +2,7 @@ package com.capgemini.bedwards.almon.almoncore.intergrations.api.error;
 
 public enum ErrorCode {
     NOT_FOUND("Not Found"),
+    INVALID_CORRELATIONID("Invalid CorrelationId"),
     NOT_SUBSCRIBED("You are not subscribed"),
     ALREADY_SUBSCRIBED("You are already subscribed"),
     INTERNAL_SERVER_ERROR("Please contact system administrators"),

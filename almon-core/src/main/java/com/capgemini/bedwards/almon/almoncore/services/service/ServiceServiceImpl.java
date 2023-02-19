@@ -57,7 +57,7 @@ public class ServiceServiceImpl implements ServiceService {
         Optional<Service> serviceOptional = findById(serviceId);
         if (serviceOptional.isPresent())
             return serviceOptional.get();
-        throw new NotFoundException("Service with Key: " + serviceId + " not found");
+        throw new NotFoundException("Service with Key: '" + serviceId + "' not found");
     }
 
     @Override

@@ -1,12 +1,14 @@
 package com.capgemini.bedwards.almon.almonaccessapi.util;
 
-import java.util.UUID;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
+import com.capgemini.bedwards.almon.almoncore.exceptions.InvalidCorrelationIdException;
 import lombok.extern.slf4j.Slf4j;
 import org.slf4j.MDC;
 import org.springframework.stereotype.Component;
 import org.springframework.web.servlet.HandlerInterceptor;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.util.UUID;
 
 @Slf4j
 @Component
@@ -28,10 +30,12 @@ public class CorrelationIdInterceptor implements HandlerInterceptor {
     }
 
     private UUID getOrGenerateCorrelationId(final HttpServletRequest request) {
-        if (request.getHeaders(CORRELATION_ID_NAME).hasMoreElements()) {
-            final String correlationId = request.getHeaders(CORRELATION_ID_NAME).nextElement();
+        if (request.getHeader(CORRELATION_ID_NAME) != null) {
+            final String correlationId = request.getHeader(CORRELATION_ID_NAME);
             if (correlationId.matches("[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}")) {
                 return UUID.fromString(correlationId);
+            } else {
+                throw new InvalidCorrelationIdException();
             }
         }
         return UUID.randomUUID();

@@ -6,11 +6,12 @@ import com.capgemini.bedwards.almon.almoncore.services.auth.AuthorityService;
 import com.capgemini.bedwards.almon.almoncore.services.service.ServiceService;
 import com.capgemini.bedwards.almon.almondatastore.models.monitor.Monitor;
 import com.capgemini.bedwards.almon.almonmonitoringcore.repository.monitor.MonitorTypeRepository;
-import java.util.Collections;
-import java.util.Optional;
-import javax.validation.constraints.NotNull;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+
+import javax.validation.constraints.NotNull;
+import java.util.Collections;
+import java.util.Optional;
 
 ;
 
@@ -111,7 +112,7 @@ public abstract class MonitorServiceBase<T extends Monitor> implements MonitorSe
     }
 
     @Override
-    public final T getMonitorFromCombinedId(String source) {
+    public T getMonitorFromCombinedId(String source) {
         String[] parts = source.split("-", 2);
         if (parts.length != 2)
             throw new BadRequestException("Could not determine service and monitor id from '" + source + "'");

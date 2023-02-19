@@ -1,6 +1,7 @@
 package com.capgemini.bedwards.almon.almoncore.intergrations.api;
 
 
+import com.capgemini.bedwards.almon.almoncore.exceptions.InvalidCorrelationIdException;
 import com.capgemini.bedwards.almon.almoncore.exceptions.InvalidPermissionException;
 import com.capgemini.bedwards.almon.almoncore.exceptions.NotFoundException;
 import com.capgemini.bedwards.almon.almoncore.exceptions.ValidationException;
@@ -11,6 +12,7 @@ import io.swagger.v3.oas.annotations.OpenAPIDefinition;
 import io.swagger.v3.oas.annotations.info.Info;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.authentication.AuthenticationCredentialsNotFoundException;
 import org.springframework.validation.FieldError;
@@ -20,6 +22,7 @@ import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
+import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -30,6 +33,20 @@ import java.util.List;
                 version = "1.0.0")
 )
 public abstract class APIController {
+
+
+    @ExceptionHandler(value = {MethodArgumentTypeMismatchException.class})
+    @ResponseBody
+    public ResponseEntity<ErrorResponse> methodArgumentTypeMismatchException(MethodArgumentTypeMismatchException exception) {
+
+        if (exception.getRootCause() != null) {
+            if (exception.getRootCause().getClass().equals(NotFoundException.class)) {
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).body(resourceNotFoundException((NotFoundException) exception.getRootCause()));
+            }
+        }
+        return ResponseEntity.internalServerError().body(new ErrorResponse(ErrorCode.INTERNAL_SERVER_ERROR, exception.getMessage()));
+    }
+
     @ExceptionHandler(value = {NotFoundException.class})
     @ResponseStatus(value = HttpStatus.NOT_FOUND)
     @ResponseBody
@@ -42,6 +59,13 @@ public abstract class APIController {
     @ResponseBody
     public ErrorResponse accessDeniedException(AccessDeniedException exception) {
         return new ErrorResponse(ErrorCode.UNAUTHORISED_API);
+    }
+
+    @ExceptionHandler(value = {InvalidCorrelationIdException.class})
+    @ResponseStatus(value = HttpStatus.BAD_REQUEST)
+    @ResponseBody
+    public ErrorResponse invalidCorrelationIdException(InvalidCorrelationIdException exception) {
+        return new ErrorResponse(ErrorCode.INVALID_CORRELATIONID);
     }
 
     @ExceptionHandler(AuthenticationCredentialsNotFoundException.class)
@@ -73,6 +97,7 @@ public abstract class APIController {
     public List<BadRequestResponse> handleValidationExceptions(MethodArgumentNotValidException ex) {
         return handleObjectError(ex.getBindingResult().getAllErrors());
     }
+
     public List<BadRequestResponse> handleObjectError(List<ObjectError> objectErrors) {
         List<BadRequestResponse> errors = new ArrayList<>();
         objectErrors.forEach((error) -> {

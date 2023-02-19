@@ -1,5 +1,6 @@
 package com.capgemini.bedwards.almon.almonmonitoringcore.service.alert;
 
+import com.capgemini.bedwards.almon.almoncore.exceptions.NotFoundException;
 import com.capgemini.bedwards.almon.almondatastore.models.alert.Alert;
 import com.capgemini.bedwards.almon.almondatastore.models.alert.AlertSpecification;
 import com.capgemini.bedwards.almon.almondatastore.models.monitor.Monitor;
@@ -13,10 +14,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.domain.Sort.Direction;
 
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
-import java.util.UUID;
+import java.util.*;
 
 @Slf4j
 public abstract class AlertServiceBase<T extends Alert<?>> implements AlertService<T> {
@@ -73,8 +71,12 @@ public abstract class AlertServiceBase<T extends Alert<?>> implements AlertServi
   }
 
 
+
   @Override
   public T getAlertFromId(UUID id) {
-    return getAlertFromId(id);
+    Optional<T> alertOptional = getRepository().findById(id);
+    if (alertOptional.isPresent())
+      return alertOptional.get();
+    throw new NotFoundException("Failed to find alert with id: '" + id + "'");
   }
 }

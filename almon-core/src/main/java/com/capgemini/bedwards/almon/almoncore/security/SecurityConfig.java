@@ -48,7 +48,7 @@ public class SecurityConfig {
     }
 
     @Bean
-    public HttpTraceRepository htttpTraceRepository() {
+    public HttpTraceRepository httpTraceRepository() {
         return new InMemoryHttpTraceRepository();
     }
 
@@ -129,8 +129,13 @@ public class SecurityConfig {
     @Configuration
     @Order(2)
     public static class ApiSecurityConfig {
+
+        private final APIKeyService API_KEY_SERVICE;
+
         @Autowired
-        private APIKeyService apiKeyService;
+        public ApiSecurityConfig(APIKeyService apiKeyService) {
+            this.API_KEY_SERVICE = apiKeyService;
+        }
 
         public AccessDeniedHandler accessDeniedHandler() {
             return (request, response, accessDeniedException) -> {
@@ -149,11 +154,9 @@ public class SecurityConfig {
                     .and()
                     .exceptionHandling(exceptionHandlingConfigurer -> exceptionHandlingConfigurer.accessDeniedHandler(accessDeniedHandler()))
                     .csrf().disable()
-                    .addFilterBefore(new ApiKeyAuthenticationFilter(apiKeyService), UsernamePasswordAuthenticationFilter.class)
+                    .addFilterBefore(new ApiKeyAuthenticationFilter(this.API_KEY_SERVICE), UsernamePasswordAuthenticationFilter.class)
                     .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.NEVER);
             return http.build();
         }
     }
-
-
 }

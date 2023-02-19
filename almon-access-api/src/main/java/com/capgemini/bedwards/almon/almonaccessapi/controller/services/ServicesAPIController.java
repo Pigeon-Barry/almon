@@ -1,4 +1,4 @@
-package com.capgemini.bedwards.almon.almonaccessapi.controllers.service;
+package com.capgemini.bedwards.almon.almonaccessapi.controller.services;
 
 import com.capgemini.bedwards.almon.almonaccessapi.models.services.ServiceRequestBody;
 import com.capgemini.bedwards.almon.almonaccessapi.models.services.ServiceResponseBody;
@@ -13,7 +13,6 @@ import io.swagger.v3.oas.annotations.media.ArraySchema;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
-import javax.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -24,6 +23,8 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+
+import javax.validation.Valid;
 
 @RestController
 @RequestMapping("/api/services")

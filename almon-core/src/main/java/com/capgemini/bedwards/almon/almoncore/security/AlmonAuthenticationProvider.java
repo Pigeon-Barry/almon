@@ -16,15 +16,20 @@ import org.springframework.stereotype.Component;
 @Slf4j
 public class AlmonAuthenticationProvider implements AuthenticationProvider {
 
+    private final AuthService AUTH_SERVICE;
+
     @Autowired
-    AuthService authService;
+
+    public AlmonAuthenticationProvider(AuthService authService) {
+        this.AUTH_SERVICE = authService;
+    }
 
 
     @Override
     public Authentication authenticate(Authentication authentication) throws AuthenticationException {
         String name = authentication.getName();
         String password = authentication.getCredentials().toString();
-        User user = authService.getAuthenticatedUser(authentication.getName(), password);
+        User user = this.AUTH_SERVICE.getAuthenticatedUser(authentication.getName(), password);
         if (user == null)
             throw new BadCredentialsException("Invalid Credentials");
         return SecurityUtil.getNewUserAuthenticationToken(user, name);

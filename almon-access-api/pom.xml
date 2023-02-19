@@ -35,6 +35,17 @@
             <artifactId>almon-monitoring-core</artifactId>
             <version>${almon-monitoring.version}</version>
         </dependency>
+        <dependency>
+            <groupId>com.capgemini.bedwards.almon</groupId>
+            <artifactId>almon-test</artifactId>
+            <version>${almon-monitoring.version}</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.security</groupId>
+            <artifactId>spring-security-test</artifactId>
+            <scope>test</scope>
+        </dependency>
     </dependencies>
 
     <build>

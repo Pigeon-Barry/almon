@@ -8,9 +8,6 @@ import com.capgemini.bedwards.almon.almoncore.security.AlmonAuthenticationProvid
 import com.capgemini.bedwards.almon.almoncore.services.auth.AuthService;
 import com.capgemini.bedwards.almon.almoncore.util.SecurityUtil;
 import com.capgemini.bedwards.almon.almondatastore.models.auth.User;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import javax.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -24,16 +21,26 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import javax.validation.Valid;
+
 @Controller
 @RequestMapping("/web/auth")
 @Slf4j
-public class AuthController  extends WebController {
+public class AuthWebController extends WebController {
+
+
+    private final AuthService AUTH_SERVICE;
+
+
+    private final AlmonAuthenticationProvider AUTHENTICATION_PROVIER;
 
     @Autowired
-    AuthService authService;
-
-    @Autowired
-    AlmonAuthenticationProvider authenticationProvider;
+    public AuthWebController(AuthService authService, AlmonAuthenticationProvider almonAuthenticationProvider) {
+        this.AUTH_SERVICE = authService;
+        this.AUTHENTICATION_PROVIER = almonAuthenticationProvider;
+    }
 
     @GetMapping("/register")
     public String getRegisterForm(Register register) {
@@ -45,7 +52,7 @@ public class AuthController  extends WebController {
         if (errors.hasErrors()) {
             return "/auth/register";
         }
-        User user = authService.register(register.getEmail(), register.getFirstName(), register.getLastName(), register.getPassword());
+        User user = this.AUTH_SERVICE.register(register.getEmail(), register.getFirstName(), register.getLastName(), register.getPassword());
 
         if (user.getApprovedBy() == null)
             return "redirect:/web/auth/pendingApproval";
@@ -108,7 +115,7 @@ public class AuthController  extends WebController {
     private void doAutoLogin(String username, String password) {
         try {
             UsernamePasswordAuthenticationToken token = new UsernamePasswordAuthenticationToken(username, password);
-            Authentication authentication = this.authenticationProvider.authenticate(token);
+            Authentication authentication = this.AUTHENTICATION_PROVIER.authenticate(token);
             log.debug("Logging in with [{}]", authentication.getPrincipal());
             SecurityUtil.setAuthentication(authentication);
         } catch (Exception e) {

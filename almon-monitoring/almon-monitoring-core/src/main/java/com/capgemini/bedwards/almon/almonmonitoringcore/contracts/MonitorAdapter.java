@@ -1,17 +1,20 @@
 package com.capgemini.bedwards.almon.almonmonitoringcore.contracts;
 
+import com.capgemini.bedwards.almon.almoncore.exceptions.ValidationException;
 import com.capgemini.bedwards.almon.almondatastore.models.alert.Alert;
 import com.capgemini.bedwards.almon.almondatastore.models.alert.AlertFilterOptions;
 import com.capgemini.bedwards.almon.almondatastore.models.alert.AlertSpecification;
 import com.capgemini.bedwards.almon.almondatastore.models.monitor.Monitor;
 import com.capgemini.bedwards.almon.almondatastore.models.service.Service;
+import com.capgemini.bedwards.almon.almonmonitoringcore.LinkUtil;
 import com.capgemini.bedwards.almon.almonmonitoringcore.service.alert.AlertService;
 import com.capgemini.bedwards.almon.almonmonitoringcore.service.monitor.MonitorService;
 import com.fasterxml.jackson.databind.node.ObjectNode;
-import java.util.List;
 import org.springframework.data.domain.Page;
 import org.springframework.ui.Model;
 import org.springframework.web.servlet.ModelAndView;
+
+import java.util.List;
 
 
 public interface MonitorAdapter<T extends Monitor, A extends Alert<?>> {
@@ -35,6 +38,7 @@ public interface MonitorAdapter<T extends Monitor, A extends Alert<?>> {
     default String getViewMonitorPageWebView() {
         return "monitor/" + getId() + "/viewMonitor";
     }
+
 
     default ModelAndView getViewPageWeb(Service service, Monitor monitor, Model model, AlertFilterOptions alertFilterOptions, int alertPageNumber, int alertPageSize) {
         ModelAndView modelAndView = new ModelAndView(getViewMonitorPageWebView());
@@ -79,14 +83,34 @@ public interface MonitorAdapter<T extends Monitor, A extends Alert<?>> {
         return modelAndView;
     }
 
-    ModelAndView createMonitorWeb(Service service, Object formData, Model model);
+    default ModelAndView createMonitorWeb(Service service, Object formData, Model model) {
+        try {
+            return new ModelAndView("redirect:" + LinkUtil.getMonitorWebViewLink(createMonitor(service, formData, model)));
+        } catch (ValidationException validationException) {
+            model.addAttribute("org.springframework.validation.BindingResult.formData", validationException.getErrors());
+            model.addAttribute("previousFormData", formData);
+            return getCreatePageWeb(service, model);
+        }
+    }
 
-    ModelAndView updateMonitorWeb(Monitor monitor, Object formData, Model model);
+    T createMonitor(Service service, Object formData, Model model);
+
+    default ModelAndView updateMonitorWeb(Monitor monitor, Object formData, Model model) {
+        try {
+            return new ModelAndView("redirect:" + LinkUtil.getMonitorWebViewLink(updateMonitor(monitor, formData, model)));
+        } catch (ValidationException validationException) {
+            model.addAttribute("org.springframework.validation.BindingResult.formData", validationException.getErrors());
+            return getUpdatePageWeb(monitor, model);
+        }
+    }
+
+    T updateMonitor(Monitor monitor, Object formData, Model model);
 
     Object getCreateMonitorRequestBody(ObjectNode jsonRes);
 
     Object getUpdateMonitorRequestBody(ObjectNode jsonRes);
 
     Class<T> getMonitorClass();
+
 
 }

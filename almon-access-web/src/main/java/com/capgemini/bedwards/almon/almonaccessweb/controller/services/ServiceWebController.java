@@ -4,11 +4,9 @@ package com.capgemini.bedwards.almon.almonaccessweb.controller.services;
 import com.capgemini.bedwards.almon.almonaccessweb.model.services.ServiceUpdateRequestBody;
 import com.capgemini.bedwards.almon.almoncore.intergrations.web.WebController;
 import com.capgemini.bedwards.almon.almoncore.services.service.ServiceService;
-import com.capgemini.bedwards.almon.almoncore.services.user.UserService;
 import com.capgemini.bedwards.almon.almondatastore.models.service.Service;
 import com.capgemini.bedwards.almon.almonmonitoringcore.Monitors;
 import com.capgemini.bedwards.almon.notificationcore.service.NotificationService;
-import javax.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -19,6 +17,8 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+
+import javax.validation.Valid;
 
 @Controller
 @RequestMapping("/web/service/{serviceId}")
@@ -33,7 +33,7 @@ public class ServiceWebController extends WebController {
 
 
     @Autowired
-    public ServiceWebController(ServiceService serviceService, UserService userService, Monitors monitors, NotificationService notificationService) {
+    public ServiceWebController(ServiceService serviceService, Monitors monitors, NotificationService notificationService) {
         this.SERVICE_SERVICE = serviceService;
         this.MONITORS = monitors;
         this.NOTIFICATION_SERVICE = notificationService;

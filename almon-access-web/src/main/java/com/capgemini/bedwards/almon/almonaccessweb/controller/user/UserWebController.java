@@ -10,8 +10,6 @@ import com.capgemini.bedwards.almon.almondatastore.models.auth.Authority;
 import com.capgemini.bedwards.almon.almondatastore.models.auth.Role;
 import com.capgemini.bedwards.almon.almondatastore.models.auth.User;
 import com.capgemini.bedwards.almon.almondatastore.models.notification.WebNotification;
-import java.util.List;
-import javax.servlet.http.HttpServletRequest;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -20,11 +18,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @Controller
 @RequestMapping("/web/user/{userId}")
@@ -32,14 +28,21 @@ import org.springframework.web.bind.annotation.RequestParam;
 @PreAuthorize("isAuthenticated()")
 public class UserWebController extends WebController {
 
+    private final UserService USER_SERVICE;
+
+    private final AuthorityService AUTHORITY_SERVICE;
+
+    private final RoleService ROLE_SERVICE;
+
+    private final WebNotificationService WEB_NOTIFICATION_SERVICE;
+
     @Autowired
-    UserService userService;
-    @Autowired
-    AuthorityService authorityService;
-    @Autowired
-    RoleService roleService;
-    @Autowired
-    WebNotificationService webNotificationService;
+    public UserWebController(UserService userService, AuthorityService authorityService, RoleService roleService, WebNotificationService webNotificationService) {
+        this.USER_SERVICE = userService;
+        this.AUTHORITY_SERVICE = authorityService;
+        this.ROLE_SERVICE = roleService;
+        this.WEB_NOTIFICATION_SERVICE = webNotificationService;
+    }
 
     @GetMapping()
 
@@ -48,14 +51,14 @@ public class UserWebController extends WebController {
         @RequestParam(defaultValue = "1") int notificationPageNumber,
         @RequestParam(defaultValue = "25") int notificationPageSize,
         Model model) {
-        List<Role> roles = roleService.getAllRoles();
-        List<Authority> authorities = authorityService.getAllAuthorities();
+        List<Role> roles = this.ROLE_SERVICE.getAllRoles();
+        List<Authority> authorities = this.AUTHORITY_SERVICE.getAllAuthorities();
         model.addAttribute("roles", roles);
         model.addAttribute("pageUser", user);
         model.addAttribute("authorities", authorities);
 
-        Page<WebNotification> page = webNotificationService.getNotifications(user,
-            notificationPageNumber, notificationPageSize);
+        Page<WebNotification> page = this.WEB_NOTIFICATION_SERVICE.getNotifications(user,
+                notificationPageNumber, notificationPageSize);
 
         model.addAttribute("currentPage", notificationPageNumber);
         model.addAttribute("totalPages", page.getTotalPages());
@@ -68,14 +71,14 @@ public class UserWebController extends WebController {
     @PutMapping("/enable")
     @PreAuthorize("hasAuthority('ENABLE_DISABLE_ACCOUNTS')")
     public ResponseEntity<String> enableAccount(@PathVariable(name = "userId") User user) {
-        userService.enableAccount(SecurityUtil.getAuthenticatedUser(), user);
+        this.USER_SERVICE.enableAccount(SecurityUtil.getAuthenticatedUser(), user);
         return new ResponseEntity<>(HttpStatus.ACCEPTED);
     }
 
     @PutMapping("/disable")
     @PreAuthorize("hasAuthority('ENABLE_DISABLE_ACCOUNTS')")
-    public ResponseEntity<String> disableAccount(@PathVariable(name = "userId") User user, HttpServletRequest request) {
-        userService.disableAccount(SecurityUtil.getAuthenticatedUser(),user);
+    public ResponseEntity<String> disableAccount(@PathVariable(name = "userId") User user) {
+        this.USER_SERVICE.disableAccount(SecurityUtil.getAuthenticatedUser(), user);
         return new ResponseEntity<>(HttpStatus.ACCEPTED);
     }
 }

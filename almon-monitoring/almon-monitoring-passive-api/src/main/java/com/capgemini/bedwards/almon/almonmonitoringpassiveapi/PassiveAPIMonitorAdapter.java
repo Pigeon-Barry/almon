@@ -1,9 +1,9 @@
 package com.capgemini.bedwards.almon.almonmonitoringpassiveapi;
 
+import com.capgemini.bedwards.almon.almoncore.exceptions.ValidationException;
 import com.capgemini.bedwards.almon.almoncore.util.ValidatorUtil;
 import com.capgemini.bedwards.almon.almondatastore.models.monitor.Monitor;
 import com.capgemini.bedwards.almon.almondatastore.models.service.Service;
-import com.capgemini.bedwards.almon.almonmonitoringcore.LinkUtil;
 import com.capgemini.bedwards.almon.almonmonitoringcore.contracts.MonitorAdapter;
 import com.capgemini.bedwards.almon.almonmonitoringcore.service.alert.AlertService;
 import com.capgemini.bedwards.almon.almonmonitoringcore.service.monitor.MonitorService;
@@ -62,18 +62,15 @@ public class PassiveAPIMonitorAdapter implements MonitorAdapter<PassiveAPIMonito
         return modelAndView;
     }
 
+
     @Override
-    public ModelAndView createMonitorWeb(Service service, Object formData, Model model) {
+    public PassiveAPIMonitor createMonitor(Service service, Object formData, Model model) {
         CreatePassiveAPIMonitorRequestBody requestBody = (CreatePassiveAPIMonitorRequestBody) formData;
         BeanPropertyBindingResult errors = ValidatorUtil.validate(requestBody, "formData");
         if (errors.hasErrors()) {
-            model.addAttribute("org.springframework.validation.BindingResult.formData", errors);
-            model.addAttribute("previousFormData", formData);
-            return getCreatePageWeb(service, model);
+            throw new ValidationException(errors);
         }
-        PassiveAPIMonitor activeApiMonitor = createAPIMonitorType(requestBody, service);
-
-        return new ModelAndView("redirect:" + LinkUtil.getMonitorWebViewLink(activeApiMonitor));
+        return createAPIMonitorType(requestBody, service);
     }
 
     private PassiveAPIMonitor createAPIMonitorType(CreatePassiveAPIMonitorRequestBody requestBody, Service service) {
@@ -82,7 +79,12 @@ public class PassiveAPIMonitorAdapter implements MonitorAdapter<PassiveAPIMonito
 
     @Override
     public ModelAndView updateMonitorWeb(Monitor monitor, Object formData, Model model) {
-        throw new UnsupportedOperationException();//TODO
+        throw new UnsupportedOperationException();
+    }
+
+    @Override
+    public PassiveAPIMonitor updateMonitor(Monitor monitor, Object formData, Model model) {
+        throw new UnsupportedOperationException();
     }
 
     @Override

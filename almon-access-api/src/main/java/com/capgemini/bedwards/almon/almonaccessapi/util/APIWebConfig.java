@@ -11,7 +11,6 @@ public class APIWebConfig implements WebMvcConfigurer {
     public void addInterceptors(final InterceptorRegistry registry) {
         registry.addInterceptor(new CorrelationIdInterceptor())
             .addPathPatterns("/api/**");
-        ;
     }
 
 }
