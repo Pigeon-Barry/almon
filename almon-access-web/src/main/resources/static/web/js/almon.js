@@ -56,11 +56,96 @@ function showAlert(message, alertType) {
     );
 }
 
-function confirmationPrompt(title, message) {
-    return confirm(message);//TODO Make more pretty
+let promptId = 0;
+
+function confirmationPrompt(title, message, onConfirm, onCancel) {
+    const idSuffix = promptId;
+    promptId = promptId + 1;
+
+    const val = "<div id=\"confirmationDialogModel_" + idSuffix + "\" class=\"modal fade\" data-bs-backdrop=\"static\" data-bs-keyboard=\"false\" tabindex=\"-1\"\n" +
+        "                 aria-labelledby=\"confirmationDialogTitle_" + idSuffix + "\" aria-hidden=\"true\">\n" +
+        "                <div class=\"modal-dialog modal-lg modal-dialog-centered modal-dialog-scrollable\">\n" +
+        "                    <div class=\"modal-content\">\n" +
+        "                        <div class=\"modal-header\">\n" +
+        "                            <h5 class=\"modal-title\" id=\"confirmationDialogTitle_" + idSuffix + "\">" + title + "</h5>\n" +
+        "                            <button type=\"button\" class=\"btn-close\" data-bs-dismiss=\"modal\" aria-label=\"Close\"></button>\n" +
+        "                        </div>\n" +
+        "                        <div class=\"modal-body\" id=\"confirmationDialogBody_" + idSuffix + "\">\n" +
+        "                            <p id=\"confirmationDialogText\">" + message + "</p>\n" +
+        "                        </div>\n" +
+        "                        <div class=\"modal-footer\">\n" +
+        "                            <button type=\"button\" class=\"btn btn-danger\" data-bs-dismiss=\"modal\" id=\"confirmationDialogCancel_" + idSuffix + "\">Cancel</button>\n" +
+        "                            <button type=\"submit\" class=\"btn btn-primary\" id=\"confirmationDialogOK_" + idSuffix + "\">OK</button>\n" +
+        "                        </div>\n" +
+        "                    </div>\n" +
+        "                </div>\n" +
+        "            </div>";
+
+    const promptContainer = $('#prompt-container');
+    promptContainer.append(val);
+
+    const modal = $('#confirmationDialogModel_' + idSuffix);
+    //Add new Listeners
+    modal.on('hide.bs.modal', function (event) {
+        console.log(onCancel);
+        if (onCancel !== null && onCancel !== undefined) {
+            onCancel();
+        }
+        modal.remove();
+    });
+    $('#confirmationDialogOK_' + idSuffix).on('click', function (event) {
+        modal.off('hide.bs.modal');
+        modal.modal('hide');
+        if (onConfirm !== null && onConfirm !== undefined) {
+            onConfirm();
+        }
+        modal.remove();
+    });
+    modal.modal('show');
 }
-function showPopup(title, message){
-    return confirmationPrompt(title,message);
+
+function showPopup(title, message, onConfirm, onCancel) {
+    const idSuffix = promptId;
+    promptId = promptId + 1;
+
+    const val = "<div id=\"confirmationDialogModel_" + idSuffix + "\" class=\"modal fade\" data-bs-backdrop=\"static\" data-bs-keyboard=\"false\" tabindex=\"-1\"\n" +
+        "                 aria-labelledby=\"confirmationDialogTitle_" + idSuffix + "\" aria-hidden=\"true\">\n" +
+        "                <div class=\"modal-dialog modal-lg modal-dialog-centered modal-dialog-scrollable\">\n" +
+        "                    <div class=\"modal-content\">\n" +
+        "                        <div class=\"modal-header\">\n" +
+        "                            <h5 class=\"modal-title\" id=\"confirmationDialogTitle_" + idSuffix + "\">" + title + "</h5>\n" +
+        "                            <button type=\"button\" class=\"btn-close\" data-bs-dismiss=\"modal\" aria-label=\"Close\"></button>\n" +
+        "                        </div>\n" +
+        "                        <div class=\"modal-body\" id=\"confirmationDialogBody_" + idSuffix + "\">\n" +
+        "                            <p id=\"confirmationDialogText\">" + message + "</p>\n" +
+        "                        </div>\n" +
+        "                        <div class=\"modal-footer\">\n" +
+        "                            <button type=\"submit\" class=\"btn btn-primary\"  id=\"confirmationDialogOK_" + idSuffix + "\">OK</button>\n" +
+        "                        </div>\n" +
+        "                    </div>\n" +
+        "                </div>\n" +
+        "            </div>";
+
+    const promptContainer = $('#prompt-container');
+    promptContainer.append(val);
+
+    const modal = $('#confirmationDialogModel_' + idSuffix);
+    //Add new Listeners
+    modal.on('hide.bs.modal', function (event) {
+        if (onCancel !== null && onCancel !== undefined) {
+            onCancel();
+        }
+        modal.remove();
+    });
+    $('#confirmationDialogOK_' + idSuffix).on('click', function (event) {
+        modal.off('hide.bs.modal');
+        if (onConfirm !== null && onConfirm !== undefined) {
+            onConfirm();
+        }
+        modal.modal('hide');
+        modal.remove();
+    });
+    modal.modal('show');
 }
 
 function redirect(url){

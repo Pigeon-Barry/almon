@@ -83,36 +83,34 @@
                     formDataMap.set(inputField.attr("name"), updateType);
                 }
             });
-            if(formDataMap.size === 0){
+            if (formDataMap.size === 0) {
                 showAlertInfo("No roles were detected as being changed.");
                 $("#" + modalId).modal('toggle');
                 return;
             }
-            if (!confirmationPrompt("Role Amendment", "Are you sure you want to update the roles of  user [[${user.getEmail()}]]?"))
-                return;
-            console.log(formDataMap);
+            confirmationPrompt("Role Amendment", "Are you sure you want to update the roles of  user [[${user.getEmail()}]]?", function () {
+                const url = "/web/user/" + userId + "/roles";
+                const token = $("meta[name='_csrf']").attr("content");
+                const header = $("meta[name='_csrf_header']").attr("content");
 
-            const url = "/web/user/" + userId + "/roles";
-            const token = $("meta[name='_csrf']").attr("content");
-            const header = $("meta[name='_csrf_header']").attr("content");
-
-            console.log(JSON.stringify(Object.fromEntries(formDataMap)));
-            $.ajax({
-                type: 'PUT',
-                url: url,
-                contentType: 'application/json',
-                data: JSON.stringify(Object.fromEntries(formDataMap)),
-                beforeSend: function (request) {
-                    request.setRequestHeader(header, token);
-                },
-                complete: function (xhr, textStatus) {
-                    if (xhr.status === 202) {
-                        refreshPage();
-                    } else {
-                        showAlertError("Failed to Update roles. Please consult an administrator");
+                console.log(JSON.stringify(Object.fromEntries(formDataMap)));
+                $.ajax({
+                    type: 'PUT',
+                    url: url,
+                    contentType: 'application/json',
+                    data: JSON.stringify(Object.fromEntries(formDataMap)),
+                    beforeSend: function (request) {
+                        request.setRequestHeader(header, token);
+                    },
+                    complete: function (xhr, textStatus) {
+                        if (xhr.status === 202) {
+                            refreshPage();
+                        } else {
+                            showAlertError("Failed to Update roles. Please consult an administrator");
+                        }
                     }
-                }
-            });
+                });
+            }, undefined);
         }
     </script>
 </div>

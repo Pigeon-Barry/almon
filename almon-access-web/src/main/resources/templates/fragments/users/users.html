@@ -93,37 +93,35 @@
 
         function updateEnableStatus(domElement, userId, enabled) {
             const suffix = enabled ? "enable" : "disable";
-
-            if (!confirmationPrompt(suffix + " - Account", "Are you sure you want to " + suffix + " this account?"))
-                return;
-
-            const url = "/web/user/" + userId + "/" + suffix;
-            const token = $("meta[name='_csrf']").attr("content");
-            const header = $("meta[name='_csrf_header']").attr("content");
-            $.ajax({
-                type: 'PUT',
-                url: url,
-                beforeSend: function (request) {
-                    request.setRequestHeader(header, token);
-                },
-                complete: function (xhr, textStatus) {
-                    if (xhr.status === 202) {
-                        showAlertSuccess("Account Successfully " + suffix + "d.");
-                        const dom = $(domElement);
-                        if (enabled) {
-                            dom.removeClass("btn-success").addClass("btn-danger");
-                            dom.attr("onclick", "disableAccount(this.getAttribute('data-userId'),this)");
-                            dom.text("Disable")
+            confirmationPrompt(suffix + " - Account", "Are you sure you want to " + suffix + " this account?", function () {
+                const url = "/web/user/" + userId + "/" + suffix;
+                const token = $("meta[name='_csrf']").attr("content");
+                const header = $("meta[name='_csrf_header']").attr("content");
+                $.ajax({
+                    type: 'PUT',
+                    url: url,
+                    beforeSend: function (request) {
+                        request.setRequestHeader(header, token);
+                    },
+                    complete: function (xhr, textStatus) {
+                        if (xhr.status === 202) {
+                            showAlertSuccess("Account Successfully " + suffix + "d.");
+                            const dom = $(domElement);
+                            if (enabled) {
+                                dom.removeClass("btn-success").addClass("btn-danger");
+                                dom.attr("onclick", "disableAccount(this.getAttribute('data-userId'),this)");
+                                dom.text("Disable")
+                            } else {
+                                dom.removeClass("btn-danger").addClass("btn-success");
+                                dom.attr("onclick", "enableAccount(this.getAttribute('data-userId'),this)");
+                                dom.text("Enable")
+                            }
                         } else {
-                            dom.removeClass("btn-danger").addClass("btn-success");
-                            dom.attr("onclick", "enableAccount(this.getAttribute('data-userId'),this)");
-                            dom.text("Enable")
+                            showAlertError("Failed to " + suffix + " account. Please consult an administrator");
                         }
-                    } else {
-                        showAlertError("Failed to " + suffix + " account. Please consult an administrator");
                     }
-                }
-            });
+                });
+            }, undefined);
         }
 
     </script>

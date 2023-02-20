@@ -53,9 +53,9 @@
     </div>
     <script>
         function resetAlertFilter() {
-            if (!confirmationPrompt("Reset Filter", "Are you sure you want to reset this filter?"))
-                return;
-            deleteQueryParam(['status', 'from', 'to']);
+            confirmationPrompt("Reset Filter", "Are you sure you want to reset this filter?", function () {
+                deleteQueryParam(['status', 'from', 'to']);
+            }, undefined);
         }
 
         const PICKER_DATE_FORMAT = 'DD/MM/YYYY h:mm:ss A';

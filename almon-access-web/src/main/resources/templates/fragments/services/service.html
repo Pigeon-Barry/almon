@@ -264,27 +264,26 @@
         const serviceId = "[[${service.getId()}]]";
 
         function deleteServiceRole(userId, email) {
-            if (!confirmationPrompt("User Deletion", "Are you sure you want remove user  " + email + " from this service?"))
-                return;
-
-            const url = "/web/service/" + serviceId + "/users/" + userId;
-            const token = $("meta[name='_csrf']").attr("content");
-            const header = $("meta[name='_csrf_header']").attr("content");
-            $.ajax({
-                type: 'DELETE',
-                url: url,
-                beforeSend: function (request) {
-                    request.setRequestHeader(header, token);
-                },
-                complete: function (xhr, textStatus) {
-                    console.log(xhr.status);
-                    if (xhr.status === 200) {
-                        refreshPage();
-                    } else {
-                        showAlertError("Failed to remove user. Please consult an administrator");
+            confirmationPrompt("User Deletion", "Are you sure you want remove user  " + email + " from this service?", function () {
+                const url = "/web/service/" + serviceId + "/users/" + userId;
+                const token = $("meta[name='_csrf']").attr("content");
+                const header = $("meta[name='_csrf_header']").attr("content");
+                $.ajax({
+                    type: 'DELETE',
+                    url: url,
+                    beforeSend: function (request) {
+                        request.setRequestHeader(header, token);
+                    },
+                    complete: function (xhr, textStatus) {
+                        console.log(xhr.status);
+                        if (xhr.status === 200) {
+                            refreshPage();
+                        } else {
+                            showAlertError("Failed to remove user. Please consult an administrator");
+                        }
                     }
-                }
-            });
+                });
+            }, undefined);
         }
     </script>
 </div>

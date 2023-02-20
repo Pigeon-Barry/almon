@@ -110,14 +110,12 @@
 
 
         updateServiceRolesFormElement.submit(function (event) {
-                event.preventDefault();
-                if (serviceAccountContainerElement.children().length === 0) {
-                    showPopup("Error", "At least one email must be present");
-                    return;
-                }
-                if (!confirmationPrompt("Service role assignment", "Are you sure you want to update the roles on this service?"))
-                    return;
-
+            event.preventDefault();
+            if (serviceAccountContainerElement.children().length === 0) {
+                showPopup("Error", "At least one email must be present", undefined, undefined);
+                return;
+            }
+            confirmationPrompt("Service role assignment", "Are you sure you want to update the roles on this service?", function () {
                 const standardUsers = new Set();
                 const adminUsers = new Set();
 
@@ -153,17 +151,18 @@
                     },
                     complete: function (xhr, textStatus) {
                         if (xhr.status === 200) {
-                            showPopup("Role Update", "Successfully added roles to users");
-                            refreshPage();
+                            showPopup("Role Update", "Successfully added roles to users", function () {
+                                refreshPage();
+                            }, undefined);
                         } else if (xhr.status === 404) {
-                            showPopup("Error - Not Found", $.parseJSON(xhr.responseText).description);
+                            showPopup("Error - Not Found", $.parseJSON(xhr.responseText).description, undefined, undefined);
                         } else {
                             showAlertError("Failed to assign user roles. Please consult an administrator");
                         }
                     }
                 });
-            }
-        );
+            }, undefined);
+        });
     </script>
 
 
