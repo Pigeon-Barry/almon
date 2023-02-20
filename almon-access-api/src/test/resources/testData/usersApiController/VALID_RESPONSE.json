@@ -1,0 +1,53 @@
+[
+  {
+    "id": "4d7b0d54-cdae-4253-bbd6-d95f6ae69113",
+    "email": "test@email.com",
+    "phoneNumber": null,
+    "firstName": "First",
+    "lastName": "Last",
+    "password": "pass",
+    "enabled": true,
+    "approvedBy": null,
+    "authorities": null,
+    "roles": null,
+    "serviceSubscriptions": null,
+    "monitorSubscriptions": null,
+    "profilePicture": "/web/img/ProfilePicturePlaceholder.png",
+    "profilePage": "/web/user/4d7b0d54-cdae-4253-bbd6-d95f6ae69113",
+    "fullName": "First Last"
+  },
+  {
+    "id": "4d7b0d54-cdae-4253-bbd6-d95f6ae69114",
+    "email": "test@email.com",
+    "phoneNumber": null,
+    "firstName": "First",
+    "lastName": "Last",
+    "password": "pass",
+    "enabled": true,
+    "approvedBy": null,
+    "authorities": null,
+    "roles": null,
+    "serviceSubscriptions": null,
+    "monitorSubscriptions": null,
+    "profilePicture": "/web/img/ProfilePicturePlaceholder.png",
+    "profilePage": "/web/user/4d7b0d54-cdae-4253-bbd6-d95f6ae69114",
+    "fullName": "First Last"
+  },
+  {
+    "id": "4d7b0d54-cdae-4253-bbd6-d95f6ae69115",
+    "email": "test@email.com",
+    "phoneNumber": null,
+    "firstName": "First",
+    "lastName": "Last",
+    "password": "pass",
+    "enabled": true,
+    "approvedBy": null,
+    "authorities": null,
+    "roles": null,
+    "serviceSubscriptions": null,
+    "monitorSubscriptions": null,
+    "profilePicture": "/web/img/ProfilePicturePlaceholder.png",
+    "profilePage": "/web/user/4d7b0d54-cdae-4253-bbd6-d95f6ae69115",
+    "fullName": "First Last"
+  }
+]

@@ -43,7 +43,7 @@ public class ApiKeyAuthenticationFilterTest {
             .build();
     when(apiKeyService.getAPIKey(eq(apiKey))).thenReturn(expectedKey);
 
-    MockHttpServletResponse response = doFilter(apiKey);
+    MockHttpServletResponse response = doFilter(apiKey, true);
     Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
     assertNotNull(authentication);
     assertInstanceOf(ApiKeyAuthenticationToken.class, authentication);

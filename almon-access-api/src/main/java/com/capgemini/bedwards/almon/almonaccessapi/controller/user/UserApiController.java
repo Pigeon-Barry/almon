@@ -1,84 +1,43 @@
 package com.capgemini.bedwards.almon.almonaccessapi.controller.user;
 
 import com.capgemini.bedwards.almon.almoncore.intergrations.api.APIController;
-import com.capgemini.bedwards.almon.almoncore.services.auth.AuthorityService;
-import com.capgemini.bedwards.almon.almoncore.services.notification.WebNotificationService;
-import com.capgemini.bedwards.almon.almoncore.services.user.RoleService;
-import com.capgemini.bedwards.almon.almoncore.services.user.UserService;
-import com.capgemini.bedwards.almon.almoncore.util.SecurityUtil;
-import com.capgemini.bedwards.almon.almondatastore.models.auth.Authority;
-import com.capgemini.bedwards.almon.almondatastore.models.auth.Role;
+import com.capgemini.bedwards.almon.almoncore.intergrations.api.error.ErrorResponse;
+import com.capgemini.bedwards.almon.almoncore.intergrations.api.error.InternalServerErrorResponse;
 import com.capgemini.bedwards.almon.almondatastore.models.auth.User;
-import com.capgemini.bedwards.almon.almondatastore.models.notification.WebNotification;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.ArraySchema;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
-import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestMapping;
 
 @Controller
 @RequestMapping("/api/user/{userId}")
 @Slf4j
 @PreAuthorize("isAuthenticated()")
 public class UserApiController extends APIController {
-
-
-    private final UserService USER_SERVICE;
-
-    private final AuthorityService AUTHORITY_SERVICE;
-
-    private final RoleService ROLE_SERVICE;
-
-    private final WebNotificationService WEB_NOTIFICATION_SERVICE;
-
-    @Autowired
-    public UserApiController(UserService userService, AuthorityService authorityService, RoleService roleService, WebNotificationService webNotificationService) {
-        this.USER_SERVICE = userService;
-        this.AUTHORITY_SERVICE = authorityService;
-        this.ROLE_SERVICE = roleService;
-        this.WEB_NOTIFICATION_SERVICE = webNotificationService;
-    }
-
+    @Operation(
+            summary = "GET - Returns the current users",
+            responses = {
+                    @ApiResponse(responseCode = "200", description = "User details found",
+                            content = @Content(mediaType = MediaType.APPLICATION_JSON_VALUE, schema = @Schema(implementation = User.class))),
+                    @ApiResponse(responseCode = "404", description = "Not Found",
+                            content = @Content(mediaType = MediaType.APPLICATION_JSON_VALUE, array = @ArraySchema(schema = @Schema(implementation = ErrorResponse.class)))),
+                    @ApiResponse(responseCode = "500", description = "Internal Server Error",
+                            content = @Content(mediaType = MediaType.APPLICATION_JSON_VALUE, array = @ArraySchema(schema = @Schema(implementation = InternalServerErrorResponse.class)))),
+                    @ApiResponse(responseCode = "503", description = "Downstream error",
+                            content = @Content(mediaType = MediaType.APPLICATION_JSON_VALUE, array = @ArraySchema(schema = @Schema(implementation = ErrorResponse.class)))),
+            })
     @GetMapping()
-    @PreAuthorize("hasAuthority('VIEW_ALL_USERS') || #user.id == authentication.principal.id")
-    public ResponseEntity<Model> getUserList(@PathVariable(name = "userId") User user,
-                                             @RequestParam(defaultValue = "1") int notificationPageNumber,
-                                             @RequestParam(defaultValue = "25") int notificationPageSize,
-                                             Model model) {
-        List<Role> roles = this.ROLE_SERVICE.getAllRoles();
-        List<Authority> authorities = this.AUTHORITY_SERVICE.getAllAuthorities();
-        model.addAttribute("roles", roles);
-        model.addAttribute("pageUser", user);
-        model.addAttribute("authorities", authorities);
-
-        Page<WebNotification> page = this.WEB_NOTIFICATION_SERVICE.getNotifications(user,
-                notificationPageNumber, notificationPageSize);
-
-        model.addAttribute("currentPage", notificationPageNumber);
-        model.addAttribute("totalPages", page.getTotalPages());
-        model.addAttribute("totalItems", page.getTotalElements());
-        model.addAttribute("webNotifications", page.getContent());
-        model.addAttribute("pageSize", notificationPageSize);
-        return ResponseEntity.ok(model);
-    }
-
-    @PutMapping("/enable")
-    @PreAuthorize("hasAuthority('ENABLE_DISABLE_ACCOUNTS')")
-    public ResponseEntity<Void> enableAccount(@PathVariable(name = "userId") User user) {
-        this.USER_SERVICE.enableAccount(SecurityUtil.getAuthenticatedUser(), user);
-        return new ResponseEntity<>(HttpStatus.ACCEPTED);
-    }
-
-    @PutMapping("/disable")
-    @PreAuthorize("hasAuthority('ENABLE_DISABLE_ACCOUNTS')")
-    public ResponseEntity<Void> disableAccount(@PathVariable(name = "userId") User user) {
-        this.USER_SERVICE.disableAccount(SecurityUtil.getAuthenticatedUser(), user);
-        return new ResponseEntity<>(HttpStatus.ACCEPTED);
+    @PreAuthorize("hasAuthority('VIEW_ALL_USERS')")
+    public ResponseEntity<User> getUser(@PathVariable(name = "userId") User user) {
+        return ResponseEntity.ok(user);
     }
 }

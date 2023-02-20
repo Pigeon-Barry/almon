@@ -187,7 +187,7 @@ public class ServiceAPIController extends APIController {
     @PreAuthorize("hasAuthority('UPDATE_SERVICE')  || hasAuthority('SERVICE_' + #service.id + '_CAN_UPDATE')")
     public ResponseEntity<Void> updateService(
             @PathVariable(name = "serviceId") Service service,
-            @Valid ServiceUpdateRequestBody serviceUpdateRequestBody) {
+            @RequestBody @Valid ServiceUpdateRequestBody serviceUpdateRequestBody) {
         SERVICE_SERVICE.updateService(service, serviceUpdateRequestBody.getName(), serviceUpdateRequestBody.getDescription());
         return ResponseEntity.status(HttpStatus.OK).build();
     }

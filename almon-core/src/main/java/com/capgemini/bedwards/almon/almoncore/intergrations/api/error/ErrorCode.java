@@ -8,7 +8,8 @@ public enum ErrorCode {
     INTERNAL_SERVER_ERROR("Please contact system administrators"),
 
     UNAUTHORISED_WEB("You are not authorised to view this page"),
-    UNAUTHORISED_API("You are not authorised");
+    UNAUTHORISED_API("You are not authorised"),
+    INVALID_PAYLOAD("Payload is invalid");
 
     private final String ERROR_DESCRIPTION;
 

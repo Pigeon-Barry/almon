@@ -1,0 +1,6 @@
+[
+  {
+    "field": "email",
+    "error": "Email is already registered"
+  }
+]

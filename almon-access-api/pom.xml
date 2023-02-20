@@ -6,7 +6,7 @@
         <groupId>com.capgemini.bedwards</groupId>
         <artifactId>almon</artifactId>
         <version>1.0.0</version>
-        <relativePath/> <!-- lookup parent from repository -->
+        <relativePath>../pom.xml</relativePath>
     </parent>
     <modelVersion>4.0.0</modelVersion>
 

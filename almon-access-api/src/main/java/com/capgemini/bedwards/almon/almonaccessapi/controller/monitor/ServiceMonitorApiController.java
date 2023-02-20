@@ -16,6 +16,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import javax.validation.Valid;
@@ -43,7 +44,7 @@ public class ServiceMonitorApiController extends APIController {
             @Valid @PathVariable(name = "monitorAdapterId")
             @MonitorAdapterExists
             MonitorAdapter<?, ?> monitorAdapter,
-            @Valid @ConvertCreateMonitorRequest Object formData,
+            @RequestBody @Valid @ConvertCreateMonitorRequest Object formData,
             Model model) {
         monitorAdapter.createMonitor(service, formData, model);
         return ResponseEntity.status(HttpStatus.CREATED).build();

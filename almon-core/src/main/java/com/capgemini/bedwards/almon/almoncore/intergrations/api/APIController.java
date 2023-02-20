@@ -13,6 +13,7 @@ import io.swagger.v3.oas.annotations.info.Info;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.authentication.AuthenticationCredentialsNotFoundException;
 import org.springframework.validation.FieldError;
@@ -30,10 +31,17 @@ import java.util.List;
 @Slf4j
 @OpenAPIDefinition(
         info = @Info(title = "ALMON - API",
-                version = "1.0.0")
+                version = "1.5.3")
 )
 public abstract class APIController {
 
+
+    @ExceptionHandler(value = {HttpMessageNotReadableException.class})
+    @ResponseStatus(value = HttpStatus.BAD_REQUEST)
+    @ResponseBody
+    public ErrorResponse httpMessageNotReadableException(HttpMessageNotReadableException exception) {
+        return new ErrorResponse(ErrorCode.INVALID_PAYLOAD);
+    }
 
     @ExceptionHandler(value = {MethodArgumentTypeMismatchException.class})
     @ResponseBody

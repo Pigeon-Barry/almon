@@ -6,7 +6,7 @@
         <groupId>com.capgemini.bedwards.almon</groupId>
         <artifactId>almon-notification</artifactId>
         <version>1.0.0</version>
-        <relativePath/> <!-- lookup parent from repository -->
+        <relativePath>../pom.xml</relativePath>
     </parent>
     <artifactId>almon-notification-core</artifactId>
     <version>1.0.0</version>

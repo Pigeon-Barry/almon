@@ -12,6 +12,7 @@ import com.capgemini.bedwards.almon.almoncore.services.user.UserServiceImpl;
 import com.capgemini.bedwards.almon.almondatastore.models.alert.Status;
 import com.capgemini.bedwards.almon.almondatastore.models.auth.APIKey;
 import com.capgemini.bedwards.almon.almondatastore.models.auth.Authority;
+import com.capgemini.bedwards.almon.almondatastore.models.auth.Role;
 import com.capgemini.bedwards.almon.almondatastore.models.auth.User;
 import com.capgemini.bedwards.almon.almondatastore.models.monitor.Monitor;
 import com.capgemini.bedwards.almon.almondatastore.models.service.Service;
@@ -76,10 +77,12 @@ public abstract class APIControllerTest {
     @MockBean
     protected AlertConvertor alertConvertor;
     @MockBean
-    private UserServiceImpl userService;
+    protected UserServiceImpl userService;
 
     @MockBean
     protected UserIdConvertor userIdConvertor;
+    @MockBean
+    protected RoleConvertor roleConvertor;
     @MockBean
     protected UserIdStringConvertor userIdStringConvertor;
 
@@ -102,6 +105,7 @@ public abstract class APIControllerTest {
 
     @MockBean
     protected ServiceService serviceService;
+
 
     @MockBean
     protected AlmonAuthenticationProvider almonAuthenticationProvider;
@@ -192,6 +196,20 @@ public abstract class APIControllerTest {
         when(userService.findById(eq(user.getId()))).thenReturn(Optional.of(user));
         return user;
     }
+
+    protected Role setupValidRole(String name) {
+        Role role = Role.builder()
+                .name(name)
+                .description("Role description")
+                .build();
+        return setupValidRole(role);
+    }
+
+    protected Role setupValidRole(Role role) {
+        when(roleConvertor.convert(eq(role.getName()))).thenReturn(role);
+        return role;
+    }
+
 
     protected TestMonitor setupValidMonitor(Service service, String id) {
         TestMonitor monitor = TestMonitor.builder()
