@@ -58,9 +58,13 @@ function showAlert(message, alertType) {
 
 let promptId = 0;
 
-function confirmationPrompt(title, message, onConfirm, onCancel) {
+function confirmationPrompt(title, message, onConfirm, onCancel, onClose) {
     const idSuffix = promptId;
     promptId = promptId + 1;
+
+    $('.modal:visible').attr("data-show-with-model-close", idSuffix);
+    const visibleModels = $('.modal[data-show-with-model-close="' + idSuffix + '"]');
+    visibleModels.hide();
 
     const val = "<div id=\"confirmationDialogModel_" + idSuffix + "\" class=\"modal fade\" data-bs-backdrop=\"static\" data-bs-keyboard=\"false\" tabindex=\"-1\"\n" +
         "                 aria-labelledby=\"confirmationDialogTitle_" + idSuffix + "\" aria-hidden=\"true\">\n" +
@@ -85,13 +89,19 @@ function confirmationPrompt(title, message, onConfirm, onCancel) {
     promptContainer.append(val);
 
     const modal = $('#confirmationDialogModel_' + idSuffix);
+    const close = function () {
+        if (onClose !== null && onClose !== undefined) {
+            onClose();
+        }
+        visibleModels.show();
+        modal.remove();
+    }
     //Add new Listeners
     modal.on('hide.bs.modal', function (event) {
-        console.log(onCancel);
         if (onCancel !== null && onCancel !== undefined) {
             onCancel();
         }
-        modal.remove();
+        close();
     });
     $('#confirmationDialogOK_' + idSuffix).on('click', function (event) {
         modal.off('hide.bs.modal');
@@ -99,15 +109,18 @@ function confirmationPrompt(title, message, onConfirm, onCancel) {
         if (onConfirm !== null && onConfirm !== undefined) {
             onConfirm();
         }
-        modal.remove();
+        close();
     });
     modal.modal('show');
 }
 
-function showPopup(title, message, onConfirm, onCancel) {
+function showPopup(title, message, onConfirm, onCancel, onClose) {
     const idSuffix = promptId;
     promptId = promptId + 1;
 
+    $('.modal:visible').attr("data-show-with-model-close", idSuffix);
+    const visibleModels = $('.modal[data-show-with-model-close="' + idSuffix + '"]');
+    visibleModels.hide();
     const val = "<div id=\"confirmationDialogModel_" + idSuffix + "\" class=\"modal fade\" data-bs-backdrop=\"static\" data-bs-keyboard=\"false\" tabindex=\"-1\"\n" +
         "                 aria-labelledby=\"confirmationDialogTitle_" + idSuffix + "\" aria-hidden=\"true\">\n" +
         "                <div class=\"modal-dialog modal-lg modal-dialog-centered modal-dialog-scrollable\">\n" +
@@ -130,20 +143,28 @@ function showPopup(title, message, onConfirm, onCancel) {
     promptContainer.append(val);
 
     const modal = $('#confirmationDialogModel_' + idSuffix);
+
+    const close = function () {
+        if (onClose !== null && onClose !== undefined) {
+            onClose();
+        }
+        visibleModels.show();
+        modal.modal('hide');
+        modal.remove();
+    }
     //Add new Listeners
     modal.on('hide.bs.modal', function (event) {
         if (onCancel !== null && onCancel !== undefined) {
             onCancel();
         }
-        modal.remove();
+        close();
     });
     $('#confirmationDialogOK_' + idSuffix).on('click', function (event) {
         modal.off('hide.bs.modal');
         if (onConfirm !== null && onConfirm !== undefined) {
             onConfirm();
         }
-        modal.modal('hide');
-        modal.remove();
+        close();
     });
     modal.modal('show');
 }

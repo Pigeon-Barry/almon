@@ -92,8 +92,7 @@
                 const url = "/web/user/" + userId + "/roles";
                 const token = $("meta[name='_csrf']").attr("content");
                 const header = $("meta[name='_csrf_header']").attr("content");
-
-                console.log(JSON.stringify(Object.fromEntries(formDataMap)));
+                
                 $.ajax({
                     type: 'PUT',
                     url: url,

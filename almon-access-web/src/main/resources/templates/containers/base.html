@@ -16,13 +16,14 @@
     <div class="container-fluid">
         <th:block th:insert="fragments/header :: header(activeTab=${activeTab})"/>
         <!-- Support Content Start -->
-        <th:block>
-            <div id="prompt-container"></div>
-        </th:block>
+
         <!-- Support Content End -->
         <!-- Main Content Start -->
         <th:block th:if="${mainContentFragment}!=null">
             <th:block th:insert="__${mainContentFragment}__"/>
+        </th:block>
+        <th:block>
+            <div id="prompt-container"></div>
         </th:block>
         <!-- Main Content End -->
         <th:block th:insert="fragments/foorter :: footer"/>
