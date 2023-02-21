@@ -25,10 +25,9 @@
                             <h5 class="my-3" th:text="${monitor.getId()}"></h5>
                             <!--                        <p class="text-muted mb-1">Placeholder</p>-->
                             <!--                        <p class="text-muted mb-4">Placeholder</p>-->
-                            <div class="d-flex justify-content-center mb-2"
-                                 th:if="${#authorization.expression('hasAuthority(''RUN_MONITORS'') || hasAuthority(''SERVICE_' + service.getId() + '_MONITOR_' + monitor.getId() +'_CAN_RUN'')')}"
-                            >
+                            <div class="d-flex justify-content-center mb-2">
                                 <button type="button" class="btn btn-primary mx-2"
+                                        th:if="${#authorization.expression('hasAuthority(''UPDATE_MONITORS'') || hasAuthority(''SERVICE_' + service.getId() + '_MONITOR_' + monitor.getId() +'_CAN_UPDATE'')')}"
                                         th:data-monitorId="${monitor.getId()}"
                                         th:data-serviceId="${service.getId()}"
                                         onclick="redirect('/web/service/' + this.getAttribute('data-serviceId') + '/monitor/' + this.getAttribute('data-monitorId') + '/update')"
@@ -36,6 +35,7 @@
                                 </button>
 
                                 <button type="button" class="btn btn-outline-primary mx-2"
+                                        th:if="${#authorization.expression('hasAuthority(''RUN_MONITORS'') || hasAuthority(''SERVICE_' + service.getId() + '_MONITOR_' + monitor.getId() +'_CAN_RUN'')')}"
                                         th:data-monitorId="${monitor.getId()}"
                                         th:data-serviceId="${service.getId()}"
                                         onclick="runMonitor(this.getAttribute('data-serviceId'),this.getAttribute('data-monitorId'),'runningOverlay')"

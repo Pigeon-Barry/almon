@@ -52,7 +52,7 @@ public class ServiceWebController extends WebController {
 
 
     @GetMapping("/update")
-    @PreAuthorize("hasAuthority('CREATE_SERVICE')  || hasAuthority('SERVICE_' + #service.id + '_CAN_UPDATE')")
+    @PreAuthorize("hasAuthority('UPDATE_SERVICE')  || hasAuthority('SERVICE_' + #service.id + '_CAN_UPDATE')")
     public String getUpdateServicePage(
             @PathVariable(name = "serviceId") Service service,
             ServiceUpdateRequestBody serviceUpdateRequestBody,
