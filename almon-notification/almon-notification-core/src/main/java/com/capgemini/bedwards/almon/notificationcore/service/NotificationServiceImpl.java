@@ -116,8 +116,12 @@ public class NotificationServiceImpl implements NotificationService {
     public <T extends Alert<?>> void send(T alert) {
         log.info("Sending Notifications for alert: " + alert);
         for (Notification notification : this.NOTIFICATIONS) {
-            if (notification.isEnabled())
-                notification.sendNotification(getSubscribedUsers(alert, notification), alert);
+            try {
+                if (notification.isEnabled())
+                    notification.sendNotification(getSubscribedUsers(alert, notification), alert);
+            } catch (Throwable throwable) {
+                log.error("Failed to send notification using notification method: " + notification.getId(), throwable);
+            }
         }
     }
 
