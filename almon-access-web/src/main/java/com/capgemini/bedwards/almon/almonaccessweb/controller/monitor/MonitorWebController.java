@@ -2,6 +2,7 @@ package com.capgemini.bedwards.almon.almonaccessweb.controller.monitor;
 
 
 import com.capgemini.bedwards.almon.almoncore.intergrations.web.WebController;
+import com.capgemini.bedwards.almon.almoncore.services.notification.NotificationService;
 import com.capgemini.bedwards.almon.almondatastore.models.alert.Alert;
 import com.capgemini.bedwards.almon.almondatastore.models.alert.AlertFilterOptions;
 import com.capgemini.bedwards.almon.almondatastore.models.monitor.Monitor;
@@ -10,9 +11,6 @@ import com.capgemini.bedwards.almon.almondatastore.models.service.Service;
 import com.capgemini.bedwards.almon.almonmonitoringcore.Monitors;
 import com.capgemini.bedwards.almon.almonmonitoringcore.contracts.ScheduledMonitorAdapter;
 import com.capgemini.bedwards.almon.almonmonitoringcore.resolver.ConvertUpdateMonitorRequest;
-import com.capgemini.bedwards.almon.notificationcore.service.NotificationService;
-import javax.servlet.http.HttpServletRequest;
-import javax.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -20,15 +18,11 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.validation.Valid;
 
 @Controller
 @RequestMapping("/web/service/{serviceId}/monitor/{monitorId}")
@@ -86,7 +80,7 @@ public class MonitorWebController extends WebController {
             @RequestParam(defaultValue = "1") int alertPageNumber,
             @RequestParam(defaultValue = "10") int alertPageSize,
             Model model) {
-        model.addAttribute("notificationHelper", NOTIFICATION_SERVICE.getNotificationHelper());
+        model.addAttribute("notificationTypes", NOTIFICATION_SERVICE.getNotificationTypes());
         return MONITORS.getMonitorAdapterFromMonitor(monitor).getViewPageWeb(service, monitor, model, alertFilterOptions, alertPageNumber, alertPageSize);
     }
 

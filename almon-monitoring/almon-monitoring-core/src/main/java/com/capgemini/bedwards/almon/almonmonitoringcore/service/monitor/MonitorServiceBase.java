@@ -4,10 +4,12 @@ import com.capgemini.bedwards.almon.almoncore.exceptions.BadRequestException;
 import com.capgemini.bedwards.almon.almoncore.exceptions.NotFoundException;
 import com.capgemini.bedwards.almon.almoncore.services.auth.AuthorityService;
 import com.capgemini.bedwards.almon.almoncore.services.service.ServiceService;
+import com.capgemini.bedwards.almon.almoncore.services.subscription.SubscriptionService;
 import com.capgemini.bedwards.almon.almondatastore.models.monitor.Monitor;
 import com.capgemini.bedwards.almon.almonmonitoringcore.repository.monitor.MonitorTypeRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.validation.constraints.NotNull;
 import java.util.Collections;
@@ -20,36 +22,43 @@ public abstract class MonitorServiceBase<T extends Monitor> implements MonitorSe
 
 
     protected final AuthorityService AUTHORITY_SERVICE;
+    protected final SubscriptionService SUBSCRIPTION_SERVICE;
     protected final ServiceService SERVICE_SERVICE;
 
 
     @Autowired
-    public MonitorServiceBase(AuthorityService authorityService, ServiceService serviceService) {
+    public MonitorServiceBase(AuthorityService authorityService, ServiceService serviceService, SubscriptionService subscriptionService) {
         this.AUTHORITY_SERVICE = authorityService;
         this.SERVICE_SERVICE = serviceService;
+        this.SUBSCRIPTION_SERVICE = subscriptionService;
     }
 
     protected abstract MonitorTypeRepository<T> getRepository();
 
     @Override
+    @Transactional
     public void enable(T monitor) {
         updateEnabledStatus(monitor, true);
     }
 
     @Override
+    @Transactional
     public void disable(T monitor) {
         updateEnabledStatus(monitor, false);
     }
 
 
     @Override
+    @Transactional
     public void delete(T monitor) {
         log.info("Deleting monitor " + monitor.getId());
+        this.AUTHORITY_SERVICE.deleteMonitorAuthorities(monitor);
+        this.SUBSCRIPTION_SERVICE.clearSubscriptions(monitor);
         getRepository().delete(monitor);
-        AUTHORITY_SERVICE.deleteMonitorAuthorities(monitor);
     }
 
     @Override
+    @Transactional
     public T create(T monitorType) {
         monitorType = save(monitorType);
         if (monitorType.isEnabled())
@@ -101,6 +110,7 @@ public abstract class MonitorServiceBase<T extends Monitor> implements MonitorSe
     }
 
     @Override
+    @Transactional
     public T save(T monitorType) {
         return getRepository().save(monitorType);
     }

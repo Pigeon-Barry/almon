@@ -2,6 +2,7 @@ package com.capgemini.bedwards.almon.almondatastore.models.monitor;
 
 import com.capgemini.bedwards.almon.almondatastore.models.alert.Alert;
 import com.capgemini.bedwards.almon.almondatastore.models.service.Service;
+import com.capgemini.bedwards.almon.almondatastore.models.subscription.MonitorSubscription;
 import com.capgemini.bedwards.almon.almondatastore.util.Constants;
 import com.fasterxml.jackson.annotation.JsonValue;
 import lombok.*;
@@ -52,6 +53,9 @@ public abstract class Monitor {
     @OneToMany(mappedBy = "monitor", fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
     protected Set<Alert> alerts;
 
+    @OneToMany(mappedBy = "id.monitor", fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
+    protected Set<MonitorSubscription> subscriptions;
+
 
     public abstract String getMonitorType();
 
@@ -64,7 +68,7 @@ public abstract class Monitor {
         @Length(max = Constants.MONITOR_ID_MAX_LENGTH)
         @Column(length = Constants.MONITOR_ID_MAX_LENGTH)
         protected String id;
-        @ManyToOne(fetch = FetchType.EAGER)
+        @ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.REMOVE)
         @JoinColumn(name = "service_id")
         protected Service service;
 

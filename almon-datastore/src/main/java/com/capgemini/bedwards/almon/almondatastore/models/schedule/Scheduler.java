@@ -1,18 +1,21 @@
 package com.capgemini.bedwards.almon.almondatastore.models.schedule;
 
 import com.capgemini.bedwards.almon.almondatastore.util.HasScheduledTasks;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.TimeZone;
-import java.util.concurrent.ScheduledFuture;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.TaskScheduler;
 import org.springframework.scheduling.support.CronTrigger;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.TimeZone;
+import java.util.concurrent.ScheduledFuture;
 
 @Service
+@Transactional
 @Slf4j
 public class Scheduler {
 

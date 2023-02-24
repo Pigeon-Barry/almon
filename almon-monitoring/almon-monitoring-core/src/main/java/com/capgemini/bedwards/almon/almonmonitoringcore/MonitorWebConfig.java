@@ -1,32 +1,26 @@
 package com.capgemini.bedwards.almon.almonmonitoringcore;
 
+import com.capgemini.bedwards.almon.almoncore.services.notification.NotificationService;
 import com.capgemini.bedwards.almon.almoncore.services.notification.WebNotificationService;
 import com.capgemini.bedwards.almon.almoncore.services.service.ServiceService;
 import com.capgemini.bedwards.almon.almoncore.services.user.UserService;
 import com.capgemini.bedwards.almon.almondatastore.models.alert.Alert;
 import com.capgemini.bedwards.almon.almondatastore.models.monitor.Monitor;
 import com.capgemini.bedwards.almon.almondatastore.models.schedule.ScheduledMonitor;
-import com.capgemini.bedwards.almon.almonmonitoringcore.convertor.AlertConvertor;
-import com.capgemini.bedwards.almon.almonmonitoringcore.convertor.MonitorAdapterConvertor;
-import com.capgemini.bedwards.almon.almonmonitoringcore.convertor.MonitorConvertor;
-import com.capgemini.bedwards.almon.almonmonitoringcore.convertor.NotificationConvertor;
-import com.capgemini.bedwards.almon.almonmonitoringcore.convertor.NotificationIdConvertor;
-import com.capgemini.bedwards.almon.almonmonitoringcore.convertor.ScheduledMonitorConvertor;
-import com.capgemini.bedwards.almon.almonmonitoringcore.convertor.ServiceConvertor;
-import com.capgemini.bedwards.almon.almonmonitoringcore.convertor.UserIdConvertor;
+import com.capgemini.bedwards.almon.almonmonitoringcore.convertor.*;
 import com.capgemini.bedwards.almon.almonmonitoringcore.resolver.CreateMonitorRequestResolver;
 import com.capgemini.bedwards.almon.almonmonitoringcore.resolver.UpdateMonitorRequestResolver;
 import com.capgemini.bedwards.almon.almonmonitoringcore.service.alert.AlertService;
 import com.capgemini.bedwards.almon.almonmonitoringcore.service.monitor.MonitorService;
 import com.capgemini.bedwards.almon.almonmonitoringcore.service.monitor.ScheduledMonitorService;
-import com.capgemini.bedwards.almon.notificationcore.service.NotificationService;
-import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.format.FormatterRegistry;
 import org.springframework.web.method.support.HandlerMethodArgumentResolver;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
+
+import java.util.List;
 
 @Configuration
 public class MonitorWebConfig implements WebMvcConfigurer {

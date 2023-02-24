@@ -4,10 +4,12 @@ import com.capgemini.bedwards.almon.almondatastore.models.auth.APIKey;
 import com.capgemini.bedwards.almon.almondatastore.repository.auth.APIKeyRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Optional;
 
 @Service
+@Transactional
 public class APIKeyServiceImpl implements APIKeyService {
 
     @Autowired

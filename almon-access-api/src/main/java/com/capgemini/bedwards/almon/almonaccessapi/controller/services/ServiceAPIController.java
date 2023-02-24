@@ -6,12 +6,13 @@ import com.capgemini.bedwards.almon.almoncore.exceptions.NotFoundException;
 import com.capgemini.bedwards.almon.almoncore.intergrations.api.APIController;
 import com.capgemini.bedwards.almon.almoncore.intergrations.api.error.ErrorResponse;
 import com.capgemini.bedwards.almon.almoncore.intergrations.api.error.InternalServerErrorResponse;
+import com.capgemini.bedwards.almon.almoncore.services.notification.NotificationService;
 import com.capgemini.bedwards.almon.almoncore.services.service.ServiceService;
 import com.capgemini.bedwards.almon.almoncore.services.user.UserService;
+import com.capgemini.bedwards.almon.almoncore.util.SecurityUtil;
 import com.capgemini.bedwards.almon.almondatastore.models.auth.User;
 import com.capgemini.bedwards.almon.almondatastore.models.service.Service;
 import com.capgemini.bedwards.almon.almonmonitoringcore.Monitors;
-import com.capgemini.bedwards.almon.notificationcore.service.NotificationService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.ArraySchema;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -112,6 +113,7 @@ public class ServiceAPIController extends APIController {
     @PreAuthorize("hasAuthority('DELETE_SERVICES') || hasAuthority('SERVICE_' + #service.id + '_CAN_DELETE')")
     public ResponseEntity delete(@PathVariable(name = "serviceId") Service service) {
         SERVICE_SERVICE.deleteService(service);
+        SecurityUtil.refreshPermissionOfAuthenticatedUser();
         return new ResponseEntity<>(HttpStatus.OK);
     }
 

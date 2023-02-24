@@ -1,20 +1,24 @@
-package com.capgemini.bedwards.almon.almoncore.services.notification;
+package com.capgemini.bedwards.almon.notificationcore.service;
 
 import com.capgemini.bedwards.almon.almoncore.exceptions.NotFoundException;
+import com.capgemini.bedwards.almon.almoncore.services.notification.WebNotificationService;
 import com.capgemini.bedwards.almon.almondatastore.models.auth.User;
 import com.capgemini.bedwards.almon.almondatastore.models.notification.WebNotification;
 import com.capgemini.bedwards.almon.almondatastore.repository.notification.WebNotificationRepository;
-import java.util.List;
-import java.util.Optional;
-import java.util.UUID;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
+import java.util.Optional;
+import java.util.UUID;
 
 @Service
+@Transactional
 @Slf4j
 public class WebNotificationServiceImpl implements WebNotificationService {
 

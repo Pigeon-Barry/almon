@@ -36,6 +36,7 @@ public class AuthorityServiceImpl implements AuthorityService {
     }
 
     @Override
+    @Transactional
     public Authority createAuthority(String authority, String description, Set<User> defaultUsers,
                                      Set<Role> roles) {
         if (authority == null) {
@@ -56,6 +57,7 @@ public class AuthorityServiceImpl implements AuthorityService {
     }
 
     @Override
+    @Transactional
     public void updateAuthorities(User user, Map<String, UpdateType> authoritiesToUpdate) {
         log.debug("Updating Authorities for user: " + user.getId());
         List<Authority> authorities = getAllAuthorities();
@@ -83,6 +85,7 @@ public class AuthorityServiceImpl implements AuthorityService {
     }
 
     @Override
+    @Transactional
     public void addAuthorities(User user, String... authorities) {
         updateAuthorities(user, new HashMap<String, UpdateType>() {{
             for (String authority : authorities) {
@@ -92,6 +95,7 @@ public class AuthorityServiceImpl implements AuthorityService {
     }
 
     @Override
+    @Transactional
     public void removeAuthorities(User user, String... authorities) {
         updateAuthorities(user, new HashMap<String, UpdateType>() {{
             for (String authority : authorities) {
@@ -101,6 +105,7 @@ public class AuthorityServiceImpl implements AuthorityService {
     }
 
     @Override
+    @Transactional
     public void addRole(Authority authority, Set<Role> roles) {
         if (authority.getRoles() == null) {
             authority.setRoles(new HashSet<>());
@@ -110,18 +115,21 @@ public class AuthorityServiceImpl implements AuthorityService {
     }
 
     @Override
+    @Transactional
     public Authority save(Authority authority) {
         log.info("Saving authority: " + authority);
         return AUTHORITY_REPOSITORY.saveAndFlush(authority);
     }
 
     @Override
+    @Transactional
     public void deleteServiceAuthorities(
             com.capgemini.bedwards.almon.almondatastore.models.service.Service service) {
         AUTHORITY_REPOSITORY.deleteServiceAuthorities(service);
     }
 
     @Override
+    @Transactional
     public void deleteMonitorAuthorities(Monitor monitor) {
         AUTHORITY_REPOSITORY.deleteMonitorAuthorities(monitor);
     }

@@ -1,10 +1,10 @@
 package com.capgemini.bedwards.almon.almonmonitoringcore.service.alert;
 
 import com.capgemini.bedwards.almon.almoncore.exceptions.NotFoundException;
+import com.capgemini.bedwards.almon.almoncore.services.notification.NotificationService;
 import com.capgemini.bedwards.almon.almondatastore.models.alert.Alert;
 import com.capgemini.bedwards.almon.almondatastore.models.alert.AlertSpecification;
 import com.capgemini.bedwards.almon.almondatastore.repository.alert.AlertRepository;
-import com.capgemini.bedwards.almon.notificationcore.service.NotificationService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -12,6 +12,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.domain.Sort.Direction;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Optional;
@@ -32,6 +33,7 @@ public abstract class AlertServiceBase<T extends Alert<?>> implements AlertServi
     protected abstract AlertRepository<T> getRepository();
 
     @Override
+    @Transactional
     public T create(T alert) {
         log.info("Saving alert: " + alert);
         alert = getRepository().save(alert);

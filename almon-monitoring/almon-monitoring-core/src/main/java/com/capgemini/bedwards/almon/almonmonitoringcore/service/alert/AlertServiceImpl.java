@@ -1,14 +1,16 @@
 package com.capgemini.bedwards.almon.almonmonitoringcore.service.alert;
 
+import com.capgemini.bedwards.almon.almoncore.services.notification.NotificationService;
 import com.capgemini.bedwards.almon.almondatastore.models.alert.Alert;
 import com.capgemini.bedwards.almon.almondatastore.repository.alert.AlertRepository;
-import com.capgemini.bedwards.almon.notificationcore.service.NotificationService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Slf4j
 @Service
+@Transactional
 public class AlertServiceImpl extends AlertServiceBase<Alert<?>> {
 
     private final AlertRepository<Alert<?>> ALERT_REPOSITORY;

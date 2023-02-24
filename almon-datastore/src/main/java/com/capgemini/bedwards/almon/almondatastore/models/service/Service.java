@@ -1,23 +1,21 @@
 package com.capgemini.bedwards.almon.almondatastore.models.service;
 
 import com.capgemini.bedwards.almon.almondatastore.models.monitor.Monitor;
+import com.capgemini.bedwards.almon.almondatastore.models.subscription.ServiceSubscription;
 import com.capgemini.bedwards.almon.almondatastore.util.Constants;
-import java.util.Objects;
-import java.util.Set;
-import javax.persistence.CascadeType;
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.Id;
-import javax.persistence.OneToMany;
-import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Pattern;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.Cascade;
 import org.hibernate.validator.constraints.Length;
+
+import javax.persistence.*;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Pattern;
+import java.util.Objects;
+import java.util.Set;
 
 @Entity
 @Builder
@@ -38,12 +36,15 @@ public class Service {
 
     private String description;
 
-    @OneToMany(mappedBy = "id.service", fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
+    @OneToMany(mappedBy = "id.service", fetch = FetchType.LAZY, cascade = CascadeType.REMOVE, orphanRemoval = true)
+    @Cascade(org.hibernate.annotations.CascadeType.DELETE)
     private Set<Monitor> monitors;
 
     @Builder.Default
     private boolean enabled = true;
 
+    @OneToMany(mappedBy = "id.service", fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
+    protected Set<ServiceSubscription> subscriptions;
 
     public String toString() {
         return id + "-" + name;

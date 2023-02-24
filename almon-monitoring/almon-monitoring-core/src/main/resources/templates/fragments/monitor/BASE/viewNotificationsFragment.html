@@ -1,9 +1,9 @@
 <html xmlns="http://www.w3.org/1999/xhtml"
       xmlns:th="http://www.thymeleaf.org" lang="en"
 >
-<th:block th:fragment="viewNotifications(notificationHelper)">
+<th:block th:fragment="viewNotifications(notificationTypes)">
   <div class="card mb-4 mb-lg-0"
-       th:with="hasOverridenServiceSubscription=${notificationHelper.isUserOverridingServiceSubscriptionForMonitor(user,monitor)}">
+       th:with="hasOverridenServiceSubscription=${T(com.capgemini.bedwards.almon.almoncore.util.SubscriptionUtil).isUserOverridingServiceSubscriptionForMonitor(user,monitor)}">
     <div class="card-body p-0">
       <ul class="list-group list-group-flush rounded-3">
         <li class="list-group-item d-flex justify-content-between align-items-center"
@@ -34,21 +34,21 @@
           </th:block>
         </li>
         <li class="list-group-item d-flex justify-content-between"
-            th:each="notification : ${notificationHelper.getNotifications()}"
+            th:each="notificationType : ${notificationTypes}"
         >
 
           <p data-bs-toggle="tooltip" data-bs-placement="top"
-             th:data-bs-title="${notification.getHelpText()}"
+             th:data-bs-title="${notificationType.getHelpText()}"
              data-bs-custom-class="primary-tooltip"
-             class="mb-0" th:text="${notification.getDisplayName()}"></p>
+             class="mb-0" th:text="${notificationType.getDisplayName()}"></p>
           <div class="justify-content-end">
             <div class="form-check form-switch">
               <input type="checkbox"
-                     th:class="'form-check-input ' + ${notification.isEnabled() ? 'subscriptionInput' : ''}"
-                     th:disabled="${(!hasOverridenServiceSubscription || !notification.isEnabled())}"
-                     th:data-notificationId="${notification.getId()}"
+                     th:class="'form-check-input ' + ${notificationType.isEnabled() ? 'subscriptionInput' : ''}"
+                     th:disabled="${(!hasOverridenServiceSubscription || !notificationType.isEnabled())}"
+                     th:data-notificationId="${notificationType.getId()}"
                      th:data-monitorId="${monitor.getId()}"
-                     th:checked="${notificationHelper.isUserSubscribedToNotification(user,notification,monitor)}"
+                     th:checked="${T(com.capgemini.bedwards.almon.almoncore.util.SubscriptionUtil).isUserSubscribedToNotification(user,notificationType,monitor)}"
                      onclick="updateMonitorNotificationStatus(this.getAttribute('data-notificationId'),this.getAttribute('data-monitorId'),this)"
               >
             </div>

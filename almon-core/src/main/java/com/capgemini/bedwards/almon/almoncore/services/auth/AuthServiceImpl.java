@@ -11,12 +11,14 @@ import org.springframework.context.annotation.Lazy;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.HashSet;
 import java.util.Optional;
 import java.util.Set;
 
 @Service
+@Transactional
 @Slf4j
 public class AuthServiceImpl implements AuthService {
 
@@ -45,6 +47,7 @@ public class AuthServiceImpl implements AuthService {
     }
 
     @Override
+    @Transactional
     public User register(String email, String firstname, String lastname, String password) {
         if (!checkUserExists(email)) {
             Set<Role> roles = new HashSet<>();

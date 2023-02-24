@@ -17,4 +17,6 @@ public interface MonitorSubscriptionRepository extends JpaRepository<MonitorSubs
 
     @Query("SELECT ms FROM MonitorSubscription ms WHERE ms.id.notificationType = ?1 and ms.id.monitor = ?2")
     List<MonitorSubscription> getFromNotificationId(String notificationId, Monitor monitor);
+
+    void deleteAllById_Monitor(Monitor monitor);
 }

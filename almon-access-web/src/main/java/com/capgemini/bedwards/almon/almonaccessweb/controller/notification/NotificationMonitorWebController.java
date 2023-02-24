@@ -3,11 +3,10 @@ package com.capgemini.bedwards.almon.almonaccessweb.controller.notification;
 import com.capgemini.bedwards.almon.almonaccessweb.controller.WebAPIController;
 import com.capgemini.bedwards.almon.almoncore.intergrations.api.error.ErrorCode;
 import com.capgemini.bedwards.almon.almoncore.intergrations.api.error.ErrorResponse;
+import com.capgemini.bedwards.almon.almoncore.services.subscription.SubscriptionService;
 import com.capgemini.bedwards.almon.almoncore.util.SecurityUtil;
 import com.capgemini.bedwards.almon.almondatastore.models.contract.Notification;
 import com.capgemini.bedwards.almon.almondatastore.models.monitor.Monitor;
-import com.capgemini.bedwards.almon.notificationcore.service.NotificationService;
-import javax.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -20,6 +19,8 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
+import javax.validation.Valid;
+
 
 @Controller
 @RequestMapping("/web/notification/monitor/{monitorId}")
@@ -27,11 +28,11 @@ import org.springframework.web.bind.annotation.RequestMapping;
 @PreAuthorize("isAuthenticated()")
 public class NotificationMonitorWebController extends WebAPIController {
 
-    public final NotificationService NOTIFICATION_SERVICE;
+    public final SubscriptionService SUBSCRIPTION_SERVICE;
 
     @Autowired
-    public NotificationMonitorWebController(NotificationService notificationService) {
-        this.NOTIFICATION_SERVICE = notificationService;
+    public NotificationMonitorWebController(SubscriptionService subscriptionService) {
+        this.SUBSCRIPTION_SERVICE = subscriptionService;
     }
 
     @PutMapping("/{notificationId}/subscribe")
@@ -41,7 +42,7 @@ public class NotificationMonitorWebController extends WebAPIController {
             @Valid @PathVariable(name = "notificationId")
             Notification notification,
             Model model) {
-        boolean result = this.NOTIFICATION_SERVICE.subscribe(SecurityUtil.getAuthenticatedUser(), monitor, notification);
+        boolean result = this.SUBSCRIPTION_SERVICE.subscribe(SecurityUtil.getAuthenticatedUser(), monitor, notification);
 
         if (result)
             return new ResponseEntity<>(null, HttpStatus.OK);
@@ -57,7 +58,7 @@ public class NotificationMonitorWebController extends WebAPIController {
             Notification notification,
             Model model) {
 
-        boolean result = this.NOTIFICATION_SERVICE.unsubscribe(SecurityUtil.getAuthenticatedUser(), monitor, notification);
+        boolean result = this.SUBSCRIPTION_SERVICE.unsubscribe(SecurityUtil.getAuthenticatedUser(), monitor, notification);
         if (result)
             return new ResponseEntity<>(null, HttpStatus.OK);
         else
@@ -69,7 +70,7 @@ public class NotificationMonitorWebController extends WebAPIController {
             @Valid @PathVariable(name = "monitorId")
             Monitor monitor,
             Model model) {
-        this.NOTIFICATION_SERVICE.clearSubscriptions(SecurityUtil.getAuthenticatedUser(), monitor);
+        this.SUBSCRIPTION_SERVICE.clearSubscriptions(SecurityUtil.getAuthenticatedUser(), monitor);
         return new ResponseEntity<>(null, HttpStatus.OK);
     }
 }

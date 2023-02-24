@@ -3,10 +3,10 @@ package com.capgemini.bedwards.almon.almonaccessweb.controller.services;
 
 import com.capgemini.bedwards.almon.almonaccessweb.model.services.ServiceUpdateRequestBody;
 import com.capgemini.bedwards.almon.almoncore.intergrations.web.WebController;
+import com.capgemini.bedwards.almon.almoncore.services.notification.NotificationService;
 import com.capgemini.bedwards.almon.almoncore.services.service.ServiceService;
 import com.capgemini.bedwards.almon.almondatastore.models.service.Service;
 import com.capgemini.bedwards.almon.almonmonitoringcore.Monitors;
-import com.capgemini.bedwards.almon.notificationcore.service.NotificationService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -45,7 +45,7 @@ public class ServiceWebController extends WebController {
     public String getUsersList(@PathVariable(name = "serviceId") Service service, Model model) {
         model.addAttribute("service", service);
         model.addAttribute("monitors", MONITORS);
-        model.addAttribute("notificationHelper", NOTIFICATION_SERVICE.getNotificationHelper());
+        model.addAttribute("notificationTypes", NOTIFICATION_SERVICE.getNotificationTypes());
         model.addAttribute("serviceUsers", SERVICE_SERVICE.getUsersByServiceRole(service));
         return "services/service";
     }

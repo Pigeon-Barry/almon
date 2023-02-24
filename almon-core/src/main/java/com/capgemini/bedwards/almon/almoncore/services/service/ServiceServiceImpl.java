@@ -2,6 +2,7 @@ package com.capgemini.bedwards.almon.almoncore.services.service;
 
 import com.capgemini.bedwards.almon.almoncore.exceptions.NotFoundException;
 import com.capgemini.bedwards.almon.almoncore.services.auth.AuthorityService;
+import com.capgemini.bedwards.almon.almoncore.services.subscription.SubscriptionService;
 import com.capgemini.bedwards.almon.almoncore.services.user.RoleService;
 import com.capgemini.bedwards.almon.almondatastore.models.auth.Authority;
 import com.capgemini.bedwards.almon.almondatastore.models.auth.Role;
@@ -23,10 +24,12 @@ import java.util.*;
 
 @org.springframework.stereotype.Service
 @Slf4j
+@Transactional
 public class ServiceServiceImpl implements ServiceService {
     private final ServiceRepository SERVICE_REPOSITORY;
     private final AuthorityService AUTHORITY_SERVICE;
     private final RoleService ROLE_SERVICE;
+    private final SubscriptionService SUBSCRIPTION_SERVICE;
     @Autowired
     @Lazy
     protected Scheduler SCHEDULER;
@@ -34,10 +37,12 @@ public class ServiceServiceImpl implements ServiceService {
     @Autowired
     public ServiceServiceImpl(ServiceRepository serviceRepository,
                               AuthorityService authorityService,
-                              RoleService roleService) {
+                              RoleService roleService,
+                              SubscriptionService subscriptionService) {
         this.SERVICE_REPOSITORY = serviceRepository;
         this.AUTHORITY_SERVICE = authorityService;
         this.ROLE_SERVICE = roleService;
+        this.SUBSCRIPTION_SERVICE = subscriptionService;
     }
 
     @Override
@@ -61,18 +66,21 @@ public class ServiceServiceImpl implements ServiceService {
     }
 
     @Override
+    @Transactional
     public void enableService(Service service) {
         updateEnabledStatus(service, true);
     }
 
     @Override
+    @Transactional
     public void disableService(Service service) {
         updateEnabledStatus(service, false);
     }
 
     @Override
+    @Transactional
     public Service save(Service service) {
-        return SERVICE_REPOSITORY.saveAndFlush(service);
+        return SERVICE_REPOSITORY.save(service);
     }
 
 
@@ -101,6 +109,7 @@ public class ServiceServiceImpl implements ServiceService {
     }
 
     @Override
+    @Transactional
     public Service updateService(Service service, String name, String description) {
         service.setName(name);
         service.setDescription(description);
@@ -120,30 +129,35 @@ public class ServiceServiceImpl implements ServiceService {
     }
 
     @Override
+    @Transactional
     public boolean removeUser(Service service, User user) {
         return ROLE_SERVICE.removeRole(user, getOrCreateAdminRole(service))
                 || ROLE_SERVICE.removeRole(user, getOrCreateUserRole(service));
     }
 
     @Override
+    @Transactional
     public void assignAdminRole(Service service, Set<User> users) {
         assignUsersRole(users, getOrCreateAdminRole(service));
         assignUserRole(service, users);
     }
 
     @Override
+    @Transactional
     public void assignUserRole(Service service, Set<User> users) {
         assignUsersRole(users, getOrCreateUserRole(service));
     }
+
 
     private void assignUsersRole(Set<User> users, Role role) {
         ROLE_SERVICE.assignRoleToUsers(role, users);
     }
 
     @Override
+    @Transactional
     public Service createService(String id, String name, String description) {
         log.info("Creating new service with id: " + id + " name: " + name + " description: " + description);
-        Service service = SERVICE_REPOSITORY.saveAndFlush(Service.builder()
+        Service service = SERVICE_REPOSITORY.save(Service.builder()
                 .id(id)
                 .name(name)
                 .description(description)
@@ -207,6 +221,7 @@ public class ServiceServiceImpl implements ServiceService {
     }
 
     @Override
+    @Transactional
     public Service createService(User owner, String id, String name, String description) {
         Service service = createService(id, name, description);
 
@@ -217,20 +232,23 @@ public class ServiceServiceImpl implements ServiceService {
     }
 
     @Override
+    @Transactional
     public Role getOrCreateAdminRole(Service service) {
         return ROLE_SERVICE.findOrCreate("SERVICE_" + service.getId() + "_ADMIN", "Standard Admin permissions");
     }
 
     @Override
+    @Transactional
     public void assignAdminAuthority(Service service, Authority authority) {
         AUTHORITY_SERVICE.addRole(authority, Collections.singleton(getOrCreateAdminRole(service)));
     }
 
     @Override
+    @Transactional
     public void deleteService(Service service) {
-        SERVICE_REPOSITORY.delete(service);
         AUTHORITY_SERVICE.deleteServiceAuthorities(service);
         ROLE_SERVICE.deleteServiceRoles(service);
+        SERVICE_REPOSITORY.delete(service);
     }
 
 

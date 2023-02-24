@@ -1,7 +1,7 @@
 INSERT INTO db_almon.user(id, email, enabled, first_name, last_name, password, phone_number,
                           approved_by_id)
 VALUES ('093d8814-4960-4da7-8337-fc89b8da69b1', 'ben.edwards2000@live.co.uk', b'1', 'Ben',
-        'Edwards', '$2a$10$dvfWel1bC4L5r4Y5G8G32.hHF6AvyxKzSOSzB/gVorrYGHs9RhGPu', NULL,
+        'Edwards', '$2a$10$dvfWel1bC4L5r4Y5G8G32.hHF6AvyxKzSOSzB/gVorrYGHs9RhGPu', '447936702397',
         '093d8814-4960-4da7-8337-fc89b8da69b1'),
        ('881a85a9-47af-404e-b399-70b3f33f8db1', 'ben.edwards2000@live.co.uk2', b'1', 'Ben',
         'Edwards', '$2a$10$cgA1fxs/5RabyEm/jHVbmOF1SO5sNlRWS07vMaDeFfi8zAqx5u9b2', NULL,

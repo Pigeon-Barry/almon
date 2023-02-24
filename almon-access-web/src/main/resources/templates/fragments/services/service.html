@@ -5,7 +5,6 @@
     <!--/*@thymesVar id="service" type="com.capgemini.bedwards.almon.almondatastore.models.service.Service"*/-->
     <!--/*@thymesVar id="authority" type="com.capgemini.bedwards.almon.almondatastore.models.auth.Authority"*/-->
     <!--/*@thymesVar id="monitors" type="com.capgemini.bedwards.almon.almonmonitoringcore.Monitors"*/-->
-    <!--/*@thymesVar id="notificationHelper" type="com.capgemini.bedwards.almon.notificationcore.NotificationHelper"*/-->
 
 
     <!--/*@thymesVar id="serviceAdmin" type="com.capgemini.bedwards.almon.almondatastore.models.auth.User"*/-->
@@ -65,19 +64,19 @@
                                     <p class="mb-0"><strong>Notification Subscriptions</strong></p>
                                 </li>
                                 <li class="list-group-item d-flex justify-content-between"
-                                    th:each="notification : ${notificationHelper.getNotifications()}">
+                                    th:each="notificationType : ${notificationTypes}">
 
                                     <p data-bs-toggle="tooltip" data-bs-placement="top"
-                                       th:data-bs-title="${notification.getHelpText()}"
+                                       th:data-bs-title="${notificationType.getHelpText()}"
                                        data-bs-custom-class="primary-tooltip"
-                                       class="mb-0" th:text="${notification.getDisplayName()}"></p>
+                                       class="mb-0" th:text="${notificationType.getDisplayName()}"></p>
                                     <div class="justify-content-end">
                                         <div class="form-check form-switch">
                                             <input class="form-check-input" type="checkbox"
-                                                   th:data-notificationId="${notification.getId()}"
+                                                   th:data-notificationId="${notificationType.getId()}"
                                                    th:data-serviceId="${service.getId()}"
-                                                   th:disabled="${!notification.isEnabled()}"
-                                                   th:checked="${notificationHelper.isUserSubscribedToNotificationAtServiceLevel(user,notification,service)}"
+                                                   th:disabled="${!notificationType.isEnabled()}"
+                                                   th:checked="${T(com.capgemini.bedwards.almon.almoncore.util.SubscriptionUtil).isUserSubscribedToNotificationAtServiceLevel(user,notificationType,service)}"
                                                    onclick="updateServiceNotificationStatus(this.getAttribute('data-notificationId'),this.getAttribute('data-serviceId'),this)"
                                             >
                                         </div>

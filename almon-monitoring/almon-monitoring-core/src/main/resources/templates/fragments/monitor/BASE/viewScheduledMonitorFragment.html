@@ -7,7 +7,6 @@
     <!--/*@thymesVar id="service" type="com.capgemini.bedwards.almon.almondatastore.models.service.Service"*/-->
     <!--/*@thymesVar id="listAlerts" type="java.util.List"*/-->
     <!--/*@thymesVar id="alert" type="com.capgemini.bedwards.almon.almondatastore.models.alert.Alert"*/-->
-    <!--/*@thymesVar id="notificationHelper" type="com.capgemini.bedwards.almon.notificationcore.NotificationHelper"*/-->
     <div class="overlay" id="runningOverlay">
         <div class="spinner"></div>
         <br/>
@@ -77,7 +76,7 @@
                             th:include="fragments/monitor/BASE/viewAlertFilterFragment :: alertsFilter(${alertFilterOptions},${currentPage},${pageSize})"/>
                     <br>
                     <th:block
-                            th:include="fragments/monitor/BASE/viewNotificationsFragment :: viewNotifications(${notificationHelper})"/>
+                            th:include="fragments/monitor/BASE/viewNotificationsFragment :: viewNotifications(${notificationTypes})"/>
                 </div>
                 <div class="col-lg-8">
                     <div class="card mb-4">
