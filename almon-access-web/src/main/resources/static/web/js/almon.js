@@ -50,10 +50,17 @@ function showAlertInfo(message) {
     showAlert(message, "alert-info")
 }
 
+let alertId = 0;
 function showAlert(message, alertType) {
+    const idSuffix = alertId;
+    alertId = alertId + 1;
+    let newAlertId = "alert-" + idSuffix;
     $('#alerts').append(
-        '<div class="alert alert-dismissible fade show '.concat(alertType, '">', message, ' <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button></div>')
+        '<div id="' + newAlertId + '" class="alert alert-dismissible fade show '.concat(alertType, '">', message, ' <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button></div>')
     );
+    $('#' + newAlertId).fadeTo(5000, 500).slideUp(500, function () {
+        $(this).remove();
+    });
 }
 
 let promptId = 0;
