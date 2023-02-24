@@ -62,6 +62,13 @@ public class PassiveAPIMonitorAdapter implements MonitorAdapter<PassiveAPIMonito
         return modelAndView;
     }
 
+    @Override
+    public ModelAndView getUpdatePageWeb(Monitor monitor, Model model) {
+        ModelAndView modelAndView = MonitorAdapter.super.getUpdatePageWeb(monitor, model);
+        if (!modelAndView.getModelMap().containsAttribute("formData"))
+            modelAndView.getModelMap().addAttribute("formData", new UpdatePassiveAPIMonitorRequestBody().populate((PassiveAPIMonitor) monitor));
+        return modelAndView;
+    }
 
     @Override
     public PassiveAPIMonitor createMonitor(Service service, Object formData, Model model) {
@@ -77,14 +84,15 @@ public class PassiveAPIMonitorAdapter implements MonitorAdapter<PassiveAPIMonito
         return API_MONITOR_SERVICE.create(requestBody.toAPIMonitor(service));
     }
 
-    @Override
-    public ModelAndView updateMonitorWeb(Monitor monitor, Object formData, Model model) {
-        throw new UnsupportedOperationException();
-    }
 
     @Override
     public PassiveAPIMonitor updateMonitor(Monitor monitor, Object formData, Model model) {
-        throw new UnsupportedOperationException();
+        UpdatePassiveAPIMonitorRequestBody requestBody = (UpdatePassiveAPIMonitorRequestBody) formData;
+        BeanPropertyBindingResult errors = ValidatorUtil.validate(requestBody, "formData");
+        if (errors.hasErrors()) {
+            throw new ValidationException(errors);
+        }
+        return this.getMonitorService().save(requestBody.updateAPIMonitor((PassiveAPIMonitor) monitor));
     }
 
     @Override
@@ -93,8 +101,8 @@ public class PassiveAPIMonitorAdapter implements MonitorAdapter<PassiveAPIMonito
     }
 
     @Override
-    public Object getUpdateMonitorRequestBody(ObjectNode jsonRes) {
-        throw new UnsupportedOperationException();//TODO
+    public Object getUpdateMonitorRequestBody(ObjectNode objectNode) {
+        return UpdatePassiveAPIMonitorRequestBody.from(objectNode);
     }
 
     @Override

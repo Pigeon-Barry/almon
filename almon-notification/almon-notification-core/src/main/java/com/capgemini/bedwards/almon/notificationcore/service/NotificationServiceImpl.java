@@ -14,6 +14,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
@@ -33,7 +34,7 @@ public class NotificationServiceImpl implements NotificationService {
         this.NOTIFICATIONS = notifications;
         if (log.isInfoEnabled())
             for (Notification notification : notifications)
-                log.info("Notification Identified: " + notification.getId());
+                log.info("Notification Type Identified: " + notification.getId());
         this.SERVICE_SUBSCRIPTION_REPOSITORY = serviceSubscriptionRepository;
         this.MONITOR_SUBSCRIPTION_REPOSITORY = monitorSubscriptionRepository;
         this.NOTIFICATION_HELPER = new NotificationHelper(this.NOTIFICATIONS);
@@ -113,12 +114,25 @@ public class NotificationServiceImpl implements NotificationService {
         return this.NOTIFICATION_HELPER;
     }
 
-    public <T extends Alert<?>> void send(T alert) {
+    public <T extends Alert<?>> void send(final T alert) {
+        final Monitor monitor = alert.getMonitor();
+        if (!alert.getStatus().shouldSendAlert() || monitor.getPreventNotificationUntil().isAfter(LocalDateTime.now())) {
+            return;
+        }
+        monitor.setPreventNotificationUntil(LocalDateTime.now().plusNanos(monitor.getNotificationThrottle()));
+        sendNotification(alert);
+    }
+
+    private <T extends Alert<?>> void sendNotification(final T alert) {
         log.info("Sending Notifications for alert: " + alert);
         for (Notification notification : this.NOTIFICATIONS) {
             try {
-                if (notification.isEnabled())
+                if (notification.isEnabled()) {
+                    log.info("Sending notify request to notification: " + notification.getId());
                     notification.sendNotification(getSubscribedUsers(alert, notification), alert);
+                } else {
+                    log.info("Notification: " + notification.getId() + " is disabled skipping");
+                }
             } catch (Throwable throwable) {
                 log.error("Failed to send notification using notification method: " + notification.getId(), throwable);
             }

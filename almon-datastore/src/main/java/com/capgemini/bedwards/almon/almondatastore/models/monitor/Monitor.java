@@ -7,10 +7,14 @@ import com.fasterxml.jackson.annotation.JsonValue;
 import lombok.*;
 import lombok.experimental.SuperBuilder;
 import org.hibernate.validator.constraints.Length;
+import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 import java.io.Serializable;
+import java.time.LocalDateTime;
+import java.time.Month;
 import java.util.Objects;
 import java.util.Set;
 
@@ -19,11 +23,13 @@ import java.util.Set;
 @AllArgsConstructor
 @NoArgsConstructor
 @ToString
-@SuperBuilder
 @Entity
 @Inheritance(strategy = InheritanceType.JOINED)
+@SuperBuilder(toBuilder = true)
 @DiscriminatorColumn(discriminatorType = DiscriminatorType.STRING, name = "type")
 public abstract class Monitor {
+
+
     @EmbeddedId
     protected MonitorId id;
 
@@ -34,6 +40,14 @@ public abstract class Monitor {
     protected String description;
 
     protected boolean enabled = false;
+
+    @NotNull
+    protected Long notificationThrottle;
+
+    @NotNull
+    @Builder.Default
+    @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+    protected LocalDateTime preventNotificationUntil = LocalDateTime.of(0, Month.JANUARY, 1, 0, 0);
 
     @OneToMany(mappedBy = "monitor", fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
     protected Set<Alert> alerts;

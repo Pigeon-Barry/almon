@@ -17,7 +17,6 @@ function runMonitor(serviceId, monitorId, overlayId) {
                     request.setRequestHeader(header, token);
                 },
                 complete: function (xhr, textStatus) {
-                    console.log("Here");
                     $("#" + overlayId).hide();
                     if (xhr.status === 200) {
                         showPopup("Monitor Executed successfully", "Monitor Executed successfully. Alert status " + $.parseJSON(xhr.responseText).status, function () {

@@ -1,14 +1,14 @@
 package com.capgemini.bedwards.almon.almonmonitoringcore.models;
 
+import com.capgemini.bedwards.almon.almoncore.util.BeanUtil;
 import com.capgemini.bedwards.almon.almondatastore.models.monitor.Monitor;
 import com.capgemini.bedwards.almon.almondatastore.models.service.Service;
 import com.capgemini.bedwards.almon.almondatastore.util.Constants;
+import com.capgemini.bedwards.almon.notificationcore.NotificationCoreConfig;
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
 
-import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.Pattern;
-import javax.validation.constraints.Size;
+import javax.validation.constraints.*;
 
 @Data
 @Slf4j
@@ -19,13 +19,17 @@ public class CreateMonitorRequestBody {
     private String key;
     @NotBlank
     protected String name;
-    protected String description;
+    @Min(0)
+    @NotNull
+    private Long notificationThrottle = BeanUtil.getBeanOfClass(NotificationCoreConfig.class).getNotificationThrottle();
 
+    protected String description;
 
     protected <T extends Monitor.MonitorBuilder<?, ?>> T toMonitor(T builder, Service service) {
         builder.id(new Monitor.MonitorId(key, service))
                 .name(name)
-                .description(description);
+                .description(description)
+                .notificationThrottle(notificationThrottle);
         return builder;
     }
 }

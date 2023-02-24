@@ -32,6 +32,19 @@
                                     <strong th:errors="*{name}"></strong>
                             </span>
     </div>
+
+    <div class="form-group required">
+        <label for="notificationThrottle" class="control-label">Notification Throttle (Seconds):</label>
+        <input
+                th:class="(${#fields.hasErrors('notificationThrottle')}? 'is-invalid ' : '') + 'form-control'"
+                type="number" id="notificationThrottle" placeholder="Enter notification throttle"
+                name="notificationThrottle" th:field="*{notificationThrottle}"/>
+        <span th:if="${#fields.hasErrors('notificationThrottle')}" class="invalid-feedback" role="alert">
+                                    <strong th:errors="*{notificationThrottle}"></strong>
+                            </span>
+    </div>
+
+
     <div class="form-group">
         <label for="description" class="control-label">Description:</label>
         <textarea
