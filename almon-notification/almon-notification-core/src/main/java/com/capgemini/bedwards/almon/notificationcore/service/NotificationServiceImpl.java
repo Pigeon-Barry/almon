@@ -38,7 +38,7 @@ public class NotificationServiceImpl implements NotificationService {
         if (!alert.getStatus().shouldSendAlert() || monitor.getPreventNotificationUntil().isAfter(LocalDateTime.now())) {
             return;
         }
-        monitor.setPreventNotificationUntil(LocalDateTime.now().plusNanos(monitor.getNotificationThrottle()));
+        monitor.setPreventNotificationUntil(LocalDateTime.now().plusSeconds(monitor.getNotificationThrottle()));
         sendNotification(alert);
     }
 

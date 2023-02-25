@@ -1,5 +1,8 @@
 package com.capgemini.bedwards.almon.almondatastore.util;
 
+import java.time.LocalDateTime;
+import java.time.Month;
+
 public class Constants {
 
   public static final String PASSWORD_REGEX = "(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[@$!%*?&\\.])[A-Za-z\\d@$!%*?&\\.]{8,}";
@@ -16,5 +19,7 @@ public class Constants {
   public static final int ALERT_SHORT_MAX_LENGTH = 1000;
   public static final int ALERT_LONG_MAX_LENGTH = 3000;
   public static String API_KEY_HEADER = "x-api-key";
+
+  public static LocalDateTime DEFAULT_MONITOR_PREVENT_UNTIL = LocalDateTime.of(0, Month.JANUARY, 1, 0, 0);
 
 }

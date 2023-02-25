@@ -15,7 +15,6 @@ import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import java.io.Serializable;
 import java.time.LocalDateTime;
-import java.time.Month;
 import java.util.Objects;
 import java.util.Set;
 
@@ -48,7 +47,7 @@ public abstract class Monitor {
     @NotNull
     @Builder.Default
     @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
-    protected LocalDateTime preventNotificationUntil = LocalDateTime.of(0, Month.JANUARY, 1, 0, 0);
+    protected LocalDateTime preventNotificationUntil = Constants.DEFAULT_MONITOR_PREVENT_UNTIL;
 
     @OneToMany(mappedBy = "monitor", fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
     protected Set<Alert> alerts;

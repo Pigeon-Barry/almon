@@ -38,7 +38,7 @@ public abstract class ScheduledMonitorServiceBase<T extends ScheduledMonitor>
     @Override
     @Transactional
     public T save(T monitorType) {
-        T response = getRepository().save(monitorType);
+        T response = super.save(monitorType);
         SCHEDULER.refreshTask(response.getScheduledTask());
         return response;
     }

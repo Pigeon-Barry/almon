@@ -6,6 +6,7 @@ import com.capgemini.bedwards.almon.almoncore.services.auth.AuthorityService;
 import com.capgemini.bedwards.almon.almoncore.services.service.ServiceService;
 import com.capgemini.bedwards.almon.almoncore.services.subscription.SubscriptionService;
 import com.capgemini.bedwards.almon.almondatastore.models.monitor.Monitor;
+import com.capgemini.bedwards.almon.almondatastore.util.Constants;
 import com.capgemini.bedwards.almon.almonmonitoringcore.repository.monitor.MonitorTypeRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -112,6 +113,9 @@ public abstract class MonitorServiceBase<T extends Monitor> implements MonitorSe
     @Override
     @Transactional
     public T save(T monitorType) {
+        //Reset the notification throttle timeout
+        monitorType.setPreventNotificationUntil(Constants.DEFAULT_MONITOR_PREVENT_UNTIL);
+        //Save monitor
         return getRepository().save(monitorType);
     }
 
