@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml"
       xmlns:th="http://www.thymeleaf.org" lang="en"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security"
 >
 <th:block th:fragment="base(pageName,activeTab, mainContentFragment)">
     <!--/*@thymesVar id="pageName" type="java.lang.String"*/-->
@@ -25,8 +26,33 @@
         <th:block>
             <div id="prompt-container"></div>
         </th:block>
+
+
         <!-- Main Content End -->
         <th:block th:insert="fragments/foorter :: footer"/>
+
+
+        <th:block sec:authorize="hasAuthority('DEVELOPER')">
+            <h1>Var Dump</h1>
+            <table>
+                <tr th:each="var : ${#vars.getVariableNames()}">
+                    <td th:text="${var}"></td>
+                    <td th:text="${#vars.getVariable(var)}"></td>
+                </tr>
+                <tr>
+                    <td>param</td>
+                    <td th:text="${#vars.getVariable('param')}"></td>
+                </tr>
+                <tr>
+                    <td>session</td>
+                    <td th:text="${#vars.getVariable('session')}"></td>
+                </tr>
+                <tr>
+                    <td>application</td>
+                    <td th:text="${#vars.getVariable('application')}"></td>
+                </tr>
+            </table>
+        </th:block>
     </div>
     </body>
     </html>

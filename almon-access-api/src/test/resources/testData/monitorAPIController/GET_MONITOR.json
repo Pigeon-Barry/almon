@@ -3,6 +3,9 @@
   "name": "Monitor Name",
   "description": "Monitor Description",
   "enabled": true,
+  "notificationThrottle": null,
+  "preventNotificationUntil": "0000-01-01T00:00:00",
   "alerts": null,
+  "subscriptions": null,
   "monitorType": "TEST"
 }

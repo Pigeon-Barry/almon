@@ -13,7 +13,6 @@
             <li class="nav-item">
                 <a class="nav-link text-danger" href="#">Dashboards</a>
             </li>
-
             <li th:class="nav-item">
                 <a th:class="'nav-link ' +  (${activeTab =='services'} ? 'active' : '')"
                    href="/web/services">Services</a>
@@ -34,6 +33,7 @@
                 </ul>
             </li>
         </ul>
+
         <!-- Right Side Of Navbar-->
         <ul class="navbar-nav ms-auto align-items-center">
             <li class="nav-item">
@@ -41,10 +41,13 @@
             </li>
             <li class="nav-item px-3">
                 <a class="nav-link position-relative" th:href="${user?.getProfilePage()}">
-                    <!--                     <span class="position-absolute top-10 start-90 translate-middle badge rounded-pill bg-danger"-->
-                    <!--                     >1-->
-                    <!--                       <span class="visually-hidden">unread messages</span>-->
-                    <!--                    </span>-->
+                   <span
+                           id="notificationCount"
+                           th:if="${unreadNotificationCount != null && unreadNotificationCount >0}"
+                           class="position-absolute top-10 start-90 translate-middle badge rounded-pill bg-danger"
+                           th:text="${unreadNotificationCount}">
+                        <span class="visually-hidden">unread notifications</span>
+                    </span>
                     <img th:src="${user?.getProfilePicture()}"
                          alt="avatar" class="rounded-circle img-fluid" style="width: 50px;">
                 </a>

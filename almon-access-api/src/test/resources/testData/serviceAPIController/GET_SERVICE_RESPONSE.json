@@ -3,5 +3,6 @@
   "name": "Service Name",
   "description": "Service Description",
   "monitors": [],
-  "enabled": true
+  "enabled": true,
+  "subscriptions": null
 }

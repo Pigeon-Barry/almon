@@ -40,7 +40,8 @@ VALUES ('ACCESS_CORE_PAGES'),
        ('DELETE_SERVICES'),
        ('RUN_MONITORS'),
        ('DELETE_MONITORS'),
-       ('ENABLE_DISABLE_MONITORS')
+       ('ENABLE_DISABLE_MONITORS'),
+       ('DEVELOPER')
 ;
 
 

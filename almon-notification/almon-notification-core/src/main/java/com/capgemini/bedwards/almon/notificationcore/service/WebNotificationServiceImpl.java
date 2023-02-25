@@ -69,4 +69,9 @@ public class WebNotificationServiceImpl implements WebNotificationService {
     }
     throw new NotFoundException("Web Notification with id: " + id + " not found");
   }
+
+  @Override
+  public long getUnreadNotifications(User user) {
+    return this.WEB_NOTIFICATION_REPOSITORY.countWebNotificationBySentTOTrue(user);
+  }
 }

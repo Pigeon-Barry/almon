@@ -1,9 +1,10 @@
-package com.capgemini.bedwards.almon.almoncore.services.notification;
+package com.capgemini.bedwards.almon.notificationcore.service;
 
 import com.capgemini.bedwards.almon.almoncore.exceptions.NotFoundException;
 import com.capgemini.bedwards.almon.almondatastore.models.auth.User;
 import com.capgemini.bedwards.almon.almondatastore.models.notification.WebNotification;
 import com.capgemini.bedwards.almon.almondatastore.repository.notification.WebNotificationRepository;
+import com.capgemini.bedwards.almon.almontest.helpers.DataCreationHelper;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -20,7 +21,6 @@ import java.util.*;
 import java.util.function.Function;
 import java.util.stream.Stream;
 
-import static com.capgemini.bedwards.almon.almontest.helpers.DataCreationHelper.createUser;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
@@ -45,7 +45,7 @@ public class WebNotificationServiceImplTest {
     }
 
     private void positive_getNotifications_validHelper(List<WebNotification> returnList) {
-        User user = createUser("test@email.com");
+        User user = DataCreationHelper.createUser("test@email.com");
         when(webNotificationRepository.findAllByUser(eq(user))).thenReturn(returnList);
         List<WebNotification> webNotifications = getWebNotificationServiceImpl().getNotifications(user);
         assertEquals(returnList, webNotifications);
@@ -79,7 +79,7 @@ public class WebNotificationServiceImplTest {
     @ParameterizedTest
     @MethodSource("getNotificationsPaginatedArgumentProvider")
     public void positive_getNotificationsPaginated_valid(int pageNo, int pageSize) {
-        User user = createUser("test@email.com");
+        User user = DataCreationHelper.createUser("test@email.com");
         TestPage expectedPage = new TestPage();
         when(webNotificationRepository.findAllByUser(eq(user), eq(PageRequest.of(pageNo - 1, pageSize)))).thenReturn(expectedPage);
         Page<WebNotification> page = getWebNotificationServiceImpl().getNotifications(user, pageNo, pageSize);
@@ -89,7 +89,7 @@ public class WebNotificationServiceImplTest {
 
     @Test
     public void negative_getNotificationsPaginated_negativePageNumber() {
-        User user = createUser("test@email.com");
+        User user = DataCreationHelper.createUser("test@email.com");
         assertThrows(IllegalArgumentException.class,
                 () -> getWebNotificationServiceImpl().getNotifications(user, -1, 2),
                 "Page index must not be less than zero");
@@ -97,7 +97,7 @@ public class WebNotificationServiceImplTest {
 
     @Test
     public void negative_getNotificationsPaginated_zeroPageNumber() {
-        User user = createUser("test@email.com");
+        User user = DataCreationHelper.createUser("test@email.com");
         assertThrows(IllegalArgumentException.class,
                 () -> getWebNotificationServiceImpl().getNotifications(user, 0, 2),
                 "Page index must not be less than zero");
@@ -105,7 +105,7 @@ public class WebNotificationServiceImplTest {
 
     @Test
     public void positive_read_valid() {
-        User user = createUser("test@email.com");
+        User user = DataCreationHelper.createUser("test@email.com");
         WebNotification webNotification = WebNotification.builder().id(UUID.randomUUID())
                 .sentTO(new HashMap<User, Boolean>() {{
                     put(user, false);
@@ -118,7 +118,7 @@ public class WebNotificationServiceImplTest {
 
     @Test
     public void negative_read_webNotificationNotSentToUser() {
-        User user = createUser("test@email.com");
+        User user = DataCreationHelper.createUser("test@email.com");
         WebNotification webNotification = WebNotification.builder().id(UUID.randomUUID()).build();
 
         assertThrows(NotFoundException.class,

@@ -206,6 +206,17 @@
             const btn = $("#notification-header-btn-" + notificationId);
             btn.removeAttr("data-notificationId");
             btn.removeClass("bg-info");
+            //notificationCount
+            const notificationCountElement = $('#notificationCount');
+            const oldValue = notificationCountElement.text();
+            const newValue = parseInt(oldValue) - 1;
+
+            if (newValue > 0) {
+              notificationCountElement.text(newValue);
+            } else {
+              notificationCountElement.hide();
+            }
+
           } else {
             showAlertError("Failed to mark notification as read. Please consult an administrator");
           }
