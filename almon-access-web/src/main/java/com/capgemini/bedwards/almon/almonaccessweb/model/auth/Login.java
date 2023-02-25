@@ -1,17 +1,18 @@
 package com.capgemini.bedwards.almon.almonaccessweb.model.auth;
 
 import com.capgemini.bedwards.almon.almondatastore.util.Constants;
-import javax.validation.constraints.Email;
-import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Pattern;
 import lombok.Data;
+
+import javax.validation.constraints.Email;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.Pattern;
 @Data
 public class Login {
-    @NotNull
+    @NotBlank
     @Email
     private String email;
 
-    @NotNull
+    @NotBlank
     @Pattern(regexp = Constants.PASSWORD_REGEX, message = Constants.PASSWORD_INVALID_MESSAGE)
     private String password;
 }
