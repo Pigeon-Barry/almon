@@ -8,6 +8,8 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
+
 @Repository
 public interface ServiceRepository extends JpaRepository<Service, String> {
     boolean existsById(String key);
@@ -23,6 +25,18 @@ public interface ServiceRepository extends JpaRepository<Service, String> {
                     "OR(authority in (select authorities_authority FROM authority_users where  users_id = :userId))) \n" +
                     "and authority like \"SERVICE_%_CAN_VIEW\")",
             nativeQuery = true)
-    Page<Service> findServicesUsersCanView(Pageable pageable,@Param("userId") String userId);
+    Page<Service> findServicesUsersCanView(Pageable pageable, @Param("userId") String userId);
+
+    @Query(
+            value = "SELECT * FROM service where id IN (select REPLACE(REPLACE(authority,\"SERVICE_\",\"\"),\"_CAN_VIEW\",\"\") from authority where \n" +
+                    "(authority in (select authorities_authority FROM authority_roles where roles_name IN (SELECT roles_name FROM user_roles where users_id = :userId))\n" +
+                    "OR(authority in (select authorities_authority FROM authority_users where  users_id = :userId))) \n" +
+                    "and authority like \"SERVICE_%_CAN_VIEW\")",
+            countQuery = "SELECT count(*) FROM service where id IN (select REPLACE(REPLACE(authority,\"SERVICE_\",\"\"),\"_CAN_VIEW\",\"\") from authority where \n" +
+                    "(authority in (select authorities_authority FROM authority_roles where roles_name IN (SELECT roles_name FROM user_roles where users_id = :userId))\n" +
+                    "OR(authority in (select authorities_authority FROM authority_users where  users_id = :userId))) \n" +
+                    "and authority like \"SERVICE_%_CAN_VIEW\")",
+            nativeQuery = true)
+    List<Service> findServicesUsersCanView(@Param("userId") String userId);
 
 }

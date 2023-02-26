@@ -221,10 +221,52 @@ function formToJson(formId) {
     return data;
 }
 
-$( document ).ready(function() {
+$(document).ready(function () {
     $('[data-bs-toggle="tooltip"]').tooltip({
-        trigger : 'hover'
+        trigger: 'hover'
     });
     // const tooltipTriggerList = document.querySelectorAll('[data-bs-toggle="tooltip"]')
     // const tooltipList = [...tooltipTriggerList].map(tooltipTriggerEl => new bootstrap.Tooltip(tooltipTriggerEl))
 });
+
+function readNotification(notificationId) {
+    if (notificationId == null) {
+        return;
+    }
+    console.log("Read: " + notificationId);
+
+    const url = "/web/notification/" + notificationId + "/read";
+    const token = $("meta[name='_csrf']").attr("content");
+    const header = $("meta[name='_csrf_header']").attr("content");
+
+    $.ajax({
+        type: 'PUT',
+        url: url,
+        xhrFields: {
+            withCredentials: true
+        },
+        beforeSend: function (request) {
+            request.setRequestHeader(header, token);
+        },
+        complete: function (xhr, textStatus) {
+            if (xhr.status === 200) {
+                const btn = $("#notification-header-btn-" + notificationId);
+                btn.removeAttr("data-notificationId");
+                btn.removeClass("bg-info");
+                //notificationCount
+                const notificationCountElement = $('#notificationCount');
+                const oldValue = notificationCountElement.text();
+                const newValue = parseInt(oldValue) - 1;
+
+                if (newValue > 0) {
+                    notificationCountElement.text(newValue);
+                } else {
+                    notificationCountElement.hide();
+                }
+
+            } else {
+                showAlertError("Failed to mark notification as read. Please consult an administrator");
+            }
+        }
+    });
+}

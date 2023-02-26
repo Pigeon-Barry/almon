@@ -55,8 +55,8 @@ public abstract class Monitor {
     @OneToMany(mappedBy = "id.monitor", fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
     protected Set<MonitorSubscription> subscriptions;
 
-
     public abstract String getMonitorType();
+
 
     @Data
     @Embeddable

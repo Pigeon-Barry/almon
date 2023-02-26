@@ -9,5 +9,4 @@ import java.util.UUID;
 
 public interface AlertRepository<T extends Alert> extends JpaRepository<T, UUID>, JpaSpecificationExecutor<T> {
 
-
 }

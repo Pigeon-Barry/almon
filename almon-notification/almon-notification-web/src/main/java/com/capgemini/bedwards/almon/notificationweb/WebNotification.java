@@ -4,11 +4,12 @@ import com.capgemini.bedwards.almon.almoncore.services.notification.WebNotificat
 import com.capgemini.bedwards.almon.almondatastore.models.alert.Alert;
 import com.capgemini.bedwards.almon.almondatastore.models.auth.User;
 import com.capgemini.bedwards.almon.almondatastore.models.contract.Notification;
-import java.util.HashMap;
-import java.util.Set;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+
+import java.util.HashMap;
+import java.util.Set;
 
 @Slf4j
 @Component
@@ -25,8 +26,8 @@ public class WebNotification implements Notification {
   public void sendNotification(Set<User> subscribedUsers, Alert<?> alert) {
 
     com.capgemini.bedwards.almon.almondatastore.models.notification.WebNotification notification = com.capgemini.bedwards.almon.almondatastore.models.notification.WebNotification.builder()
-        .title(alert.getMonitor().getId().toString() + " - " + alert.getMessage())
-        .message(alert.getLongMessage())
+            .title(alert.getStatus() + ": " + alert.getMonitor().getId().toString() + " - " + alert.getMessage())
+            .message(alert.getShortMessage())
         .sentTO(new HashMap<>())
         .build();
 

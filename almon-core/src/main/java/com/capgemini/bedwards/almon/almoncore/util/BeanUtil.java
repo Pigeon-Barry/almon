@@ -6,8 +6,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Component;
 
-import java.util.Arrays;
-
 
 @Component
 @Slf4j
@@ -22,7 +20,10 @@ public class BeanUtil {
     }
 
     public static <T> T getBeanOfClass(Class<T> _class) {
-        log.info(Arrays.toString(applicationContext.getBeanDefinitionNames()));
         return applicationContext.getBean(_class);
+    }
+
+    public static <T> T getBeanOfName(String beanName, Class<T> _class) {
+        return applicationContext.getBean(beanName, _class);
     }
 }

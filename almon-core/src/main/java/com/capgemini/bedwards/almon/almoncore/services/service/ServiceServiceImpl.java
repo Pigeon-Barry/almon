@@ -58,6 +58,11 @@ public class ServiceServiceImpl implements ServiceService {
     }
 
     @Override
+    public List<Service> findServicesFromUser(User user) {
+        return SERVICE_REPOSITORY.findServicesUsersCanView(user.getId().toString());
+    }
+
+    @Override
     public Service findServiceById(String serviceId) {
         Optional<Service> serviceOptional = findById(serviceId);
         if (serviceOptional.isPresent())

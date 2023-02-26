@@ -1,0 +1,111 @@
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org" lang="en"
+>
+<!--/*@thymesVar id="user" type="com.capgemini.bedwards.almon.almondatastore.models.auth.User"*/-->
+<!--/*@thymesVar id="authority" type="com.capgemini.bedwards.almon.almondatastore.models.auth.Authority"*/-->
+<!--/*@thymesVar id="webNotifications" type="java.util.List"*/-->
+<!--/*@thymesVar id="webNotification" type="com.capgemini.bedwards.almon.almondatastore.models.notification.WebNotification"*/-->
+
+<div class="###container" th:fragment="home">
+    <div class="row">
+        <div class="col-md-6">
+            <div class="card mb-4 mb-md-0">
+                <div class="card-body">
+                    <ul class="list-group list-group-flush rounded-3">
+                        <li class="list-group-item d-flex justify-content-start align-items-center p-3">
+                            <p class="mb-0"><strong>Notifications</strong></p>
+                        </li>
+                        <li class="list-group-item p-3">
+                            <div class="accordion" id="accordionNotifications">
+                                <div class="accordion-item" th:each="webNotification : ${webNotifications}"
+                                     th:id="${'notification-' + webNotification.getId()}">
+                                    <h2 class="accordion-header"
+                                        th:id="${'notification-header-' + webNotification.getId()}">
+                                        <button
+                                                th:id="${'notification-header-btn-' + webNotification.getId()}"
+                                                th:class="${'accordion-button collapsed ' + (webNotification.getSentTO().get(user) ? '' :'bg-info')}"
+                                                type="button"
+                                                data-bs-toggle="collapse"
+                                                th:data-bs-target="${'#notification-collapse-' + webNotification.getId()}"
+                                                th:data-notificationId="${webNotification.getSentTO().get(user) ? null :webNotification.getId()}"
+                                                onclick="readNotification(this.getAttribute('data-notificationId'))"
+                                                th:text="${webNotification.getTitle()}"/>
+                                    </h2>
+                                    <div th:id="${'notification-collapse-' + webNotification.getId()}"
+                                         class="accordion-collapse collapse">
+                                        <div class="accordion-body">
+                                            <p th:text="${webNotification.getMessage()}"/>
+                                            <small class="text-muted"
+                                                   th:text="${#temporals.format(webNotification.getCreatedAt(), 'yyyy-MM-dd : hh:mm:ss a')}"></small>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </li>
+                        <th:block
+                                th:insert="fragments/util/pagintation :: standard('Notifications','notification')"/>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        <div class="col-6">
+            <div class="w-75">
+                <canvas id="chart-failure-rate-by-service-weekly"></canvas>
+            </div>
+        </div>
+    </div>
+
+    <script th:inline="javascript">
+        const weeklyChart = document.getElementById('chart-failure-rate-by-service-weekly');
+        const serviceStats = JSON.parse('[[${serviceStats}]]');
+        const weeklyStats = serviceStats.weekly;
+
+        function convertToDataset(key, field, data) {
+            const dataset = [];
+            data.forEach(function (currentValue) {
+                dataset.push(currentValue[key][field]);
+
+            });
+            return dataset;
+        }
+
+        function convertToDataSet(data, field) {
+            const datasets = [];
+            Object.keys(data[0]).forEach(function (currentValue) {
+                const dataset = {};
+                dataset.label = currentValue;
+                dataset.data = convertToDataset(currentValue, field, weeklyStats)
+                datasets.push(dataset);
+            });
+            return datasets;
+        }
+
+
+        const weeklyData = {
+            labels: [
+                moment().format("DD-MM-YYYY"),
+                moment().subtract(1, 'days').format("DD-MM-YYYY"),
+                moment().subtract(2, 'days').format("DD-MM-YYYY"),
+                moment().subtract(3, 'days').format("DD-MM-YYYY"),
+                moment().subtract(4, 'days').format("DD-MM-YYYY"),
+                moment().subtract(5, 'days').format("DD-MM-YYYY"),
+                moment().subtract(6, 'days').format("DD-MM-YYYY")
+            ],
+            datasets: convertToDataSet(weeklyStats, 'failureRate')
+        };
+        new Chart(weeklyChart, {
+            type: 'radar',
+            data: weeklyData,
+            options: {
+                responsive: true,
+                plugins: {
+                    title: {
+                        display: true,
+                        text: 'Failure rate by service (Last 7 Days)'
+                    }
+                }
+            }
+        });
+    </script>
+</div>
+

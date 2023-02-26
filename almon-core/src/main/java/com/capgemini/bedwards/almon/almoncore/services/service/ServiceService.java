@@ -6,6 +6,7 @@ import com.capgemini.bedwards.almon.almondatastore.models.auth.User;
 import com.capgemini.bedwards.almon.almondatastore.models.service.Service;
 import org.springframework.data.domain.Page;
 
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
@@ -26,6 +27,8 @@ public interface ServiceService {
     Service createService(User owner, String id, String name, String description);
 
     Page<Service> findPaginatedFromUser(int pageNumber, int pageSize, User user);
+
+    List<Service> findServicesFromUser(User user);
 
     Service findServiceById(String serviceId);
 

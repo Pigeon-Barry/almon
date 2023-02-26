@@ -10,7 +10,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-public class AlertSpecification<T extends Alert> implements Specification<T> {
+public class AlertSpecification<T extends Alert<?>> implements Specification<T> {
 
 
     private final AlertFilterOptions ALERT_FILTER_OPTIONS;
@@ -33,11 +33,12 @@ public class AlertSpecification<T extends Alert> implements Specification<T> {
         if (ALERT_FILTER_OPTIONS.getTo() != null)
             predicates.add(builder.lessThanOrEqualTo(root.get("createdAt"), ALERT_FILTER_OPTIONS.getTo()));
 
+        if (ALERT_FILTER_OPTIONS.getMonitors() != null && ALERT_FILTER_OPTIONS.getMonitors().length > 0) {
+            predicates.add(root.get("monitor").in(Arrays.asList(ALERT_FILTER_OPTIONS.getMonitors())));
+        }
 
         query.orderBy(builder.desc(root.get("createdAt")));
 
-//        if (ALERT_FILTER_OPTIONS.getMonitors() != null && ALERT_FILTER_OPTIONS.getMonitors().length > 0)
-//            predicates.add(root.get("monitor").in(ALERT_FILTER_OPTIONS.getMonitors()));
 
         return predicates.size() == 0 ? null : builder.and(predicates.toArray(new Predicate[0]));
     }

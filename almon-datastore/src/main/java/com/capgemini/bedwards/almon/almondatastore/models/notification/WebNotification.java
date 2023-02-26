@@ -40,7 +40,7 @@ public class WebNotification {
     @Column(length = Constants.ALERT_LONG_MAX_LENGTH)
     protected String message;
 
-    @ElementCollection
+    @ElementCollection(fetch = FetchType.EAGER)
     @Column(name = "hasRead")
     @MapKeyJoinColumn(name = "user_id")
     protected Map<User, Boolean> sentTO;

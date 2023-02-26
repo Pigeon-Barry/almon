@@ -43,4 +43,14 @@
             <p class="text-muted mb-0" th:text="${monitor.getDescription()}"></p>
         </div>
     </div>
+    <hr>
+    <div class="row">
+        <div class="col-sm-3">
+            <p class="mb-0">Failure Rate (Last 7 days)</p>
+        </div>
+        <div class="col-sm-9">
+            <p class="text-muted mb-0"
+               th:text="${#numbers.formatPercent(T(com.capgemini.bedwards.almon.almonmonitoringcore.AlertUtil).getFailureRateLast7Days(monitor),2,2)}"></p>
+        </div>
+    </div>
 </th:block>
