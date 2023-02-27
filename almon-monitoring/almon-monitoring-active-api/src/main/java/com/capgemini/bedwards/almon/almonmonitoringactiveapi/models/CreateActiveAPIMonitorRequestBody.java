@@ -5,8 +5,7 @@ import com.capgemini.bedwards.almon.almoncore.validators.ValidJsonPath;
 import com.capgemini.bedwards.almon.almondatastore.models.service.Service;
 import com.capgemini.bedwards.almon.almonmonitoringcore.models.CreateScheduledMonitorRequestBody;
 import com.fasterxml.jackson.databind.node.ObjectNode;
-import lombok.Data;
-import lombok.SneakyThrows;
+import lombok.*;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpMethod;
 
@@ -16,7 +15,10 @@ import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import java.util.Map;
 
-@Data
+@Builder
+@Getter
+@NoArgsConstructor
+@AllArgsConstructor
 @Slf4j
 public class CreateActiveAPIMonitorRequestBody extends CreateScheduledMonitorRequestBody {
 

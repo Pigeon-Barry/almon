@@ -1,7 +1,9 @@
 package com.capgemini.bedwards.almon.almonmonitoringcore.models;
 
 import com.capgemini.bedwards.almon.almondatastore.models.monitor.Monitor;
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
 import javax.validation.constraints.Min;
@@ -10,15 +12,18 @@ import javax.validation.constraints.NotNull;
 
 @Data
 @Slf4j
+@NoArgsConstructor
+@AllArgsConstructor
 public class UpdateMonitorRequestBody {
     @NotBlank
     protected String name;
-    @Min(0)
-    @NotNull
-    private Long notificationThrottle;
+
 
     protected String description;
 
+    @Min(0)
+    @NotNull
+    protected Long notificationThrottle;
 
     protected <T extends Monitor> T toMonitor(T monitor) {
         if (this.getName() != null)

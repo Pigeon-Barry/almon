@@ -2,10 +2,14 @@ package com.capgemini.bedwards.almon.almonmonitoringcore.models;
 
 import com.capgemini.bedwards.almon.almoncore.validators.CronExpression;
 import com.capgemini.bedwards.almon.almondatastore.models.schedule.ScheduledMonitor;
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
 @Data
+@NoArgsConstructor
+@AllArgsConstructor
 @Slf4j
 public class UpdateScheduledMonitorRequestBody extends UpdateMonitorRequestBody {
     @CronExpression

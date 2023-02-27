@@ -28,6 +28,8 @@ public class UserDoesNotExistValidator implements ConstraintValidator<UserDoesNo
 
     @Override
     public boolean isValid(String value, ConstraintValidatorContext context) {
+        if (value == null || value.length() == 0)
+            return true;
         return !AUTH_SERVICE.checkUserExists(value);
     }
 }

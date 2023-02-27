@@ -49,9 +49,6 @@ public class APIControllerTest {
                     new InvalidPermissionException("Error Message of Exception")),
             ErrorCode.UNAUTHORISED_API, "Error Message of Exception");
   }
-  //TODO handleValidationExceptions
-  //TODO handleObjectError
-  //TODO handleValidationExceptions
 
 
   @Test

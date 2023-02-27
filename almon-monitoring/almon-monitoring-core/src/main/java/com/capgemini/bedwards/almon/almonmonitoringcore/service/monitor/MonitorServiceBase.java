@@ -48,6 +48,11 @@ public abstract class MonitorServiceBase<T extends Monitor> implements MonitorSe
         updateEnabledStatus(monitor, false);
     }
 
+    protected void updateEnabledStatus(@NotNull T monitor, boolean enabled) {
+        log.info((enabled ? "Enabling" : "Disabling") + " monitor: " + monitor);
+        monitor.setEnabled(enabled);
+        getRepository().save(monitor);
+    }
 
     @Override
     @Transactional
@@ -89,7 +94,7 @@ public abstract class MonitorServiceBase<T extends Monitor> implements MonitorSe
         AUTHORITY_SERVICE.addRole(
                 AUTHORITY_SERVICE.createAuthority(
                         "SERVICE_" + monitorType.getId().getService().getId() + "_MONITOR_" + monitorType.getId() + "_CAN_DELETE",
-                        "Grants the ability to Delete  this monitor"
+                        "Grants the ability to Delete this monitor"
                 ),
             Collections.singleton(
                 SERVICE_SERVICE.getOrCreateAdminRole(monitorType.getId().getService()))
@@ -119,11 +124,6 @@ public abstract class MonitorServiceBase<T extends Monitor> implements MonitorSe
         return getRepository().save(monitorType);
     }
 
-    protected void updateEnabledStatus(@NotNull T monitor, boolean enabled) {
-        log.info((enabled ? "Enabling" : "Disabling") + " monitor: " + monitor);
-        monitor.setEnabled(enabled);
-        getRepository().save(monitor);
-    }
 
     @Override
     public T getMonitorFromCombinedId(String source) {

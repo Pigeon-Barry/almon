@@ -21,6 +21,12 @@
             <version>${almon-monitoring-core.version}</version>
         </dependency>
         <dependency>
+            <groupId>com.capgemini.bedwards.almon</groupId>
+            <artifactId>almon-monitoring-test</artifactId>
+            <version>${almon-monitoring-core.version}</version>
+        </dependency>
+
+        <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-web</artifactId>
         </dependency>

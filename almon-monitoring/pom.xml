@@ -18,12 +18,14 @@
         <almon-monitoring-core.version>1.0.0</almon-monitoring-core.version>
         <almon-monitoring-active-api.version>1.0.0</almon-monitoring-active-api.version>
         <almon-monitoring-passive-api.version>1.0.0</almon-monitoring-passive-api.version>
+        <almon-monitoring-test.version>1.0.0</almon-monitoring-test.version>
     </properties>
 
     <modules>
         <module>almon-monitoring-core</module>
         <module>almon-monitoring-active-api</module>
         <module>almon-monitoring-passive-api</module>
+        <module>almon-monitoring-test</module>
     </modules>
 
     <build>

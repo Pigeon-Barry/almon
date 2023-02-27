@@ -2,15 +2,16 @@ package com.capgemini.bedwards.almon.almonmonitoringactiveapi.models;
 
 import com.capgemini.bedwards.almon.almondatastore.models.alert.ScheduledAlert;
 import com.capgemini.bedwards.almon.almonmonitoringactiveapi.ActiveAPIMonitorAdapter;
-import javax.persistence.DiscriminatorValue;
-import javax.persistence.Entity;
-import javax.persistence.Transient;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
 import lombok.experimental.SuperBuilder;
 import org.springframework.http.ResponseEntity;
+
+import javax.persistence.DiscriminatorValue;
+import javax.persistence.Entity;
+import javax.persistence.Transient;
 
 @Entity
 @SuperBuilder
@@ -21,7 +22,7 @@ import org.springframework.http.ResponseEntity;
 @DiscriminatorValue(ActiveAPIMonitorAdapter.ID)
 public class ActiveAPIAlert extends ScheduledAlert<ActiveAPIMonitor> {
 
-  protected int responseStatusCode;
+  private int responseStatusCode;
   private long requestDurationMS;
 
   @Transient

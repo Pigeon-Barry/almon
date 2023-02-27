@@ -15,7 +15,7 @@ public class ValidJsonPathValidator implements ConstraintValidator<ValidJsonPath
     @Override
     public boolean isValid(String value, ConstraintValidatorContext context) {
         try {
-            JsonPath jsonPath = JsonPath.compile(value);
+            JsonPath.compile(value);
             return true;
         } catch (Throwable e) {
             return false;

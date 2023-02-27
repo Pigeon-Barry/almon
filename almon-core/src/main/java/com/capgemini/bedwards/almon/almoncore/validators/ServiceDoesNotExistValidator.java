@@ -13,8 +13,12 @@ import javax.validation.ConstraintValidatorContext;
 public class ServiceDoesNotExistValidator implements ConstraintValidator<ServiceDoesNotExist, String> {
 
 
+    private final ServiceService SERVICE_SERVICE;
+
     @Autowired
-    ServiceService serviceService;
+    public ServiceDoesNotExistValidator(ServiceService service) {
+        this.SERVICE_SERVICE = service;
+    }
 
     @Override
     public void initialize(ServiceDoesNotExist constraintAnnotation) {
@@ -25,6 +29,6 @@ public class ServiceDoesNotExistValidator implements ConstraintValidator<Service
     public boolean isValid(String key, ConstraintValidatorContext context) {
         if (key == null || key.length() == 0)
             return true;
-        return !serviceService.checkKeyExists(key);
+        return !this.SERVICE_SERVICE.checkKeyExists(key);
     }
 }

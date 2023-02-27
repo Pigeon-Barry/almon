@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.core.convert.converter.Converter;
 import org.springframework.stereotype.Component;
 
+import javax.validation.constraints.NotNull;
 import java.util.UUID;
 
 @Component
@@ -21,7 +22,7 @@ public class AlertStringConvertor implements Converter<String, Alert<?>> {
     }
 
     @Override
-    public Alert<?> convert(String source) {
+    public Alert<?> convert(@NotNull String source) {
         return ALERT_SERVICE.getAlertFromId(UUID.fromString(source));
     }
 }

@@ -17,8 +17,8 @@ import java.util.Map;
 @Slf4j
 public class ActiveAPIMonitoringTask extends ScheduledTask<ActiveAPIAlert> {
 
-    private final ActiveAPIMonitor API_MONITORING_TYPE;
-    private final ActiveAPIAlertService API_ALERT_SERVICE;
+    protected final ActiveAPIMonitor API_MONITORING_TYPE;
+    protected final ActiveAPIAlertService API_ALERT_SERVICE;
 
     private final RestTemplate REST_TEMPLATE;
 
@@ -34,6 +34,10 @@ public class ActiveAPIMonitoringTask extends ScheduledTask<ActiveAPIAlert> {
         if (this.API_MONITORING_TYPE.getHeaders() != null)
             this.API_MONITORING_TYPE.getHeaders().forEach(builder::defaultHeader);
         return builder.build();
+    }
+
+    public ActiveAPIAlertService getAlertService() {
+        return this.API_ALERT_SERVICE;
     }
 
     @Override

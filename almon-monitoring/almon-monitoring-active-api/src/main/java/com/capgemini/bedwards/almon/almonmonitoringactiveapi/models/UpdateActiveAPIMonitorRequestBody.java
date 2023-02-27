@@ -4,8 +4,7 @@ import com.capgemini.bedwards.almon.almoncore.util.MappingUtil;
 import com.capgemini.bedwards.almon.almoncore.validators.ValidJsonPath;
 import com.capgemini.bedwards.almon.almonmonitoringcore.models.UpdateScheduledMonitorRequestBody;
 import com.fasterxml.jackson.databind.node.ObjectNode;
-import lombok.Data;
-import lombok.SneakyThrows;
+import lombok.*;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpMethod;
 
@@ -17,6 +16,9 @@ import java.util.Map;
 
 @Data
 @Slf4j
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
 public class UpdateActiveAPIMonitorRequestBody extends UpdateScheduledMonitorRequestBody {
 
 

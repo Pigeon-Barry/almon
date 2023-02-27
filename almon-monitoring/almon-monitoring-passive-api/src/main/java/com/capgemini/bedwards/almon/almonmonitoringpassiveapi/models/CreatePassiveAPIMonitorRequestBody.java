@@ -4,11 +4,15 @@ import com.capgemini.bedwards.almon.almoncore.util.MappingUtil;
 import com.capgemini.bedwards.almon.almondatastore.models.service.Service;
 import com.capgemini.bedwards.almon.almonmonitoringcore.models.CreateMonitorRequestBody;
 import com.fasterxml.jackson.databind.node.ObjectNode;
+import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 
 @Data
+@Builder
+@NoArgsConstructor
 @Slf4j
 public class CreatePassiveAPIMonitorRequestBody extends CreateMonitorRequestBody {
 
