@@ -35,7 +35,7 @@ public class CorrelationIdInterceptor implements HandlerInterceptor {
             if (correlationId.matches("[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}")) {
                 return UUID.fromString(correlationId);
             } else {
-                throw new InvalidCorrelationIdException();
+                throw new InvalidCorrelationIdException("Invalid CorrelationId.");
             }
         }
         return UUID.randomUUID();

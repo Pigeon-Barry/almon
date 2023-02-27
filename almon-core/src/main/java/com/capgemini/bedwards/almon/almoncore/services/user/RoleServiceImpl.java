@@ -10,7 +10,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import javax.persistence.EntityManager;
 import java.util.*;
 
 @Service
@@ -23,8 +22,6 @@ public class RoleServiceImpl implements RoleService {
 
     private final UserService USER_SERVICE;
 
-    @Autowired
-    private EntityManager entityManager;
 
     @Autowired
     public RoleServiceImpl(RoleRepository roleRepository, UserService userService) {
@@ -119,11 +116,4 @@ public class RoleServiceImpl implements RoleService {
     public void deleteServiceRoles(com.capgemini.bedwards.almon.almondatastore.models.service.Service service) {
         ROLE_REPOSITORY.deleteServiceRoles(service);
     }
-
-    @Override
-    public Set<User> getUsersByRole(Role role) {
-        return role.getUsers();
-    }
-
-
 }

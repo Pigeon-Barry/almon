@@ -2,9 +2,7 @@ package com.capgemini.bedwards.almon.almoncore.services.service;
 
 import com.capgemini.bedwards.almon.almoncore.exceptions.NotFoundException;
 import com.capgemini.bedwards.almon.almoncore.services.auth.AuthorityService;
-import com.capgemini.bedwards.almon.almoncore.services.subscription.SubscriptionService;
 import com.capgemini.bedwards.almon.almoncore.services.user.RoleService;
-import com.capgemini.bedwards.almon.almondatastore.models.auth.Authority;
 import com.capgemini.bedwards.almon.almondatastore.models.auth.Role;
 import com.capgemini.bedwards.almon.almondatastore.models.auth.User;
 import com.capgemini.bedwards.almon.almondatastore.models.monitor.Monitor;
@@ -29,7 +27,6 @@ public class ServiceServiceImpl implements ServiceService {
     private final ServiceRepository SERVICE_REPOSITORY;
     private final AuthorityService AUTHORITY_SERVICE;
     private final RoleService ROLE_SERVICE;
-    private final SubscriptionService SUBSCRIPTION_SERVICE;
     @Autowired
     @Lazy
     protected Scheduler SCHEDULER;
@@ -37,12 +34,10 @@ public class ServiceServiceImpl implements ServiceService {
     @Autowired
     public ServiceServiceImpl(ServiceRepository serviceRepository,
                               AuthorityService authorityService,
-                              RoleService roleService,
-                              SubscriptionService subscriptionService) {
+                              RoleService roleService) {
         this.SERVICE_REPOSITORY = serviceRepository;
         this.AUTHORITY_SERVICE = authorityService;
         this.ROLE_SERVICE = roleService;
-        this.SUBSCRIPTION_SERVICE = subscriptionService;
     }
 
     @Override
@@ -82,17 +77,14 @@ public class ServiceServiceImpl implements ServiceService {
         updateEnabledStatus(service, false);
     }
 
-    @Override
-    @Transactional
-    public Service save(Service service) {
-        return SERVICE_REPOSITORY.save(service);
-    }
-
 
     private void updateEnabledStatus(Service service, boolean enabled) {
         log.info((enabled ? "Enabling" : "Disabling") + " Service: " + service.getId());
         service.setEnabled(enabled);
         save(service);
+        if (service.getMonitors() == null) {
+            return;
+        }
         for (Monitor monitor : service.getMonitors()) {
             if (monitor instanceof ScheduledMonitor) {
                 if (enabled)
@@ -102,6 +94,13 @@ public class ServiceServiceImpl implements ServiceService {
             }
         }
     }
+
+    @Override
+    @Transactional
+    public Service save(Service service) {
+        return SERVICE_REPOSITORY.save(service);
+    }
+
 
     @Override
     public Optional<Service> findById(String serviceId) {
@@ -122,9 +121,22 @@ public class ServiceServiceImpl implements ServiceService {
     }
 
     @Override
+    @Transactional
+    public Role getOrCreateAdminRole(Service service) {
+        return ROLE_SERVICE.findOrCreate("SERVICE_" + service.getId() + "_ADMIN", "Standard Admin permissions");
+    }
+
+    @Override
+    @Transactional
+    public Role getOrCreateUserRole(Service service) {
+        return ROLE_SERVICE.findOrCreate("SERVICE_" + service.getId() + "_USER", "Standard User permissions");
+    }
+
+
+    @Override
     public Map<String, Set<User>> getUsersByServiceRole(Service service) {
-        Set<User> adminUsers = ROLE_SERVICE.getUsersByRole(getOrCreateAdminRole(service));
-        Set<User> standardUsers = ROLE_SERVICE.getUsersByRole(getOrCreateUserRole(service));
+        Set<User> adminUsers = getOrCreateAdminRole(service).getUsers();
+        Set<User> standardUsers = getOrCreateUserRole(service).getUsers();
 
         standardUsers.removeAll(adminUsers);
         return new HashMap<String, Set<User>>() {{
@@ -136,8 +148,10 @@ public class ServiceServiceImpl implements ServiceService {
     @Override
     @Transactional
     public boolean removeUser(Service service, User user) {
-        return ROLE_SERVICE.removeRole(user, getOrCreateAdminRole(service))
-                || ROLE_SERVICE.removeRole(user, getOrCreateUserRole(service));
+        //Checks need to be separate to prevent short-circuiting
+        boolean adminRoleRemoved = ROLE_SERVICE.removeRole(user, getOrCreateAdminRole(service));
+        boolean standardRoleRemoved = ROLE_SERVICE.removeRole(user, getOrCreateUserRole(service));
+        return adminRoleRemoved || standardRoleRemoved;
     }
 
     @Override
@@ -202,8 +216,7 @@ public class ServiceServiceImpl implements ServiceService {
                 adminRoleSet
         );
         AUTHORITY_SERVICE.createAuthority(
-                "SERVICE_" + id + "_" +
-                        "CAN_CREATE_MONITORS",
+                "SERVICE_" + id + "_CAN_CREATE_MONITORS",
                 "Grants the ability to create new monitors for this service",
                 null,
                 adminRoleSet
@@ -238,28 +251,9 @@ public class ServiceServiceImpl implements ServiceService {
 
     @Override
     @Transactional
-    public Role getOrCreateAdminRole(Service service) {
-        return ROLE_SERVICE.findOrCreate("SERVICE_" + service.getId() + "_ADMIN", "Standard Admin permissions");
-    }
-
-    @Override
-    @Transactional
-    public void assignAdminAuthority(Service service, Authority authority) {
-        AUTHORITY_SERVICE.addRole(authority, Collections.singleton(getOrCreateAdminRole(service)));
-    }
-
-    @Override
-    @Transactional
     public void deleteService(Service service) {
         AUTHORITY_SERVICE.deleteServiceAuthorities(service);
         ROLE_SERVICE.deleteServiceRoles(service);
         SERVICE_REPOSITORY.delete(service);
-    }
-
-
-    @Override
-    @Transactional
-    public Role getOrCreateUserRole(Service service) {
-        return ROLE_SERVICE.findOrCreate("SERVICE_" + service.getId() + "_USER", "Standard User permissions");
     }
 }

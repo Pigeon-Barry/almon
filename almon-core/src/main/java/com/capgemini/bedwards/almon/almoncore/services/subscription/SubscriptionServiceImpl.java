@@ -86,6 +86,7 @@ public class SubscriptionServiceImpl implements SubscriptionService {
         return true;
     }
 
+
     @Override
     @Transactional
     public boolean subscribe(User user, Monitor monitor, Notification notification) {
@@ -134,7 +135,14 @@ public class SubscriptionServiceImpl implements SubscriptionService {
     @Transactional
     public void clearSubscriptions(User user, Monitor monitor) {
         this.MONITOR_SUBSCRIPTION_REPOSITORY.deleteById_UserAndId_Monitor(user, monitor);
-        user.getMonitorSubscriptions().clear();
+        user.getMonitorSubscriptions()
+                .removeAll(user.getMonitorSubscriptions().stream().filter(monitorSubscription -> monitorSubscription.getId().getMonitor().equals(monitor)).collect(Collectors.toSet()));
+    }
+
+    @Override
+    @Transactional
+    public void clearSubscriptions(Monitor monitor) {
+        this.MONITOR_SUBSCRIPTION_REPOSITORY.deleteAllById_Monitor(monitor);
     }
 
     @Override
@@ -143,9 +151,5 @@ public class SubscriptionServiceImpl implements SubscriptionService {
         this.SERVICE_SUBSCRIPTION_REPOSITORY.deleteAllById_Service(service);
     }
 
-    @Override
-    @Transactional
-    public void clearSubscriptions(Monitor monitor) {
-        this.MONITOR_SUBSCRIPTION_REPOSITORY.deleteAllById_Monitor(monitor);
-    }
+
 }

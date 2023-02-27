@@ -13,9 +13,6 @@ public interface UserService {
 
     Page<User> findPaginatedWithFilter(int pageNo, int pageSize, Boolean enabled);
 
-    Page<User> findApprovalsPaginated(int pageNo, int pageSize);
-
-
     void enableAccount(@NotNull User authorizer, @NotNull User user);
 
     User getUser(@NotNull UUID userId);

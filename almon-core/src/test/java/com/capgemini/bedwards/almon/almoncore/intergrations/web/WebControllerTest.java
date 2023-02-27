@@ -10,18 +10,12 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class WebControllerTest {
 
-  //TODO getUser
-
   @Test
   public void positive_accessDeniedException() {
     validateExceptionHandler(new TestWebController().accessDeniedException(
                     new AccessDeniedException("Error Message of Exception")),
             "error/error-unauthorized");
   }
-
-  //TODO handleValidationExceptions
-  //TODO handleObjectError
-
 
   @Test
   public void positive_notFoundException() {

@@ -1,16 +1,13 @@
 package com.capgemini.bedwards.almon.almondatastore.models.auth;
 
-import java.util.Set;
-import javax.persistence.CascadeType;
-import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.Id;
-import javax.persistence.ManyToMany;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.springframework.lang.Nullable;
+
+import javax.persistence.*;
+import java.util.Set;
 
 @Entity
 @Data
@@ -40,7 +37,9 @@ public class Role {
 
     @Override
     public boolean equals(Object obj) {
-        return this.name.equals(obj);
+        if (obj == null || !(obj instanceof Role))
+            return false;
+        return this.name.equals(((Role) obj).name);
     }
 
 

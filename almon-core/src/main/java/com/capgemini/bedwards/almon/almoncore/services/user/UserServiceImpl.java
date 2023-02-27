@@ -37,16 +37,11 @@ public class UserServiceImpl implements UserService {
     @Override
     public Page<User> findPaginatedWithFilter(int pageNo, int pageSize, Boolean enabled) {
         if (enabled == null)
-            return findApprovalsPaginated(pageNo, pageSize);
+            return findPaginated(pageNo, pageSize);
         Pageable pageable = PageRequest.of(pageNo - 1, pageSize);
         return USER_REPOSITORY.findUsersByEnabledEquals(pageable, enabled);
     }
 
-    @Override
-    public Page<User> findApprovalsPaginated(int pageNo, int pageSize) {
-        Pageable pageable = PageRequest.of(pageNo - 1, pageSize);
-        return USER_REPOSITORY.findAll(pageable);
-    }
 
     @Override
     public void enableAccount(@NotNull User authorizer, @NotNull User user) {

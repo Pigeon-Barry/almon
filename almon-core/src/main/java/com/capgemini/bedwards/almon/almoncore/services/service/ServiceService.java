@@ -1,6 +1,5 @@
 package com.capgemini.bedwards.almon.almoncore.services.service;
 
-import com.capgemini.bedwards.almon.almondatastore.models.auth.Authority;
 import com.capgemini.bedwards.almon.almondatastore.models.auth.Role;
 import com.capgemini.bedwards.almon.almondatastore.models.auth.User;
 import com.capgemini.bedwards.almon.almondatastore.models.service.Service;
@@ -42,7 +41,6 @@ public interface ServiceService {
 
     Role getOrCreateAdminRole(Service service);
 
-    void assignAdminAuthority(Service service, Authority authority);
 
     void deleteService(Service service);
 

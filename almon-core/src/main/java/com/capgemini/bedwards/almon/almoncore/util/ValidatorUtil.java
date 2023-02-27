@@ -22,12 +22,4 @@ public final class ValidatorUtil {
         v.validate(entry, errors);
         return errors;
     }
-
-//
-//    @SneakyThrows(JsonProcessingException.class)
-//    public static <T> T convertAndValidate(ObjectNode objectNode, Class<T> _class) throws MethodArgumentNotValidException {
-//        T res = MappingUtil.getObjectMapper().treeToValue(objectNode, _class);
-//        ValidatorUtil.validate(res);
-//        return res;
-//    }
 }

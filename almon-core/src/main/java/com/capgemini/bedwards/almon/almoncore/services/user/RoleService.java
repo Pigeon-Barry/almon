@@ -35,7 +35,5 @@ public interface RoleService {
 
     void deleteServiceRoles(Service service);
 
-    Set<User> getUsersByRole(Role role);
-
     void assignRoleToUsers(Role role, Set<User> users);
 }

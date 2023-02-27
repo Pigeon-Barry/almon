@@ -4,8 +4,10 @@ package com.capgemini.bedwards.almon.almondatastore.models.subscription;
 import com.capgemini.bedwards.almon.almondatastore.models.auth.User;
 import com.capgemini.bedwards.almon.almondatastore.models.monitor.Monitor;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import lombok.experimental.SuperBuilder;
 
 import javax.persistence.Embeddable;
 import javax.persistence.EmbeddedId;
@@ -17,6 +19,7 @@ import java.io.Serializable;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
+@Builder
 public class MonitorSubscription {
 
     @EmbeddedId
@@ -28,6 +31,7 @@ public class MonitorSubscription {
     @Data
     @NoArgsConstructor
     @AllArgsConstructor
+    @SuperBuilder
     public static class SubscriptionId implements Serializable {
         private String notificationType;
         @ManyToOne
