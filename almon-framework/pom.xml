@@ -25,11 +25,11 @@
             <artifactId>almon-access-web</artifactId>
             <version>1.0.0</version>
         </dependency>
-        <!--        <dependency>-->
-        <!--            <groupId>com.capgemini.bedwards.almon</groupId>-->
-        <!--            <artifactId>almon-access-api</artifactId>-->
-        <!--            <version>1.0.0</version>-->
-        <!--        </dependency>-->
+        <dependency>
+            <groupId>com.capgemini.bedwards.almon</groupId>
+            <artifactId>almon-access-api</artifactId>
+            <version>1.0.0</version>
+        </dependency>
         <dependency>
             <groupId>com.capgemini.bedwards.almon</groupId>
             <artifactId>almon-notification-stmp</artifactId>

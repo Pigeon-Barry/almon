@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <parent>
+        <groupId>com.capgemini.bedwards</groupId>
+        <artifactId>almon</artifactId>
+        <version>1.0.0</version>
+        <relativePath>../pom.xml</relativePath>
+    </parent>
+    <artifactId>almon-access</artifactId>
+    <version>1.0.0</version>
+    <packaging>pom</packaging>
+
+    <name>almon-access</name>
+    <description>almon-access</description>
+
+    <modules>
+        <module>almon-access-web</module>
+        <module>almon-access-api</module>
+    </modules>
+    <properties>
+        <almon-access-web.version>1.0.0</almon-access-web.version>
+        <almon-access-api.version>1.0.0</almon-access-api.version>
+    </properties>
+    <dependencies>
+        <dependency>
+            <groupId>com.capgemini.bedwards.almon</groupId>
+            <artifactId>almon-monitoring-core</artifactId>
+            <version>${almon-monitoring.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.capgemini.bedwards.almon</groupId>
+            <artifactId>almon-test</artifactId>
+            <version>${almon-monitoring.version}</version>
+            <scope>test</scope>
+        </dependency>
+    </dependencies>
+</project>
