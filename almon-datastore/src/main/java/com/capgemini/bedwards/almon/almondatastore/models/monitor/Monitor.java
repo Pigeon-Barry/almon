@@ -35,7 +35,8 @@ public abstract class Monitor {
 
     @NotBlank
     protected String name;
-
+    @Column(name = "type", insertable = false, updatable = false)
+    private String type;
 
     protected String description;
 

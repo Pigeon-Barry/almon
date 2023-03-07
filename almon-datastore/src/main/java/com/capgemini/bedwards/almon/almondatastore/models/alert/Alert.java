@@ -3,30 +3,17 @@ package com.capgemini.bedwards.almon.almondatastore.models.alert;
 import com.capgemini.bedwards.almon.almondatastore.models.monitor.Monitor;
 import com.capgemini.bedwards.almon.almondatastore.util.Constants;
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import java.time.LocalDateTime;
-import java.time.ZoneId;
-import java.util.UUID;
-import javax.persistence.Column;
-import javax.persistence.DiscriminatorColumn;
-import javax.persistence.DiscriminatorType;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
-import javax.persistence.Inheritance;
-import javax.persistence.InheritanceType;
-import javax.persistence.JoinColumn;
-import javax.persistence.JoinColumns;
-import javax.persistence.ManyToOne;
-import javax.validation.constraints.NotNull;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
-import lombok.ToString;
+import lombok.*;
 import lombok.experimental.SuperBuilder;
 import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.Type;
 import org.hibernate.validator.constraints.Length;
+
+import javax.persistence.*;
+import javax.validation.constraints.NotNull;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.util.UUID;
 
 @Getter
 @Setter
@@ -46,12 +33,8 @@ public abstract class Alert<M extends Monitor> {
 
     @NotNull
     @ManyToOne
-    @JoinColumns({
-            @JoinColumn(name = "id.service"),
-            @JoinColumn(name = "id.id")
-    })
     @JsonIgnore
-    protected M monitor;
+    protected Monitor monitor;
 
     @NotNull
     @Builder.Default
@@ -75,5 +58,9 @@ public abstract class Alert<M extends Monitor> {
 
     public long getCreatedAtInMilliseconds() {
         return this.getCreatedAt().atZone(ZoneId.systemDefault()).toInstant().toEpochMilli();
+    }
+
+    public M getMonitor() {
+        return (M) this.monitor;
     }
 }

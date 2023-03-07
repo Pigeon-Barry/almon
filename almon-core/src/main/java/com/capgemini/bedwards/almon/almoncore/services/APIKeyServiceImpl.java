@@ -2,7 +2,6 @@ package com.capgemini.bedwards.almon.almoncore.services;
 
 import com.capgemini.bedwards.almon.almondatastore.models.auth.APIKey;
 import com.capgemini.bedwards.almon.almondatastore.repository.auth.APIKeyRepository;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -12,12 +11,15 @@ import java.util.Optional;
 @Transactional
 public class APIKeyServiceImpl implements APIKeyService {
 
-    @Autowired
-    APIKeyRepository apiKeyRepository;
+    private final APIKeyRepository API_KEY_REPOSITORY;
+
+    public APIKeyServiceImpl(APIKeyRepository apiKeyRepository) {
+        this.API_KEY_REPOSITORY = apiKeyRepository;
+    }
 
     @Override
     public APIKey getAPIKey(String apiKey) {
-        Optional<APIKey> apiKeyOptional = apiKeyRepository.findById(apiKey);
+        Optional<APIKey> apiKeyOptional = this.API_KEY_REPOSITORY.findById(apiKey.trim());
         return apiKeyOptional.orElse(null);
     }
 }

@@ -45,11 +45,12 @@ VALUES ('ACCESS_CORE_PAGES'),
 ;
 
 
-# INSERT INTO db_almon.apikey(api_key, owner_id)
-# VALUES ('e5c9d432-d4e8-4859-9f4a-ef56f8a7854a','c5c86836-c38f-4f05-b9a7-164a96099413')
-# ;
-#
-
+INSERT INTO db_almon.apikey(api_key, owner_id, enabled)
+VALUES ('e5c9d432-d4e8-4859-9f4a-ef56f8a7854a', '093d8814-4960-4da7-8337-fc89b8da69b1', true);
+INSERT INTO db_almon.role_api_keys(api_keys_api_key, roles_name)
+VALUES ('e5c9d432-d4e8-4859-9f4a-ef56f8a7854a', 'USER'),
+       ('e5c9d432-d4e8-4859-9f4a-ef56f8a7854a', 'ADMIN')
+;
 
 INSERT INTO db_almon.authority_roles (authorities_authority, roles_name)
 VALUES ('ACCESS_CORE_PAGES', 'USER');

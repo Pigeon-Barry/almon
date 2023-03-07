@@ -24,6 +24,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import javax.validation.constraints.NotNull;
 
 @RestController
 @RequestMapping("/api/service/{serviceId}/monitor/{monitorId}")
@@ -55,7 +56,7 @@ public class PassiveAPIMonitorController extends APIController {
     public ResponseEntity<? extends Object> triggerAlert(
             @Valid @PathVariable(name = "serviceId") Service service,
             @Valid @PathVariable(name = "monitorId") Monitor monitor,
-            @RequestBody TriggerPassiveAPIMonitorRequestBody body
+            @Valid @NotNull @RequestBody TriggerPassiveAPIMonitorRequestBody body
     ) {
         if (!(monitor instanceof PassiveAPIMonitor))
             return new ResponseEntity<>(new BadRequestResponse("monitorId", "MonitorId is of type: '" + monitor.getMonitorType() + "' but expected type: '" + PassiveAPIMonitorAdapter.ID + "'"), HttpStatus.BAD_REQUEST);

@@ -1,5 +1,6 @@
 package com.capgemini.bedwards.almon.almondatastore.models.alert;
 
+import com.capgemini.bedwards.almon.almondatastore.models.monitor.Monitor;
 import org.springframework.data.jpa.domain.Specification;
 
 import javax.persistence.criteria.CriteriaBuilder;
@@ -9,6 +10,7 @@ import javax.persistence.criteria.Root;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class AlertSpecification<T extends Alert<?>> implements Specification<T> {
 
@@ -34,7 +36,10 @@ public class AlertSpecification<T extends Alert<?>> implements Specification<T> 
             predicates.add(builder.lessThanOrEqualTo(root.get("createdAt"), ALERT_FILTER_OPTIONS.getTo()));
 
         if (ALERT_FILTER_OPTIONS.getMonitors() != null && ALERT_FILTER_OPTIONS.getMonitors().length > 0) {
-            predicates.add(root.get("monitor").in(Arrays.asList(ALERT_FILTER_OPTIONS.getMonitors())));
+            predicates.add(
+                    root.get("monitor").get("type")
+                            .in(Arrays.stream(ALERT_FILTER_OPTIONS.getMonitors()).map(Monitor::getType).collect(Collectors.toSet())));
+//            predicates.add(builder.isTrue(root.get("monitor").type().in(new ArrayList<>().addAll(Arrays.stream(ALERT_FILTER_OPTIONS.getMonitors()).map(Monitor::getClass).collect(Collectors.toSet())))));
         }
 
         query.orderBy(builder.desc(root.get("createdAt")));
