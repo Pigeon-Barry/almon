@@ -1,6 +1,7 @@
 {
   "id": "myServiceId-myMonitorId",
   "name": "Monitor Name",
+  "type": null,
   "description": "Monitor Description",
   "enabled": true,
   "notificationThrottle": null,
