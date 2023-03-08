@@ -186,7 +186,7 @@
                                         <li class="list-group-item d-flex justify-content-between align-items-center p-3">
                                             <p class="mb-0"><strong>Monitors</strong></p>
                                             <button
-                                                    th:if="${#authorization.expression('hasAuthority(''CREATE_MONITORS'') || hasAuthority(''SERVICE_' + service.getId() + '_CAN_CREATE_ALERTS'')')}"
+                                                    th:if="${#authorization.expression('hasAuthority(''CREATE_MONITORS'') || hasAuthority(''SERVICE_' + service.getId() + '_CAN_CREATE_MONITORS'')')}"
                                                     data-bs-toggle="modal" data-bs-target="#selectMonitorTypeModal"
                                                     type="button" class="btn btn-primary">Create New Monitor
                                             </button>
@@ -248,7 +248,7 @@
         </div>
         <th:block
                 th:include="fragments/monitor/selectMonitorTypeModal :: selectMonitorTypeModal(${service},${monitors},selectMonitorTypeModal)"
-                th:if="${#authorization.expression('hasAuthority(''CREATE_MONITORS'') || hasAuthority(''SERVICE_' + service.getId() + '_CAN_CREATE_ALERTS'')')}"/>
+                th:if="${#authorization.expression('hasAuthority(''CREATE_MONITORS'') || hasAuthority(''SERVICE_' + service.getId() + '_CAN_CREATE_MONITORS'')')}"/>
 
         <th:block
                 th:include="fragments/auth/serviceRoleAssignmentModal :: serviceRoleAssignmentModal('updateServiceRolesModel',${service})"

@@ -39,7 +39,16 @@ public class AlertSpecification<T extends Alert<?>> implements Specification<T> 
             predicates.add(
                     root.get("monitor").get("type")
                             .in(Arrays.stream(ALERT_FILTER_OPTIONS.getMonitors()).map(Monitor::getType).collect(Collectors.toSet())));
-//            predicates.add(builder.isTrue(root.get("monitor").type().in(new ArrayList<>().addAll(Arrays.stream(ALERT_FILTER_OPTIONS.getMonitors()).map(Monitor::getClass).collect(Collectors.toSet())))));
+            predicates.add(
+                    root.get("monitor").get("id").get("service").get("id")
+                            .in(Arrays.stream(ALERT_FILTER_OPTIONS.getMonitors())
+                                    .map(monitor -> monitor.getId().getService().getId())
+                                    .collect(Collectors.toSet())));
+            predicates.add(
+                    root.get("monitor").get("id").get("id")
+                            .in(Arrays.stream(ALERT_FILTER_OPTIONS.getMonitors())
+                                    .map(monitor -> monitor.getId().getId())
+                                    .collect(Collectors.toSet())));
         }
 
         query.orderBy(builder.desc(root.get("createdAt")));

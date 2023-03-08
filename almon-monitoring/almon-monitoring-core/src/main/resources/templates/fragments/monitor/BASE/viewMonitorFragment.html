@@ -24,7 +24,7 @@
                             <!--                        <p class="text-muted mb-1">Placeholder</p>-->
                             <!--                        <p class="text-muted mb-4">Placeholder</p>-->
                             <div class="d-flex justify-content-center mb-2"
-                                 th:if="${#authorization.expression('hasAuthority(''RUN_MONITORS'') || hasAuthority(''SERVICE_' + service.getId() + '_MONITOR_' + monitor.getId() +'_CAN_RUN'')')}"
+                                 th:if="${#authorization.expression('hasAuthority(''RUN_MONITORS'') || hasAuthority(''SERVICE_' + service.getId() + '_MONITOR_' + monitor.getId() +'_CAN_UPDATE'')')}"
                             >
                                 <button type="button" class="btn btn-primary mx-2"
                                         th:data-monitorId="${monitor.getId()}"
